@@ -56,10 +56,10 @@ const STATS = [
 ];
 
 const FAQS = [
-  { q: "What is DiabetesHub?", a: "DiabetesHub is the world's most complete diabetes support platform — your single destination for everything you need to understand, manage, and thrive with diabetes." },
+  { q: "What is iamsweet?", a: "iamsweet is the world's most complete diabetes support platform — your single destination for everything you need to understand, manage, and thrive with diabetes." },
   { q: "Who is this built for?", a: "Every person touched by diabetes: newly diagnosed patients, long-term T1D and T2D warriors, parents of children with diabetes, caregivers, and healthcare professionals." },
-  { q: "Why DiabetesHub instead of other sites?", a: "DiabetesHub brings together Lifestyle, Nutrition, Medication, Technology, Mental Health, and more — so your entire diabetes journey lives here, always free." },
-  { q: "Is everything here free?", a: "Yes. Every resource on DiabetesHub is free to access. Our mission is to make world-class diabetes support available to every person on the planet." },
+  { q: "Why iamsweet instead of other sites?", a: "iamsweet brings together Lifestyle, Nutrition, Medication, Technology, Mental Health, and more — so your entire diabetes journey lives here, always free." },
+  { q: "Is everything here free?", a: "Yes. Every resource on iamsweet is free to access. Our mission is to make world-class diabetes support available to every person on the planet." },
 ];
 
 const FEATURE_CARDS = [
@@ -141,9 +141,9 @@ export default function Home() {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-2.5 mr-2 flex-shrink-0">
               <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-md shadow-blue-600/30">
-                <span className="text-white font-black text-sm">D</span>
+                <span className="text-white font-black text-sm">i</span>
               </div>
-              <span className="font-black text-base text-gray-900 dark:text-white tracking-tight hidden sm:block">DiabetesHub</span>
+              <span className="font-black text-base text-gray-900 dark:text-white tracking-tight hidden sm:block">iamsweet</span>
             </Link>
 
             <div className="h-5 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block" />
@@ -271,7 +271,7 @@ export default function Home() {
               className="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 px-3.5 py-1.5 rounded-full text-xs font-bold mb-6 uppercase tracking-widest"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-              World's #1 Diabetes Support Platform
+              World's #1 Diabetes Support Platform by iamsweet
             </motion.div>
 
             <motion.h1
@@ -292,7 +292,7 @@ export default function Home() {
               transition={{ delay: 0.12 }}
               className="mt-5 text-lg text-gray-500 dark:text-gray-400 leading-relaxed"
             >
-              Stop bouncing between websites. DiabetesHub is your free, single destination for lifestyle, nutrition, medication, technology, mental health, and expert care.
+              Stop bouncing between websites. iamsweet is your free, single destination for lifestyle, nutrition, medication, technology, mental health, and expert care.
             </motion.p>
 
             {/* Search bar */}
@@ -351,7 +351,7 @@ export default function Home() {
                   <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/40">
                     <div className="w-10 h-10 rounded-full border-[5px] border-white" />
                   </div>
-                  <span className="text-xs font-black text-blue-700 dark:text-blue-300 tracking-wide">DiabetesHub</span>
+                  <span className="text-xs font-black text-blue-700 dark:text-blue-300 tracking-wide">iamsweet</span>
                   <span className="text-[10px] text-gray-400">No one fights alone 💙</span>
                 </motion.div>
               </div>
@@ -438,7 +438,7 @@ export default function Home() {
             </div>
             <div className="flex items-end justify-between">
               <div>
-                <h3 className="text-white text-lg font-black">Ask DiabetesHub AI</h3>
+                <h3 className="text-white text-lg font-black">Ask iamsweet AI</h3>
                 <p className="text-white/70 text-xs mt-0.5">Voice & text · instant answers</p>
               </div>
               <span className="bg-white/20 text-white text-xs font-bold px-2.5 py-1 rounded-full">Free</span>
@@ -644,11 +644,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
-              <span className="text-white font-black text-xs">D</span>
+              <span className="text-white font-black text-xs">i</span>
             </div>
-            <span className="text-sm font-bold text-gray-800 dark:text-gray-200">DiabetesHub</span>
+            <span className="text-sm font-bold text-gray-800 dark:text-gray-200">iamsweet</span>
           </div>
-          <p className="text-xs text-gray-400">© 2026 · No one faces diabetes alone 🔵</p>
+          <p className="text-xs text-gray-400">© 2026 iamsweet · No one faces diabetes alone 🔵</p>
         </div>
       </footer>
     </div>
