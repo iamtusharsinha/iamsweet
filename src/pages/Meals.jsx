@@ -13,7 +13,11 @@ export default function Meals() {
   const [selectedMeal, setSelectedMeal] = useState(null);
 
   const filtered = MEALS.filter(m => {
-    if (category !== "All" && m.category !== category) return false;
+    if (category === "Vegan") {
+      if (!m.tags.includes("vegan")) return false;
+    } else if (category !== "All" && m.category !== category) {
+      return false;
+    }
     if (ethnicity !== "All" && m.ethnicity !== ethnicity) return false;
     if (giFilter !== "All GI" && m.glycemic !== giFilter) return false;
     const q = search.toLowerCase();
