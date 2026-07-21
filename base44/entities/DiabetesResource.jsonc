@@ -1,0 +1,68 @@
+{
+  "name": "DiabetesResource",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "link": {
+      "type": "string"
+    },
+    "prompt_type": {
+      "type": "string",
+      "enum": [
+        "Article",
+        "PDF",
+        "Video",
+        "Guide",
+        "Tool",
+        "Infographic",
+        "Course"
+      ]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "Lifestyle",
+        "Nutrition",
+        "Medication",
+        "Technology",
+        "Mental Health",
+        "Complications",
+        "Prevention",
+        "Research",
+        "Gestational",
+        "Pediatric"
+      ]
+    },
+    "credible_org_source": {
+      "type": "boolean",
+      "default": true
+    },
+    "org_name": {
+      "type": "string"
+    },
+    "image": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "featured": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "link",
+    "prompt_type",
+    "category"
+  ]
+}

@@ -1,93 +1,112 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Search, BookOpen, Calendar, Users, ChevronDown, GraduationCap, Wrench, FileText } from "lucide-react";
+import {
+  ArrowRight, Search, BookOpen, Heart, Activity, Pill, Brain, Shield,
+  Baby, FlaskConical, ChevronDown, ExternalLink, BadgeCheck, FileText,
+  Zap, Globe
+} from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import Logo from "@/components/Logo";
 import DarkModeToggle from "@/components/DarkModeToggle";
-import TickerBar from "@/components/TickerBar";
 
 const CATEGORIES = [
-  { key: "all", label: "All" },
-  { key: "course", label: "Courses", icon: BookOpen },
-  { key: "meetup", label: "Meetups", icon: Users },
-  { key: "workshop", label: "Workshops", icon: Wrench },
-  { key: "hackathon", label: "Hackathons", icon: Calendar },
-  { key: "talk", label: "Talks", icon: FileText },
-  { key: "study_group", label: "Study groups", icon: GraduationCap }
+  { key: "all", label: "All Resources", icon: Globe, color: "bg-blue-100 text-blue-700 border-blue-200" },
+  { key: "Lifestyle", label: "Lifestyle", icon: Heart, color: "bg-sky-100 text-sky-700 border-sky-200" },
+  { key: "Nutrition", label: "Nutrition", icon: Activity, color: "bg-cyan-100 text-cyan-700 border-cyan-200" },
+  { key: "Medication", label: "Medication", icon: Pill, color: "bg-blue-100 text-blue-700 border-blue-200" },
+  { key: "Technology", label: "Technology", icon: Zap, color: "bg-indigo-100 text-indigo-700 border-indigo-200" },
+  { key: "Mental Health", label: "Mental Health", icon: Brain, color: "bg-violet-100 text-violet-700 border-violet-200" },
+  { key: "Prevention", label: "Prevention", icon: Shield, color: "bg-teal-100 text-teal-700 border-teal-200" },
+  { key: "Complications", label: "Complications", icon: BookOpen, color: "bg-rose-100 text-rose-700 border-rose-200" },
+  { key: "Research", label: "Research", icon: FlaskConical, color: "bg-purple-100 text-purple-700 border-purple-200" },
+  { key: "Gestational", label: "Gestational", icon: Baby, color: "bg-pink-100 text-pink-700 border-pink-200" },
+];
+
+const TYPE_COLORS = {
+  Article: "bg-blue-50 text-blue-700 border-blue-200",
+  PDF: "bg-rose-50 text-rose-700 border-rose-200",
+  Video: "bg-amber-50 text-amber-700 border-amber-200",
+  Guide: "bg-teal-50 text-teal-700 border-teal-200",
+  Tool: "bg-violet-50 text-violet-700 border-violet-200",
+  Infographic: "bg-orange-50 text-orange-700 border-orange-200",
+  Course: "bg-indigo-50 text-indigo-700 border-indigo-200",
+};
+
+const STATS = [
+  { value: "537M+", label: "People with Diabetes Worldwide" },
+  { value: "1 in 2", label: "Adults with Diabetes Undiagnosed" },
+  { value: "90%", label: "Are Type 2 Diabetes Cases" },
+  { value: "966B", label: "USD Spent on Diabetes Health Annually" },
 ];
 
 const FAQS = [
-  {
-    q: "Is OnRamp free?",
-    a: "Yes — free, no account, about two minutes. You answer five taps and walk away with a plan."
-  },
-  {
-    q: "Do I need to know how to code?",
-    a: "No. OnRamp is built for people just breaking into AI: every plan starts with a beginner-safe course and rooms tagged for newcomers."
-  },
-  {
-    q: "How is this different from asking ChatGPT?",
-    a: "Base44 hands you a plan and forgets you. OnRamp hands you one next step and a real room to walk into."
-  },
-  {
-    q: "What happens after I get my plan?",
-    a: "You take the first step — start the course, sign up for one event. Email yourself the plan so it's on your device when you come back."
-  }
+  { q: "What is the IDF Blue Circle?", a: "The Blue Circle is the global symbol for diabetes, adopted by the International Diabetes Federation (IDF) in 2006. It represents the unity of the global diabetes community." },
+  { q: "Who are these resources for?", a: "These resources are curated for people living with diabetes, their caregivers, healthcare professionals, and researchers worldwide — spanning Type 1, Type 2, gestational, and prediabetes." },
+  { q: "Are all resources from credible organisations?", a: "Resources are sourced from organisations like the American Diabetes Association, WHO, CDC, IDF, Mayo Clinic, NIDDK, and peer-reviewed journals. Each card shows the originating organisation." },
+  { q: "How do I use this platform?", a: "Browse by category (Lifestyle, Nutrition, Medication, etc.), filter by content type (Article, PDF, Guide), or search by keyword to find the most relevant resources for your needs." },
 ];
 
 export default function Home() {
-  const [counts, setCounts] = useState({ courses: 0, events: 0 });
-  const [openFaq, setOpenFaq] = useState(0);
+  const [resources, setResources] = useState([]);
+  const [featured, setFeatured] = useState([]);
+  const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [openFaq, setOpenFaq] = useState(0);
+  const [counts, setCounts] = useState({ total: 0, orgs: 0 });
 
   useEffect(() => {
-    async function loadCounts() {
+    async function load() {
       try {
-        const [c, e] = await Promise.all([
-          base44.entities.Course.list(),
-          base44.entities.Event.list()
-        ]);
-        setCounts({ courses: c.length, events: e.length });
+        const all = await base44.entities.DiabetesResource.list();
+        setResources(all);
+        setFeatured(all.filter(r => r.featured));
+        const orgs = new Set(all.map(r => r.org_name).filter(Boolean));
+        setCounts({ total: all.length, orgs: orgs.size });
       } catch (err) { console.error(err); }
     }
-    loadCounts();
+    load();
   }, []);
 
-  const total = counts.courses + counts.events;
+  const filtered = resources.filter(r => {
+    const matchCat = activeCategory === "all" || r.category === activeCategory;
+    const q = searchQuery.toLowerCase();
+    const matchSearch = !q || r.title?.toLowerCase().includes(q) || r.org_name?.toLowerCase().includes(q) || r.category?.toLowerCase().includes(q) || r.tags?.some(t => t.toLowerCase().includes(q));
+    return matchCat && matchSearch;
+  });
 
   return (
-    <div className="min-h-screen overflow-hidden bg-orange-50 dark:bg-gray-950 transition-colors duration-300">
-      {/* Decorative blobs */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full blur-3xl -z-10 bg-orange-200/30 dark:bg-orange-900/20" />
-      <div className="absolute top-40 left-0 w-80 h-80 rounded-full blur-3xl -z-10 bg-orange-200/20 dark:bg-orange-900/10" />
-      <div className="absolute bottom-0 left-1/2 w-[500px] h-96 rounded-full blur-3xl -z-10 bg-orange-100/30 dark:bg-orange-900/10" />
+    <div className="min-h-screen bg-blue-50 dark:bg-gray-950 transition-colors duration-300 overflow-x-hidden">
+      {/* Decorative blobs — blue palette */}
+      <div className="fixed top-0 right-0 w-[700px] h-[700px] rounded-full blur-3xl -z-10 bg-blue-200/30 dark:bg-blue-900/20 pointer-events-none" />
+      <div className="fixed top-60 left-0 w-80 h-80 rounded-full blur-3xl -z-10 bg-sky-200/25 dark:bg-sky-900/10 pointer-events-none" />
+      <div className="fixed bottom-0 left-1/2 w-[500px] h-96 rounded-full blur-3xl -z-10 bg-blue-100/30 dark:bg-blue-900/10 pointer-events-none" />
 
       {/* Header */}
-      <header className="max-w-6xl mx-auto px-4 pt-6 pb-2 flex items-center justify-between" style={{background: "transparent"}}>
-        <Logo size="md" />
+      <header className="max-w-7xl mx-auto px-4 sm:px-6 pt-5 pb-2 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <Link
-            to="/browse"
-            className="text-sm text-gray-600 dark:text-gray-400 hover:text-orange-500 transition-colors font-medium"
-          >
-            Browse all
-          </Link>
+          <div className="w-9 h-9 rounded-full border-4 border-blue-600 flex items-center justify-center bg-blue-600">
+            <span className="text-white font-bold text-xs">D</span>
+          </div>
+          <span className="font-heading font-bold text-lg text-blue-900 dark:text-white tracking-tight">DiabetesHub</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <Link to="/resources" className="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium hidden sm:block">Browse all</Link>
           <DarkModeToggle />
         </div>
       </header>
 
       {/* Hero */}
-      <section className="max-w-6xl mx-auto px-4 pt-12 md:pt-20 pb-10">
-        {/* Top row: text + image aligned */}
-        <div className="grid lg:grid-cols-2 gap-12 items-start mb-10">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-12">
+        <div className="grid lg:grid-cols-2 gap-14 items-center">
           <div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 bg-orange-500/10 border border-orange-400/30 text-orange-600 px-3 py-1.5 rounded-full text-xs font-semibold mb-5 uppercase tracking-wide"
+              className="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-400/30 text-blue-700 dark:text-blue-400 px-3 py-1.5 rounded-full text-xs font-semibold mb-5 uppercase tracking-wide"
             >
-              <Sparkles className="w-3.5 h-3.5" /> AI Learning, Personalised
+              <div className="w-3 h-3 rounded-full border-2 border-blue-600 dark:border-blue-400" />
+              Global Diabetes Resource Hub
             </motion.div>
 
             <motion.h1
@@ -96,168 +115,183 @@ export default function Home() {
               transition={{ delay: 0.05 }}
               className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-gray-900 dark:text-white leading-tight tracking-tight"
             >
-              A platform where{" "}
-              <span className="text-orange-500">Curiosity</span>{" "}
-              meets personalised AI{" "}
-              <span className="text-orange-500">Curation.</span>
+              Master Data for{" "}
+              <span className="text-blue-600 dark:text-blue-400">Diabetes</span>{" "}
+              Patients{" "}
+              <span className="text-blue-600 dark:text-blue-400">Worldwide.</span>
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="mt-6 text-lg text-gray-500 dark:text-gray-400"
+              className="mt-5 text-lg text-gray-500 dark:text-gray-400 leading-relaxed"
             >
-              Base44 hands you a plan and forgets you. <strong className="text-gray-800 dark:text-gray-200">OnRamp hands you one next step and a real room to walk into.</strong>
+              Curated resources from the world's most credible organisations — ADA, WHO, CDC, IDF, and more — spanning lifestyle, nutrition, medication, technology, and mental health.
             </motion.p>
+
+            {/* Search */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15 }}
+              className="mt-8 relative"
+            >
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search resources, organisations, topics…"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-14 py-4 rounded-2xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+              />
+              <button
+                onClick={() => setActiveCategory("all")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors"
+              >
+                <ArrowRight className="w-5 h-5 text-white" />
+              </button>
+            </motion.div>
+
+            {/* Trust bar */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+              className="mt-5 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400"
+            >
+              <span className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-semibold"><BadgeCheck className="w-4 h-4" /> {counts.total}+ Resources</span>
+              <span>·</span>
+              <span>{counts.orgs}+ Credible Orgs</span>
+              <span>·</span>
+              <span>Free Access</span>
+            </motion.div>
           </div>
 
-          {/* Hero image — top-aligned with text */}
+          {/* Blue Circle visual */}
           <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3 }}
-            className="hidden lg:block"
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3, type: "spring", stiffness: 100 }}
+            className="hidden lg:flex items-center justify-center"
           >
-            <div className="rounded-3xl overflow-hidden shadow-2xl shadow-orange-200/60">
-              <img
-                src="https://media.base44.com/images/public/6a58169d7409d26e73f9d4a3/d569f9017_li-zhang-K-DwbsTXliY-unsplash.jpg"
-                alt="Abstract orange waves"
-                className="w-full h-72 object-cover"
-              />
+            <div className="relative w-80 h-80">
+              {/* Outer glow ring */}
+              <div className="absolute inset-0 rounded-full border-[20px] border-blue-600 opacity-10 animate-ping" style={{ animationDuration: "4s" }} />
+              <div className="absolute inset-4 rounded-full border-[16px] border-blue-600 opacity-20" />
+              <div className="absolute inset-8 rounded-full border-[14px] border-blue-500 opacity-40" />
+              {/* Core */}
+              <div className="absolute inset-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-2xl shadow-blue-500/50 flex flex-col items-center justify-center text-white">
+                <Globe className="w-10 h-10 mb-2 opacity-90" />
+                <span className="text-3xl font-bold">537M</span>
+                <span className="text-xs opacity-80 text-center px-4 leading-tight mt-1">people living with diabetes worldwide</span>
+              </div>
+              {/* Orbiting category dots */}
+              {["ADA", "WHO", "CDC", "IDF"].map((label, i) => {
+                const angle = (i * 90) - 45;
+                const rad = (angle * Math.PI) / 180;
+                const x = 50 + 42 * Math.cos(rad);
+                const y = 50 + 42 * Math.sin(rad);
+                return (
+                  <div
+                    key={label}
+                    className="absolute w-12 h-12 rounded-full bg-white dark:bg-gray-800 shadow-lg border-2 border-blue-200 flex items-center justify-center text-xs font-bold text-blue-700"
+                    style={{ left: `${x}%`, top: `${y}%`, transform: "translate(-50%,-50%)" }}
+                  >
+                    {label}
+                  </div>
+                );
+              })}
             </div>
           </motion.div>
         </div>
-
-        {/* Full-width: search, ticker, pills, CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search courses, meetups, hackathons…"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && searchQuery) {
-                  window.location.href = `/browse?q=${encodeURIComponent(searchQuery)}`;
-                }
-              }}
-              className="w-full pl-12 pr-14 py-4 rounded-2xl border border-orange-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent shadow-sm"
-            />
-            <button
-              onClick={() => {
-                if (searchQuery) window.location.href = `/browse?q=${encodeURIComponent(searchQuery)}`;
-              }}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center hover:bg-orange-600 transition-colors"
-            >
-              <ArrowRight className="w-5 h-5 text-white" />
-            </button>
-          </div>
-          <TickerBar />
-        </motion.div>
-
-        {/* Category pills */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-5 flex flex-wrap gap-2"
-        >
-          {CATEGORIES.map(cat => (
-            <Link
-              key={cat.key}
-              to={cat.key === "all" ? "/browse" : `/browse?tab=${cat.key}`}
-              className="px-4 py-2 rounded-full text-sm font-medium bg-white dark:bg-gray-800 border border-orange-100 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-orange-400 hover:text-orange-500 hover:bg-orange-50 dark:hover:bg-gray-700 transition-all"
-            >
-              {cat.label}
-            </Link>
-          ))}
-        </motion.div>
-
-        {/* How it works */}
-        <p className="mt-10 text-xs uppercase tracking-widest text-orange-500 font-semibold mb-3">How it works?</p>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.35 }}
-          className="grid sm:grid-cols-3 gap-4"
-        >
-          {[
-            { step: "1", title: "Tell us where you are", desc: "5 quick questions — level, goal, time, city." },
-            { step: "2", title: "Get your path", desc: "One course + local events matched to you." },
-            { step: "3", title: "Walk in", desc: "Start learning, show up, meet your community." }
-          ].map(({ step, title, desc }) => (
-            <div key={step} className="flex items-start gap-3 bg-white dark:bg-gray-800 rounded-2xl border border-orange-100 dark:border-gray-700 p-4">
-              <span className="w-7 h-7 rounded-full bg-orange-500 text-white text-xs font-bold flex items-center justify-center flex-shrink-0">{step}</span>
-              <div>
-                <p className="font-semibold text-sm text-gray-900 dark:text-white">{title}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{desc}</p>
-              </div>
-            </div>
-          ))}
-        </motion.div>
-
-        {/* CTAs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-8 flex flex-wrap gap-3"
-        >
-          <Link
-            to="/intake"
-            className="inline-flex items-center gap-2 px-7 py-4 bg-orange-500 text-white rounded-2xl font-semibold text-base hover:bg-orange-600 transition-all shadow-lg shadow-orange-200 dark:shadow-orange-900/40"
-          >
-            Get my plan <ArrowRight className="w-5 h-5" />
-          </Link>
-          <Link
-            to="/browse"
-            className="inline-flex items-center gap-2 px-7 py-4 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 rounded-2xl font-semibold text-base border border-orange-200 dark:border-gray-700 hover:border-orange-400 hover:text-orange-500 transition-all"
-          >
-            Browse all {total}
-          </Link>
-        </motion.div>
-
-        {/* Trust bar */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mt-6 flex items-center gap-4 text-sm text-gray-400"
-        >
-          <span className="text-orange-500 font-semibold">Free</span>
-          <span>·</span>
-          <span>No account</span>
-          <span>·</span>
-          <span>2 minutes</span>
-        </motion.div>
       </section>
 
-      {/* Community image strip */}
-      <section className="max-w-6xl mx-auto px-4 pb-14">
-        <div className="grid grid-cols-3 gap-3 rounded-3xl overflow-hidden">
-          <img src="https://media.base44.com/images/public/6a58169d7409d26e73f9d4a3/b6892c842_who-s-denilo-S6DSXlLeijI-unsplash.jpg" alt="Colorful abstract" className="w-full h-32 object-cover rounded-2xl" />
-          <img src="https://media.base44.com/images/public/6a58169d7409d26e73f9d4a3/e3273c1c0_aditya-chinchure-ZhQCZjr9fHo-unsplash.jpg" alt="Event crowd" className="w-full h-32 object-cover rounded-2xl" />
-          <img src="https://media.base44.com/images/public/6a58169d7409d26e73f9d4a3/c0931f3a2_teemu-paananen-bzdhc5b3Bxs-unsplash.jpg" alt="Tech talk" className="w-full h-32 object-cover rounded-2xl" />
+      {/* Stats bar */}
+      <section className="bg-blue-600 dark:bg-blue-900 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {STATS.map((s, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.08 }}
+                className="text-center"
+              >
+                <p className="text-2xl md:text-3xl font-bold text-white">{s.value}</p>
+                <p className="text-xs text-blue-200 mt-1">{s.label}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
+      {/* Featured Resources */}
+      {featured.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-6">
+          <p className="text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 font-semibold mb-4">⭐ Featured Resources</p>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {featured.map((r, i) => (
+              <ResourceCard key={r.id} resource={r} delay={i * 0.05} />
+            ))}
+          </div>
+        </section>
+      )}
 
+      {/* Category filter + All resources */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-10 pb-16">
+        <p className="text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 font-semibold mb-5">Browse by Category</p>
+
+        {/* Category pills */}
+        <div className="flex flex-wrap gap-2 mb-8">
+          {CATEGORIES.map(cat => {
+            const Icon = cat.icon;
+            const isActive = activeCategory === cat.key;
+            return (
+              <button
+                key={cat.key}
+                onClick={() => setActiveCategory(cat.key)}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+                  isActive
+                    ? "bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-200 dark:shadow-blue-900"
+                    : "bg-white dark:bg-gray-800 border-blue-100 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-blue-400 hover:text-blue-600"
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                {cat.label}
+                {cat.key !== "all" && (
+                  <span className={`text-xs rounded-full px-1.5 py-0.5 font-semibold ${isActive ? "bg-blue-500 text-white" : "bg-blue-50 dark:bg-gray-700 text-blue-600 dark:text-blue-400"}`}>
+                    {resources.filter(r => r.category === cat.key).length}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Results */}
+        {filtered.length === 0 ? (
+          <div className="text-center py-20 text-gray-400">
+            <Search className="w-10 h-10 mx-auto mb-3 opacity-40" />
+            <p className="text-lg font-medium">No resources found</p>
+            <p className="text-sm mt-1">Try a different category or search term</p>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {filtered.map((r, i) => (
+              <ResourceCard key={r.id} resource={r} delay={i * 0.03} />
+            ))}
+          </div>
+        )}
+      </section>
 
       {/* FAQs */}
-      <section className="max-w-5xl mx-auto px-4 pb-20">
-        <p className="text-xs uppercase tracking-widest text-orange-500 font-semibold mb-6 text-center">FAQs</p>
+      <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+        <p className="text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 font-semibold mb-6 text-center">About This Resource Hub</p>
         <div className="grid md:grid-cols-2 gap-3">
           {FAQS.map((faq, i) => (
-            <div
-              key={i}
-              className="bg-white dark:bg-gray-800 rounded-2xl border border-orange-100 dark:border-gray-700 overflow-hidden"
-            >
+            <div key={i} className="bg-white dark:bg-gray-800 rounded-2xl border border-blue-100 dark:border-gray-700 overflow-hidden">
               <button
                 onClick={() => setOpenFaq(openFaq === i ? -1 : i)}
                 className="w-full flex items-center justify-between p-5 text-left"
@@ -280,12 +314,72 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-orange-100 dark:border-gray-800 py-6 bg-white dark:bg-gray-900">
-        <div className="max-w-6xl mx-auto px-4 flex items-center justify-between">
-          <Logo size="sm" />
-          <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 OnRamp</p>
+      <footer className="border-t border-blue-100 dark:border-gray-800 py-6 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-6 h-6 rounded-full border-3 border-blue-600 bg-blue-600 flex items-center justify-center">
+              <span className="text-white font-bold text-xs">D</span>
+            </div>
+            <span className="text-sm font-semibold text-blue-800 dark:text-blue-300">DiabetesHub</span>
+          </div>
+          <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 · In solidarity with the global diabetes community 🔵</p>
         </div>
       </footer>
     </div>
+  );
+}
+
+function ResourceCard({ resource, delay = 0 }) {
+  const typeColor = TYPE_COLORS[resource.prompt_type] || "bg-gray-50 text-gray-700 border-gray-200";
+
+  return (
+    <motion.a
+      href={resource.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+      className="group flex flex-col bg-white dark:bg-gray-800 rounded-2xl border border-blue-100 dark:border-gray-700 p-5 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-lg hover:shadow-blue-100 dark:hover:shadow-blue-900/30 transition-all cursor-pointer"
+    >
+      <div className="flex items-start justify-between gap-3 mb-3">
+        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${typeColor} flex-shrink-0`}>
+          {resource.prompt_type}
+        </span>
+        {resource.credible_org_source && (
+          <BadgeCheck className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" title="Credible organisation" />
+        )}
+      </div>
+
+      <h3 className="text-sm font-semibold text-gray-900 dark:text-white leading-snug line-clamp-2 mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
+        {resource.title}
+      </h3>
+
+      {resource.description && (
+        <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2 mb-3 flex-1">
+          {resource.description}
+        </p>
+      )}
+
+      <div className="flex items-center justify-between mt-auto pt-3 border-t border-blue-50 dark:border-gray-700">
+        <div className="flex flex-col">
+          {resource.org_name && (
+            <span className="text-xs text-blue-600 dark:text-blue-400 font-medium truncate max-w-[160px]">{resource.org_name}</span>
+          )}
+          {resource.category && (
+            <span className="text-xs text-gray-400">{resource.category}</span>
+          )}
+        </div>
+        <ExternalLink className="w-3.5 h-3.5 text-gray-300 group-hover:text-blue-500 transition-colors flex-shrink-0" />
+      </div>
+
+      {resource.tags && resource.tags.length > 0 && (
+        <div className="flex flex-wrap gap-1 mt-3">
+          {resource.tags.slice(0, 3).map(tag => (
+            <span key={tag} className="text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-full">{tag}</span>
+          ))}
+        </div>
+      )}
+    </motion.a>
   );
 }

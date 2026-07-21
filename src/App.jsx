@@ -10,6 +10,7 @@ import Home from './pages/Home';
 import Intake from './pages/Intake';
 import Plan from './pages/Plan';
 import Browse from './pages/Browse';
+import Resources from './pages/Resources';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -41,6 +42,7 @@ const AuthenticatedApp = () => {
       <Route path="/intake" element={<Intake />} />
       <Route path="/plan" element={<Plan />} />
       <Route path="/browse" element={<Browse />} />
+      <Route path="/resources" element={<Resources />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
