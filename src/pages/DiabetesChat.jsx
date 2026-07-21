@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowLeft, Send, Mic, MicOff, Bot, User, Loader2, Volume2, VolumeX } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import ReactMarkdown from "react-markdown";
 
 const SUGGESTIONS = [
   "What foods should I avoid with Type 2 diabetes?",
@@ -15,30 +16,20 @@ const SUGGESTIONS = [
   "How does stress affect blood sugar levels?",
 ];
 
-const SYSTEM_CONTEXT = `You are DiabetesHub AI — the world's most knowledgeable, compassionate, and empowering diabetes support assistant. Your sole mission is to be the only diabetes resource anyone will ever need.
+const SYSTEM_CONTEXT = `You are SWEETY, a warm and friendly diabetes support assistant. Keep responses short, conversational, and practical — like texting a knowledgeable friend.
 
-You help people with Type 1, Type 2, gestational, prediabetes, and pediatric diabetes. You answer questions about:
-- Nutrition, meal planning, and recipes
-- Blood sugar monitoring and A1C
-- Medications and insulin
-- Exercise and lifestyle
-- Mental health and emotional wellbeing
-- Technology (CGM, insulin pumps, apps)
-- Complications and prevention
-- Gestational and pediatric diabetes
-
-Always:
-- Give warm, clear, practical answers
-- Use plain English — no unnecessary jargon
-- Remind users you are an AI and serious medical decisions need a doctor
-- Stay fully on-topic for diabetes
-- Be encouraging and empowering — living well with diabetes is absolutely possible`;
+Rules:
+- Be concise. 2-4 short paragraphs max. No long lists unless truly needed.
+- Use simple, natural language. No jargon.
+- Only answer diabetes-related questions.
+- Add a brief reminder to consult a doctor for serious medical decisions (one short sentence, not a disclaimer block).
+- Be warm and encouraging.`;
 
 export default function DiabetesChat() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Hi! I'm your DiabetesHub AI. Ask me anything about diabetes — nutrition, blood sugar, medications, exercise, mental health, technology, or anything else. I'm here to help you thrive. 🔵"
+      content: "Hey! I'm **SWEETY** 🩵 — your diabetes support buddy. Ask me anything about blood sugar, nutrition, meds, lifestyle, or just how you're feeling today."
     }
   ]);
   const [input, setInput] = useState("");
@@ -62,8 +53,8 @@ export default function DiabetesChat() {
     setLoading(true);
 
     try {
-      const history = newMessages.map(m => `${m.role === "user" ? "User" : "DiabetesHub AI"}: ${m.content}`).join("\n");
-      const prompt = `${SYSTEM_CONTEXT}\n\nConversation so far:\n${history}\n\nRespond as DiabetesHub AI:`;
+      const history = newMessages.map(m => `${m.role === "user" ? "User" : "SWEETY"}: ${m.content}`).join("\n");
+      const prompt = `${SYSTEM_CONTEXT}\n\nConversation:\n${history}\n\nSWEETY:`;
 
       const response = await base44.integrations.Core.InvokeLLM({ prompt });
       setMessages(prev => [...prev, { role: "assistant", content: response }]);
@@ -128,7 +119,7 @@ export default function DiabetesChat() {
               <Bot className="w-4 h-4 text-white" />
             </div>
             <div>
-              <span className="font-heading font-bold text-sm text-blue-900 dark:text-white block leading-none">DiabetesHub AI</span>
+              <span className="font-heading font-bold text-sm text-blue-900 dark:text-white block leading-none">SWEETY</span>
               <span className="text-xs text-green-500 font-medium">● Online</span>
             </div>
           </div>
@@ -179,12 +170,16 @@ export default function DiabetesChat() {
 
             {/* Bubble */}
             <div className={`max-w-[80%] relative group ${msg.role === "user" ? "items-end" : "items-start"} flex flex-col`}>
-              <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed whitespace-pre-wrap ${
+              <div className={`px-4 py-3 rounded-2xl text-sm leading-relaxed ${
                 msg.role === "user"
                   ? "bg-blue-600 text-white rounded-tr-sm"
                   : "bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 border border-blue-100 dark:border-gray-700 rounded-tl-sm shadow-sm"
               }`}>
-                {msg.content}
+                {msg.role === "assistant" ? (
+                  <ReactMarkdown className="prose prose-sm dark:prose-invert max-w-none prose-p:my-1 prose-ul:my-1 prose-li:my-0.5 prose-headings:text-sm prose-headings:font-semibold prose-headings:my-1">
+                    {msg.content}
+                  </ReactMarkdown>
+                ) : msg.content}
               </div>
               {msg.role === "assistant" && (
                 <button
@@ -239,7 +234,7 @@ export default function DiabetesChat() {
             <Send className="w-4 h-4 text-white" />
           </button>
         </div>
-        <p className="text-center text-xs text-gray-400 mt-2">DiabetesHub AI can make mistakes. Always consult a healthcare professional for medical decisions.</p>
+        <p className="text-center text-xs text-gray-400 mt-2">SWEETY is an AI — always check with your doctor for medical decisions.</p>
       </div>
     </div>
   );
