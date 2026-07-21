@@ -1,0 +1,64 @@
+{
+  "name": "CareLog",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "blood_sugar": {
+      "type": "number"
+    },
+    "blood_sugar_unit": {
+      "type": "string",
+      "enum": [
+        "mg/dL",
+        "mmol/L"
+      ],
+      "default": "mg/dL"
+    },
+    "mood": {
+      "type": "string",
+      "enum": [
+        "great",
+        "good",
+        "okay",
+        "low",
+        "rough"
+      ]
+    },
+    "energy": {
+      "type": "string",
+      "enum": [
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "symptoms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "medications_taken": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "string"
+    },
+    "ai_summary": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "date"
+  ]
+}

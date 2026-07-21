@@ -91,6 +91,7 @@ export default function Home() {
           <span className="font-heading font-bold text-lg text-blue-900 dark:text-white tracking-tight">DiabetesHub</span>
         </div>
         <div className="flex items-center gap-3">
+          <Link to="/care" className="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium"><Heart className="w-4 h-4 text-rose-500" />Care</Link>
           <Link to="/meals" className="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium"><ChefHat className="w-4 h-4" />Meals</Link>
           <Link to="/videos" className="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium"><Youtube className="w-4 h-4 text-red-500" />Videos</Link>
           <Link to="/opensource" className="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium"><Github className="w-4 h-4" />Open Source</Link>
@@ -212,7 +213,18 @@ export default function Home() {
 
       {/* Quick Access Feature Cards */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          <Link to="/care" className="group flex items-center gap-4 bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-700 rounded-2xl p-5 hover:border-rose-400 hover:shadow-lg hover:shadow-rose-100 dark:hover:shadow-rose-900/20 transition-all">
+            <div className="w-12 h-12 rounded-xl bg-rose-100 dark:bg-rose-900/30 flex items-center justify-center flex-shrink-0">
+              <Heart className="w-6 h-6 text-rose-500" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-gray-900 dark:text-white text-sm">AI Care Companion</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Daily check-ins & tracking</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-rose-500 transition-colors flex-shrink-0" />
+          </Link>
+
           <Link to="/meals" className="group flex items-center gap-4 bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-700 rounded-2xl p-5 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-100 dark:hover:shadow-blue-900/20 transition-all">
             <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
               <ChefHat className="w-6 h-6 text-green-600" />
