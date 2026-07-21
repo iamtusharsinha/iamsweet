@@ -606,16 +606,22 @@ export default function Home() {
       {/* ── FEATURED RESOURCES ── */}
       {featured.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10" ref={featuredRef}>
-          <div className="flex items-center gap-3 mb-5">
-            <span className="flex items-center gap-1.5 text-sm font-black text-gray-900 dark:text-white">
-              <Star className="w-4 h-4 text-amber-500 fill-amber-500" /> Featured Resources
-            </span>
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
+          {/* Distinct amber/gold banner header */}
+          <div className="bg-gradient-to-r from-amber-400 to-orange-400 dark:from-amber-500 dark:to-orange-500 rounded-2xl px-6 py-4 mb-5 flex items-center justify-between shadow-lg shadow-amber-200/50 dark:shadow-amber-900/30">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-white/25 flex items-center justify-center">
+                <Star className="w-5 h-5 text-white fill-white" />
+              </div>
+              <div>
+                <p className="text-white font-black text-base leading-none">Featured Resources</p>
+                <p className="text-amber-100 text-xs mt-0.5">Hand-picked by our team · Always credible</p>
+              </div>
+            </div>
             {featured.length > 3 && (
-              <div className="relative">
+              <div className="relative" ref={featuredRef}>
                 <button
                   onClick={() => setFeaturedDropdown(d => d === "more" ? null : "more")}
-                  className="flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 transition-colors border border-blue-200 dark:border-blue-700 px-3 py-1.5 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                  className="flex items-center gap-1.5 text-xs font-bold bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-xl transition-all border border-white/30"
                 >
                   {featuredExpanded ? "Show less" : `+${featured.length - 3} more`}
                   <ChevronDown className={`w-3.5 h-3.5 transition-transform ${featuredDropdown === "more" ? "rotate-180" : ""}`} />
@@ -653,14 +659,16 @@ export default function Home() {
               </div>
             )}
           </div>
+
+          {/* Featured cards — distinct amber-tinted style */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {(featuredExpanded ? featured : featured.slice(0, 3)).map((r, i) => (
-              <ResourceCard key={r.id} resource={r} delay={i * 0.05} featured />
+              <FeaturedCard key={r.id} resource={r} delay={i * 0.05} />
             ))}
           </div>
           {featuredExpanded && featured.length > 3 && (
             <button onClick={() => setFeaturedExpanded(false)}
-              className="mt-4 text-sm text-gray-400 hover:text-blue-600 transition-colors flex items-center gap-1 mx-auto">
+              className="mt-4 text-sm text-gray-400 hover:text-amber-600 transition-colors flex items-center gap-1 mx-auto">
               Show less <ChevronDown className="w-4 h-4 rotate-180" />
             </button>
           )}
@@ -706,6 +714,75 @@ export default function Home() {
         </div>
       </footer>
     </div>
+  );
+}
+
+function FeaturedCard({ resource, delay = 0 }) {
+  const typeStyle = TYPE_COLORS[resource.prompt_type] || { bg: "bg-gray-100 text-gray-700", dot: "bg-gray-400" };
+  const catEmoji = { Lifestyle: "❤️", Nutrition: "🥗", Medication: "💊", Technology: "⚡", "Mental Health": "🧠", Prevention: "🛡️", Complications: "📋", Research: "🔬", Gestational: "🤱" };
+  const emoji = catEmoji[resource.category] || "📄";
+
+  return (
+    <motion.a
+      href={resource.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      initial={{ opacity: 0, y: 14 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+      className="group flex flex-col bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/20 dark:to-orange-900/10 rounded-2xl border-2 border-amber-200 dark:border-amber-700/50 hover:border-amber-400 dark:hover:border-amber-500 hover:shadow-xl hover:shadow-amber-100/60 dark:hover:shadow-amber-900/30 transition-all cursor-pointer overflow-hidden"
+    >
+      {/* Amber accent bar */}
+      <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 to-orange-400" />
+
+      <div className="p-5 flex flex-col flex-1">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${typeStyle.bg}`}>{resource.prompt_type}</span>
+            <span className="text-xs font-bold px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 flex items-center gap-1">
+              <Star className="w-3 h-3 fill-amber-500 text-amber-500" /> Featured
+            </span>
+          </div>
+          <span className="text-xl flex-shrink-0">{emoji}</span>
+        </div>
+
+        <h3 className="text-sm font-bold text-gray-900 dark:text-white leading-snug line-clamp-2 mb-2 group-hover:text-amber-700 dark:group-hover:text-amber-400 transition-colors">
+          {resource.title}
+        </h3>
+
+        {resource.description && (
+          <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2 mb-3 flex-1">
+            {resource.description}
+          </p>
+        )}
+
+        {resource.tags?.length > 0 && (
+          <div className="flex flex-wrap gap-1 mb-3">
+            {resource.tags.slice(0, 4).map(tag => (
+              <span key={tag} className="text-[10px] font-semibold bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 px-2 py-0.5 rounded-full">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        )}
+
+        <div className="flex items-center justify-between mt-auto pt-3 border-t border-amber-100 dark:border-amber-800/40">
+          <div>
+            {resource.org_name && (
+              <span className="text-xs text-amber-700 dark:text-amber-400 font-semibold truncate max-w-[160px] block">{resource.org_name}</span>
+            )}
+            {resource.category && (
+              <span className="text-[10px] text-gray-400">{emoji} {resource.category}</span>
+            )}
+          </div>
+          <div className="flex items-center gap-1 text-amber-400 group-hover:text-amber-600 transition-colors">
+            {resource.credible_org_source && <BadgeCheck className="w-4 h-4 text-blue-500" />}
+            <ExternalLink className="w-3.5 h-3.5" />
+          </div>
+        </div>
+      </div>
+    </motion.a>
   );
 }
 
