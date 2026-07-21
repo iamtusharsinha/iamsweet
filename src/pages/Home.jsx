@@ -574,30 +574,13 @@ export default function Home() {
         <div className="flex items-center gap-3 mb-5">
           <span className="text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 font-bold">Browse by Category</span>
           <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
-        </div>
-
-        {/* Category pills */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {CATEGORIES.map(cat => {
-            const Icon = cat.icon;
-            const isActive = activeCategory === cat.key;
-            return (
-              <button key={cat.key} onClick={() => setActiveCategory(cat.key)}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold border transition-all ${
-                  isActive
-                    ? "bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-400/20"
-                    : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-blue-400 hover:text-blue-600"
-                }`}>
-                <Icon className="w-3.5 h-3.5" />
-                {cat.label}
-                {cat.key !== "all" && (
-                  <span className={`text-xs rounded-full px-1.5 font-bold ${isActive ? "bg-blue-500 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400"}`}>
-                    {resources.filter(r => r.category === cat.key).length}
-                  </span>
-                )}
-              </button>
-            );
-          })}
+          {/* Category dropdown */}
+          <CategoryDropdown
+            categories={CATEGORIES}
+            resources={resources}
+            activeCategory={activeCategory}
+            setActiveCategory={setActiveCategory}
+          />
         </div>
 
         {filtered.length === 0 ? (
@@ -651,6 +634,66 @@ export default function Home() {
           <p className="text-xs text-gray-400">© 2026 iamsweet · No one faces diabetes alone 🔵</p>
         </div>
       </footer>
+    </div>
+  );
+}
+
+function CategoryDropdown({ categories, resources, activeCategory, setActiveCategory }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const active = categories.find(c => c.key === activeCategory) || categories[0];
+  const ActiveIcon = active.icon;
+
+  useEffect(() => {
+    function handleClick(e) {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-blue-200 dark:border-blue-700 bg-white dark:bg-gray-800 text-sm font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all"
+      >
+        <ActiveIcon className="w-3.5 h-3.5" />
+        {active.label}
+        <ChevronDown className={`w-3.5 h-3.5 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: 6, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 6, scale: 0.97 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-full mt-2 w-56 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-xl z-50 p-1.5 max-h-80 overflow-y-auto"
+          >
+            {categories.map(cat => {
+              const Icon = cat.icon;
+              const count = cat.key !== "all" ? resources.filter(r => r.category === cat.key).length : resources.length;
+              const isActive = activeCategory === cat.key;
+              return (
+                <button
+                  key={cat.key}
+                  onClick={() => { setActiveCategory(cat.key); setOpen(false); }}
+                  className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm transition-all ${
+                    isActive
+                      ? "bg-blue-600 text-white"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                  }`}
+                >
+                  <Icon className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span className="flex-1 text-left font-medium">{cat.label}</span>
+                  <span className={`text-xs px-1.5 rounded-full font-bold ${isActive ? "bg-blue-500 text-white" : "bg-gray-100 dark:bg-gray-700 text-gray-400"}`}>{count}</span>
+                </button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

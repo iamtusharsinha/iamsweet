@@ -1,15 +1,85 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, Heart, Plus, Pill, Calendar, TrendingUp,
-  Activity, Star, Bot, ClipboardList, Sparkles, Lock
+  Activity, Star, Bot, ClipboardList, Sparkles, Lock,
+  ChevronDown, CheckCircle2
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import CheckInModal from "@/components/care/CheckInModal";
 import MedicationManager from "@/components/care/MedicationManager";
 import CareHistory from "@/components/care/CareHistory";
 import TrendCharts from "@/components/care/TrendCharts";
+
+const HOW_IT_WORKS = [
+  { emoji: "📝", step: "1", title: "Daily Check-In", desc: "Log your blood sugar, mood, energy, symptoms and medications in under 60 seconds." },
+  { emoji: "🤖", step: "2", title: "AI Analysis", desc: "Our AI reads your entry and generates a personalised health summary with actionable tips." },
+  { emoji: "📈", step: "3", title: "Track Trends", desc: "Visualise patterns in your glucose, mood and energy over days, weeks and months." },
+  { emoji: "💊", step: "4", title: "Medication Reminders", desc: "Set up your medications and mark them off each day to stay consistent." },
+  { emoji: "🩺", step: "5", title: "Share with Doctor", desc: "Export your care history to share with your healthcare team at your next appointment." },
+];
+
+function HowItWorks() {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="mb-6">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-700 rounded-2xl px-5 py-3.5 hover:bg-blue-50 dark:hover:bg-gray-700/50 transition-all group"
+      >
+        <div className="flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-xl bg-blue-100 dark:bg-blue-900/40 flex items-center justify-center">
+            <CheckCircle2 className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+          </div>
+          <span className="text-sm font-bold text-gray-900 dark:text-white">How it works</span>
+          <span className="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 px-2 py-0.5 rounded-full font-semibold">5 steps</span>
+        </div>
+        <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="overflow-hidden"
+          >
+            <div className="bg-white dark:bg-gray-800 border border-t-0 border-blue-100 dark:border-gray-700 rounded-b-2xl px-5 pb-5 pt-4">
+              <div className="relative">
+                {/* Vertical line */}
+                <div className="absolute left-4 top-4 bottom-4 w-0.5 bg-blue-100 dark:bg-gray-700" />
+                <div className="space-y-4">
+                  {HOW_IT_WORKS.map((item, i) => (
+                    <motion.div
+                      key={i}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: i * 0.07 }}
+                      className="flex gap-4 items-start relative"
+                    >
+                      <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0 z-10 shadow-md shadow-blue-400/20">
+                        <span className="text-white text-xs font-black">{item.step}</span>
+                      </div>
+                      <div className="flex-1 pt-1">
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <span className="text-base">{item.emoji}</span>
+                          <p className="text-sm font-bold text-gray-900 dark:text-white">{item.title}</p>
+                        </div>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{item.desc}</p>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 const TABS = [
   { key: "dashboard", label: "Dashboard", icon: Activity },
@@ -113,6 +183,10 @@ export default function CareCompanion() {
       </header>
 
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+
+        {/* ── HOW IT WORKS ── */}
+        <HowItWorks />
+
         {/* Hero greeting */}
         <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-3xl p-6 mb-6 text-white relative overflow-hidden">
           <div className="absolute top-0 right-0 w-40 h-40 rounded-full bg-white/5 -translate-y-8 translate-x-8" />
