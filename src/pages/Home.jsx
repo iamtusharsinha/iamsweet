@@ -5,7 +5,7 @@ import {
   ArrowRight, Search, BookOpen, Heart, Activity, Pill, Brain, Shield,
   Baby, FlaskConical, ChevronDown, ExternalLink, BadgeCheck,
   Zap, Globe, ChefHat, Youtube, MessageCircle, Github, ShoppingBag,
-  Stethoscope, Sparkles, TrendingUp, Users, Menu, X
+  Stethoscope, Sparkles, TrendingUp, Users, Menu, X, ChevronRight
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import DarkModeToggle from "@/components/DarkModeToggle";
@@ -71,6 +71,19 @@ const FEATURE_CARDS = [
   { to: "/store", icon: ShoppingBag, label: "HSA/FSA Store", desc: "20+ eligible products", bg: "from-teal-500 to-cyan-600", size: "small" },
 ];
 
+const TICKER_ITEMS = [
+  "🔵 World Diabetes Day — November 14",
+  "💊 537 million people live with diabetes globally",
+  "🥗 Low-GI eating reduces HbA1c by up to 0.5%",
+  "🚶 30 min daily walking lowers T2D risk by 35%",
+  "🔬 Continuous Glucose Monitors now available OTC",
+  "🧠 Diabetes doubles the risk of depression — get support",
+  "📊 374 million people have prediabetes — most undiagnosed",
+  "💉 Insulin pump users see 70% fewer hypoglycaemic episodes",
+  "🌍 1 in 2 adults with diabetes don't know they have it",
+  "🩺 Regular HbA1c checks save lives — book yours today",
+];
+
 export default function Home() {
   const [resources, setResources] = useState([]);
   const [featured, setFeatured] = useState([]);
@@ -80,7 +93,10 @@ export default function Home() {
   const [counts, setCounts] = useState({ total: 0 });
   const [moreOpen, setMoreOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [featuredExpanded, setFeaturedExpanded] = useState(false);
+  const [featuredDropdown, setFeaturedDropdown] = useState(null);
   const moreRef = useRef(null);
+  const featuredRef = useRef(null);
 
   useEffect(() => {
     async function load() {
@@ -97,6 +113,7 @@ export default function Home() {
   useEffect(() => {
     function handleClick(e) {
       if (moreRef.current && !moreRef.current.contains(e.target)) setMoreOpen(false);
+      if (featuredRef.current && !featuredRef.current.contains(e.target)) setFeaturedDropdown(null);
     }
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -227,76 +244,150 @@ export default function Home() {
         </div>
       </header>
 
+      {/* ── TICKER ── */}
+      <div className="overflow-hidden bg-blue-600 dark:bg-blue-900 py-2">
+        <motion.div
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+          className="flex gap-0 whitespace-nowrap"
+        >
+          {[...TICKER_ITEMS, ...TICKER_ITEMS].map((item, i) => (
+            <span key={i} className="inline-flex items-center gap-3 text-xs text-blue-100 font-medium px-8">
+              {item}
+              <span className="text-blue-400">◆</span>
+            </span>
+          ))}
+        </motion.div>
+      </div>
+
       {/* ── HERO ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-8">
-        <div className="text-center max-w-3xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 px-3.5 py-1.5 rounded-full text-xs font-bold mb-6 uppercase tracking-widest"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-            World's #1 Diabetes Support Platform
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.06 }}
-            className="text-5xl md:text-6xl lg:text-7xl font-black text-gray-900 dark:text-white leading-[1.05] tracking-tight"
-          >
-            Everything Diabetes.
-            <span className="block bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-              One Platform.
-            </span>
-          </motion.h1>
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.12 }}
-            className="mt-5 text-lg md:text-xl text-gray-500 dark:text-gray-400 leading-relaxed max-w-2xl mx-auto"
-          >
-            Stop bouncing between websites. DiabetesHub is your free, single destination for lifestyle, nutrition, medication, technology, mental health, and expert care.
-          </motion.p>
-
-          {/* Search bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.18 }}
-            className="mt-8 relative max-w-xl mx-auto"
-          >
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search resources, topics, organisations…"
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-full pl-12 pr-14 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg shadow-blue-900/5"
-            />
-            <button
-              onClick={() => setActiveCategory("all")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/30"
+        <div className="grid lg:grid-cols-2 gap-10 items-center">
+          {/* Left — text */}
+          <div>
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 px-3.5 py-1.5 rounded-full text-xs font-bold mb-6 uppercase tracking-widest"
             >
-              <ArrowRight className="w-5 h-5 text-white" />
-            </button>
-          </motion.div>
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
+              World's #1 Diabetes Support Platform
+            </motion.div>
 
-          {/* Trust bar */}
+            <motion.h1
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.06 }}
+              className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white leading-[1.05] tracking-tight"
+            >
+              Everything Diabetes.
+              <span className="block bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+                One Platform.
+              </span>
+            </motion.h1>
+
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.12 }}
+              className="mt-5 text-lg text-gray-500 dark:text-gray-400 leading-relaxed"
+            >
+              Stop bouncing between websites. DiabetesHub is your free, single destination for lifestyle, nutrition, medication, technology, mental health, and expert care.
+            </motion.p>
+
+            {/* Search bar */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.18 }}
+              className="mt-8 relative"
+            >
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <input
+                type="text"
+                placeholder="Search resources, topics, organisations…"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-14 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg shadow-blue-900/5"
+              />
+              <button onClick={() => setActiveCategory("all")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/30">
+                <ArrowRight className="w-5 h-5 text-white" />
+              </button>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }}
+              className="mt-5 flex items-center flex-wrap gap-4 text-sm text-gray-400">
+              <span className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-semibold">
+                <BadgeCheck className="w-4 h-4" /> {counts.total}+ Resources
+              </span>
+              <span className="w-1 h-1 rounded-full bg-gray-300" />
+              <span>10 Categories</span>
+              <span className="w-1 h-1 rounded-full bg-gray-300" />
+              <span className="text-blue-600 dark:text-blue-400 font-semibold">Always Free</span>
+            </motion.div>
+          </div>
+
+          {/* Right — Creative Blue Circle */}
           <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="mt-5 flex items-center justify-center flex-wrap gap-4 text-sm text-gray-400"
+            initial={{ opacity: 0, scale: 0.85 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.25, type: "spring", stiffness: 80 }}
+            className="hidden lg:flex items-center justify-center"
           >
-            <span className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-semibold">
-              <BadgeCheck className="w-4 h-4" /> {counts.total}+ Resources
-            </span>
-            <span className="w-1 h-1 rounded-full bg-gray-300" />
-            <span>10 Categories</span>
-            <span className="w-1 h-1 rounded-full bg-gray-300" />
-            <span className="text-blue-600 dark:text-blue-400 font-semibold">Always Free</span>
+            <div className="relative w-[340px] h-[340px]">
+              {/* Outer slow-spin ring with dashes */}
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-0 rounded-full"
+                style={{ border: "2px dashed rgba(59,130,246,0.3)" }}
+              />
+              {/* Middle ring */}
+              <motion.div
+                animate={{ rotate: -360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="absolute inset-6 rounded-full"
+                style={{ border: "3px solid rgba(99,102,241,0.25)" }}
+              />
+              {/* Core blue circle — IDF Blue Circle symbol */}
+              <div className="absolute inset-12 rounded-full bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 shadow-2xl shadow-blue-600/50 flex flex-col items-center justify-center">
+                {/* Hollow center — Blue Circle of Diabetes */}
+                <div className="w-16 h-16 rounded-full border-[6px] border-white/90 mb-2 shadow-inner" />
+                <span className="text-white text-[10px] font-bold tracking-widest uppercase opacity-80">Blue Circle</span>
+                <span className="text-blue-200 text-[9px] mt-0.5">IDF Symbol of Diabetes</span>
+              </div>
+
+              {/* Orbiting stat bubbles */}
+              {[
+                { label: "537M+", sub: "Diabetes", angle: 0 },
+                { label: "374M+", sub: "Prediabetes", angle: 72 },
+                { label: "1 in 2", sub: "Undiagnosed", angle: 144 },
+                { label: "90%", sub: "Type 2", angle: 216 },
+                { label: "Free", sub: "Always", angle: 288 },
+              ].map(({ label, sub, angle }) => {
+                const rad = ((angle - 90) * Math.PI) / 180;
+                const r = 148;
+                const x = 50 + (r / 340) * 100 * Math.cos(rad);
+                const y = 50 + (r / 340) * 100 * Math.sin(rad);
+                return (
+                  <motion.div
+                    key={label}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5 + angle / 500 }}
+                    className="absolute w-14 h-14 rounded-2xl bg-white dark:bg-gray-800 shadow-lg border border-blue-100 dark:border-gray-700 flex flex-col items-center justify-center"
+                    style={{ left: `${x}%`, top: `${y}%`, transform: "translate(-50%,-50%)" }}
+                  >
+                    <span className="text-xs font-black text-blue-700 dark:text-blue-400 leading-none">{label}</span>
+                    <span className="text-[9px] text-gray-400 mt-0.5 text-center leading-tight">{sub}</span>
+                  </motion.div>
+                );
+              })}
+
+              {/* Glow */}
+              <div className="absolute inset-12 rounded-full bg-blue-500/20 blur-2xl -z-10" />
+            </div>
           </motion.div>
         </div>
       </section>
@@ -397,14 +488,64 @@ export default function Home() {
 
       {/* ── FEATURED RESOURCES ── */}
       {featured.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10" ref={featuredRef}>
           <div className="flex items-center gap-3 mb-5">
             <span className="text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 font-bold">⭐ Featured</span>
             <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
+            {/* More dropdown button */}
+            {featured.length > 3 && (
+              <div className="relative">
+                <button
+                  onClick={() => setFeaturedDropdown(d => d === "more" ? null : "more")}
+                  className="flex items-center gap-1.5 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-800 transition-colors border border-blue-200 dark:border-blue-700 px-3 py-1.5 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                >
+                  {featuredExpanded ? "Show less" : `+${featured.length - 3} more`}
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${featuredDropdown === "more" ? "rotate-180" : ""}`} />
+                </button>
+                <AnimatePresence>
+                  {featuredDropdown === "more" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 6, scale: 0.97 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-xl z-50 overflow-hidden"
+                    >
+                      <div className="p-2">
+                        {featured.slice(3).map(r => (
+                          <a key={r.id} href={r.link} target="_blank" rel="noopener noreferrer"
+                            className="flex items-start gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all group">
+                            <div className="flex-1 min-w-0">
+                              <p className="text-xs font-semibold text-gray-900 dark:text-white line-clamp-2 group-hover:text-blue-600 transition-colors">{r.title}</p>
+                              {r.org_name && <p className="text-[10px] text-blue-500 mt-0.5">{r.org_name}</p>}
+                            </div>
+                            <ExternalLink className="w-3 h-3 text-gray-300 group-hover:text-blue-500 flex-shrink-0 mt-0.5" />
+                          </a>
+                        ))}
+                      </div>
+                      <div className="px-3 pb-3">
+                        <button onClick={() => { setFeaturedExpanded(true); setFeaturedDropdown(null); }}
+                          className="w-full text-center text-xs font-semibold text-blue-600 py-2 border border-blue-200 dark:border-blue-700 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all">
+                          Show all {featured.length} featured →
+                        </button>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {featured.map((r, i) => <ResourceCard key={r.id} resource={r} delay={i * 0.05} />)}
+            {(featuredExpanded ? featured : featured.slice(0, 3)).map((r, i) => (
+              <ResourceCard key={r.id} resource={r} delay={i * 0.05} />
+            ))}
           </div>
+          {featuredExpanded && featured.length > 3 && (
+            <button onClick={() => setFeaturedExpanded(false)}
+              className="mt-4 text-sm text-gray-400 hover:text-blue-600 transition-colors flex items-center gap-1 mx-auto">
+              Show less <ChevronDown className="w-4 h-4 rotate-180" />
+            </button>
+          )}
         </section>
       )}
 
