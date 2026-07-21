@@ -1,0 +1,65 @@
+{
+  "name": "ConsultationRequest",
+  "type": "object",
+  "properties": {
+    "doctor_id": {
+      "type": "string"
+    },
+    "doctor_name": {
+      "type": "string"
+    },
+    "patient_name": {
+      "type": "string"
+    },
+    "patient_email": {
+      "type": "string"
+    },
+    "patient_country": {
+      "type": "string"
+    },
+    "diabetes_type": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "preferred_mode": {
+      "type": "string",
+      "enum": [
+        "Video Call",
+        "Phone Call",
+        "Chat",
+        "Any"
+      ]
+    },
+    "preferred_time": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "contacted",
+        "scheduled",
+        "completed",
+        "declined"
+      ],
+      "default": "pending"
+    },
+    "urgency": {
+      "type": "string",
+      "enum": [
+        "routine",
+        "soon",
+        "urgent"
+      ],
+      "default": "routine"
+    }
+  },
+  "required": [
+    "doctor_id",
+    "patient_name",
+    "patient_email",
+    "message"
+  ]
+}

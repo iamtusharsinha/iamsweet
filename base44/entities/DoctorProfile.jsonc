@@ -1,0 +1,106 @@
+{
+  "name": "DoctorProfile",
+  "type": "object",
+  "properties": {
+    "full_name": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "Doctor",
+        "Nurse",
+        "Nurse Practitioner",
+        "Diabetes Educator",
+        "Dietitian",
+        "Endocrinologist"
+      ],
+      "default": "Doctor"
+    },
+    "specialty": {
+      "type": "string"
+    },
+    "credentials": {
+      "type": "string"
+    },
+    "bio": {
+      "type": "string"
+    },
+    "photo_url": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "country": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "timezone": {
+      "type": "string"
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "diabetes_types": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "consultation_modes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "years_experience": {
+      "type": "number"
+    },
+    "availability": {
+      "type": "string"
+    },
+    "rating": {
+      "type": "number",
+      "default": 0
+    },
+    "review_count": {
+      "type": "number",
+      "default": 0
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "verified": {
+      "type": "boolean",
+      "default": false
+    },
+    "license_number": {
+      "type": "string"
+    },
+    "accepting_patients": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "full_name",
+    "role",
+    "email",
+    "country"
+  ]
+}

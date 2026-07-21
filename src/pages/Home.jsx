@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import {
   ArrowRight, Search, BookOpen, Heart, Activity, Pill, Brain, Shield,
   Baby, FlaskConical, ChevronDown, ExternalLink, BadgeCheck, FileText,
-  Zap, Globe, ChefHat, Youtube, MessageCircle, Github, ShoppingBag
+  Zap, Globe, ChefHat, Youtube, MessageCircle, Github, ShoppingBag, Stethoscope
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import Logo from "@/components/Logo";
@@ -96,6 +96,7 @@ export default function Home() {
           <Link to="/videos" className="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium"><Youtube className="w-4 h-4 text-red-500" />Videos</Link>
           <Link to="/opensource" className="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium"><Github className="w-4 h-4" />Open Source</Link>
           <Link to="/store" className="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium"><ShoppingBag className="w-4 h-4 text-green-600" />HSA Store</Link>
+          <Link to="/telehealth" className="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium"><Stethoscope className="w-4 h-4 text-blue-500" />Telehealth</Link>
           <Link to="/chat" className="hidden sm:flex items-center gap-1.5 text-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors font-medium px-3 py-1.5 rounded-full"><MessageCircle className="w-4 h-4" />Ask AI</Link>
           <DarkModeToggle />
         </div>
@@ -268,6 +269,17 @@ export default function Home() {
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">20+ eligible diabetes products</p>
             </div>
             <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-green-600 transition-colors flex-shrink-0" />
+          </Link>
+
+          <Link to="/telehealth" className="group flex items-center gap-4 bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-700 rounded-2xl p-5 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-100 dark:hover:shadow-blue-900/20 transition-all">
+            <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center flex-shrink-0">
+              <Stethoscope className="w-6 h-6 text-blue-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-gray-900 dark:text-white text-sm">Telehealth</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Find a diabetes specialist globally</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-blue-600 transition-colors flex-shrink-0" />
           </Link>
 
           <Link to="/chat" className="group flex items-center gap-4 bg-blue-600 dark:bg-blue-700 border border-blue-500 rounded-2xl p-5 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-300/40 transition-all">
