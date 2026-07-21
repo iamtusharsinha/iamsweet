@@ -328,65 +328,85 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* Right — Creative Blue Circle */}
+          {/* Right — Fun Hero Illustration */}
           <motion.div
             initial={{ opacity: 0, scale: 0.85 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.25, type: "spring", stiffness: 80 }}
             className="hidden lg:flex items-center justify-center"
           >
-            <div className="relative w-[340px] h-[340px]">
-              {/* Outer slow-spin ring with dashes */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-0 rounded-full"
-                style={{ border: "2px dashed rgba(59,130,246,0.3)" }}
-              />
-              {/* Middle ring */}
-              <motion.div
-                animate={{ rotate: -360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute inset-6 rounded-full"
-                style={{ border: "3px solid rgba(99,102,241,0.25)" }}
-              />
-              {/* Core blue circle — IDF Blue Circle symbol */}
-              <div className="absolute inset-12 rounded-full bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-700 shadow-2xl shadow-blue-600/50 flex flex-col items-center justify-center">
-                {/* Hollow center — Blue Circle of Diabetes */}
-                <div className="w-16 h-16 rounded-full border-[6px] border-white/90 mb-2 shadow-inner" />
-                <span className="text-white text-[10px] font-bold tracking-widest uppercase opacity-80">Blue Circle</span>
-                <span className="text-blue-200 text-[9px] mt-0.5">IDF Symbol of Diabetes</span>
+            <div className="relative w-[380px] h-[380px]">
+
+              {/* Background blob */}
+              <div className="absolute inset-8 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/20 blur-md" />
+
+              {/* Central card */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="w-44 h-44 rounded-3xl bg-white dark:bg-gray-800 shadow-2xl shadow-blue-200/60 dark:shadow-blue-900/40 flex flex-col items-center justify-center gap-2 border border-blue-100 dark:border-gray-700"
+                >
+                  {/* IDF Blue Circle — clean, iconic */}
+                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/40">
+                    <div className="w-10 h-10 rounded-full border-[5px] border-white" />
+                  </div>
+                  <span className="text-xs font-black text-blue-700 dark:text-blue-300 tracking-wide">DiabetesHub</span>
+                  <span className="text-[10px] text-gray-400">No one fights alone 💙</span>
+                </motion.div>
               </div>
 
-              {/* Orbiting stat bubbles */}
-              {[
-                { label: "537M+", sub: "Diabetes", angle: 0 },
-                { label: "374M+", sub: "Prediabetes", angle: 72 },
-                { label: "1 in 2", sub: "Undiagnosed", angle: 144 },
-                { label: "90%", sub: "Type 2", angle: 216 },
-                { label: "Free", sub: "Always", angle: 288 },
-              ].map(({ label, sub, angle }) => {
-                const rad = ((angle - 90) * Math.PI) / 180;
-                const r = 148;
-                const x = 50 + (r / 340) * 100 * Math.cos(rad);
-                const y = 50 + (r / 340) * 100 * Math.sin(rad);
-                return (
-                  <motion.div
-                    key={label}
-                    initial={{ opacity: 0, scale: 0 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 + angle / 500 }}
-                    className="absolute w-14 h-14 rounded-2xl bg-white dark:bg-gray-800 shadow-lg border border-blue-100 dark:border-gray-700 flex flex-col items-center justify-center"
-                    style={{ left: `${x}%`, top: `${y}%`, transform: "translate(-50%,-50%)" }}
-                  >
-                    <span className="text-xs font-black text-blue-700 dark:text-blue-400 leading-none">{label}</span>
-                    <span className="text-[9px] text-gray-400 mt-0.5 text-center leading-tight">{sub}</span>
-                  </motion.div>
-                );
-              })}
+              {/* Floating pill cards */}
+              <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+                className="absolute top-4 left-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-rose-100 dark:border-gray-700 px-3 py-2 flex items-center gap-2">
+                <span className="text-lg">❤️</span>
+                <div>
+                  <p className="text-xs font-bold text-gray-800 dark:text-white leading-none">Care Log</p>
+                  <p className="text-[10px] text-gray-400">Today: 98 mg/dL</p>
+                </div>
+              </motion.div>
 
-              {/* Glow */}
-              <div className="absolute inset-12 rounded-full bg-blue-500/20 blur-2xl -z-10" />
+              <motion.div animate={{ y: [0, 7, 0] }} transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
+                className="absolute top-6 right-4 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-green-100 dark:border-gray-700 px-3 py-2 flex items-center gap-2">
+                <span className="text-lg">🥗</span>
+                <div>
+                  <p className="text-xs font-bold text-gray-800 dark:text-white leading-none">Low GI Meal</p>
+                  <p className="text-[10px] text-gray-400">GI Score: 32</p>
+                </div>
+              </motion.div>
+
+              <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+                className="absolute bottom-10 left-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-violet-100 dark:border-gray-700 px-3 py-2 flex items-center gap-2">
+                <span className="text-lg">🤖</span>
+                <div>
+                  <p className="text-xs font-bold text-gray-800 dark:text-white leading-none">AI Insight</p>
+                  <p className="text-[10px] text-gray-400">Looking good!</p>
+                </div>
+              </motion.div>
+
+              <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.1 }}
+                className="absolute bottom-8 right-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-blue-100 dark:border-gray-700 px-3 py-2 flex items-center gap-2">
+                <span className="text-lg">🩺</span>
+                <div>
+                  <p className="text-xs font-bold text-gray-800 dark:text-white leading-none">Telehealth</p>
+                  <p className="text-[10px] text-gray-400">Dr. available now</p>
+                </div>
+              </motion.div>
+
+              {/* Sparkle dots */}
+              {[
+                { top: "20%", left: "5%", delay: 0 },
+                { top: "70%", left: "15%", delay: 0.6 },
+                { top: "15%", left: "75%", delay: 1.2 },
+                { top: "75%", left: "80%", delay: 0.4 },
+              ].map((pos, i) => (
+                <motion.div key={i}
+                  animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+                  transition={{ duration: 2, repeat: Infinity, delay: pos.delay }}
+                  className="absolute w-2 h-2 rounded-full bg-blue-400"
+                  style={{ top: pos.top, left: pos.left }}
+                />
+              ))}
             </div>
           </motion.div>
         </div>
