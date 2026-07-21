@@ -9,6 +9,7 @@ import { base44 } from "@/api/base44Client";
 import CheckInModal from "@/components/care/CheckInModal";
 import MedicationManager from "@/components/care/MedicationManager";
 import CareHistory from "@/components/care/CareHistory";
+import TrendCharts from "@/components/care/TrendCharts";
 
 const TABS = [
   { key: "dashboard", label: "Dashboard", icon: Activity },
@@ -281,6 +282,9 @@ export default function CareCompanion() {
                 </div>
               </div>
             )}
+
+            {/* Trend Charts */}
+            {user && logs.length > 0 && <TrendCharts logs={logs} />}
 
             {!user && (
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-6 text-center">
