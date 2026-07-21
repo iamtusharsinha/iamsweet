@@ -36,6 +36,7 @@ const TYPE_COLORS = {
 const STATS = [
   { value: "537M+", label: "People with Diabetes Worldwide" },
   { value: "1 in 2", label: "Adults with Diabetes Undiagnosed" },
+  { value: "374M+", label: "People with Prediabetes Globally" },
   { value: "90%", label: "Are Type 2 Diabetes Cases" },
   { value: "966B", label: "USD Spent on Diabetes Health Annually" },
 ];
@@ -193,8 +194,8 @@ export default function Home() {
                 <span className="text-xs opacity-80 text-center px-4 leading-tight mt-1">people living with diabetes worldwide</span>
               </div>
               {/* Orbiting category dots */}
-              {["ADA", "WHO", "CDC", "IDF"].map((label, i) => {
-                const angle = (i * 90) - 45;
+              {["ADA", "WHO", "CDC", "IDF", "Pre-D"].map((label, i) => {
+                const angle = (i * 72) - 36;
                 const rad = (angle * Math.PI) / 180;
                 const x = 50 + 42 * Math.cos(rad);
                 const y = 50 + 42 * Math.sin(rad);
@@ -298,7 +299,7 @@ export default function Home() {
       {/* Stats bar */}
       <section className="bg-blue-600 dark:bg-blue-900 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
             {STATS.map((s, i) => (
               <motion.div
                 key={i}
