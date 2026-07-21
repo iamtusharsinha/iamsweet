@@ -139,14 +139,14 @@ const TOPIC_CARDS = [
   },
 ];
 
-// Category image strip — GoodRx style
+// Category image cards — same style as TOPIC_CARDS
 const CAT_IMAGES = [
-  { key: "Lifestyle", emoji: "🏃", image: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=200&h=200&fit=crop", color: "bg-rose-50 dark:bg-rose-900/20", border: "border-rose-200 dark:border-rose-800" },
-  { key: "Nutrition", emoji: "🥑", image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=200&h=200&fit=crop", color: "bg-green-50 dark:bg-green-900/20", border: "border-green-200 dark:border-green-800" },
-  { key: "Medication", emoji: "💊", image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=200&h=200&fit=crop", color: "bg-blue-50 dark:bg-blue-900/20", border: "border-blue-200 dark:border-blue-800" },
-  { key: "Technology", emoji: "📡", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=200&h=200&fit=crop", color: "bg-violet-50 dark:bg-violet-900/20", border: "border-violet-200 dark:border-violet-800" },
-  { key: "Mental Health", emoji: "🧘", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200&h=200&fit=crop", color: "bg-teal-50 dark:bg-teal-900/20", border: "border-teal-200 dark:border-teal-800" },
-  { key: "Research", emoji: "🔬", image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=200&h=200&fit=crop", color: "bg-amber-50 dark:bg-amber-900/20", border: "border-amber-200 dark:border-amber-800" },
+  { key: "Lifestyle", label: "Lifestyle", desc: "Exercise, sleep & daily habits", emoji: "🏃", image: "https://images.unsplash.com/photo-1476480862126-209bfaa8edc8?w=400&h=300&fit=crop", tag: "Most Viewed", tagColor: "bg-rose-500", gradient: "from-rose-600/80" },
+  { key: "Nutrition", label: "Nutrition", desc: "Low-GI foods & meal planning", emoji: "🥑", image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=300&fit=crop", tag: "Top Tips", tagColor: "bg-emerald-500", gradient: "from-emerald-600/80" },
+  { key: "Medication", label: "Medication", desc: "Insulin, metformin & more", emoji: "💊", image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=300&fit=crop", tag: "Expert Guides", tagColor: "bg-blue-500", gradient: "from-blue-600/80" },
+  { key: "Technology", label: "Technology", desc: "CGMs, pumps & digital tools", emoji: "📡", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=400&h=300&fit=crop", tag: "Cutting Edge", tagColor: "bg-violet-500", gradient: "from-violet-600/80" },
+  { key: "Mental Health", label: "Mental Health", desc: "Stress, burnout & support", emoji: "🧘", image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400&h=300&fit=crop", tag: "Self-Care", tagColor: "bg-teal-500", gradient: "from-teal-600/80" },
+  { key: "Research", label: "Research", desc: "Latest science & clinical trials", emoji: "🔬", image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=400&h=300&fit=crop", tag: "New Studies", tagColor: "bg-amber-500", gradient: "from-amber-600/80" },
 ];
 
 export default function Home() {
@@ -547,22 +547,36 @@ export default function Home() {
           <span className="text-sm font-black text-gray-900 dark:text-white">Browse by Category</span>
           <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
         </div>
-        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 mb-6">
-          {CAT_IMAGES.map(c => (
-            <button
-              key={c.key}
-              onClick={() => setActiveCategory(c.key)}
-              className={`group flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all hover:scale-105 ${
-                activeCategory === c.key
-                  ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30 shadow-md shadow-blue-200/40"
-                  : `${c.color} ${c.border} hover:border-blue-400`
-              }`}
-            >
-              <div className="w-14 h-14 rounded-xl overflow-hidden">
-                <img src={c.image} alt={c.key} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" />
-              </div>
-              <span className="text-[10px] font-bold text-gray-700 dark:text-gray-200 text-center leading-tight">{c.emoji} {c.key}</span>
-            </button>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
+          {CAT_IMAGES.map((c, i) => (
+            <motion.div key={c.key} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
+              <button
+                onClick={() => setActiveCategory(c.key)}
+                className={`group relative flex flex-col overflow-hidden rounded-2xl border-2 w-full hover:shadow-xl hover:-translate-y-1 transition-all duration-200 ${
+                  activeCategory === c.key
+                    ? "border-blue-500 shadow-md shadow-blue-200/40"
+                    : "border-gray-100 dark:border-gray-700 hover:border-blue-400"
+                }`}
+              >
+                {/* Image */}
+                <div className="relative h-28 overflow-hidden">
+                  <img src={c.image} alt={c.label} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${c.gradient} to-transparent`} />
+                  <span className={`absolute top-2 left-2 ${c.tagColor} text-white text-[10px] font-bold px-2 py-0.5 rounded-full`}>
+                    {c.tag}
+                  </span>
+                  {activeCategory === c.key && (
+                    <div className="absolute inset-0 ring-2 ring-blue-500 ring-inset rounded-2xl" />
+                  )}
+                  <span className="absolute bottom-2 right-2 text-xl">{c.emoji}</span>
+                </div>
+                {/* Text */}
+                <div className="p-3 flex-1 bg-white dark:bg-gray-800">
+                  <p className={`text-xs font-black leading-tight transition-colors ${activeCategory === c.key ? "text-blue-700 dark:text-blue-400" : "text-gray-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400"}`}>{c.label}</p>
+                  <p className="text-[10px] text-gray-400 mt-0.5 leading-snug">{c.desc}</p>
+                </div>
+              </button>
+            </motion.div>
           ))}
         </div>
 
