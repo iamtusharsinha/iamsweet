@@ -190,8 +190,8 @@ export default function Home() {
               {/* Core */}
               <div className="absolute inset-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 shadow-2xl shadow-blue-500/50 flex flex-col items-center justify-center text-white">
                 <Globe className="w-10 h-10 mb-2 opacity-90" />
-                <span className="text-3xl font-bold">537M</span>
-                <span className="text-xs opacity-80 text-center px-4 leading-tight mt-1">people living with diabetes worldwide</span>
+                <span className="text-2xl font-bold">537M+</span>
+                <span className="text-xs opacity-80 text-center px-4 leading-tight mt-1">diabetes · 374M+ prediabetes worldwide</span>
               </div>
               {/* Orbiting category dots */}
               {["ADA", "WHO", "CDC", "IDF", "Pre-D"].map((label, i) => {
