@@ -1,0 +1,36 @@
+{
+  "name": "PlanCapture",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string"
+    },
+    "level": {
+      "type": "string"
+    },
+    "goal": {
+      "type": "string"
+    },
+    "motivation": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "hours_per_week": {
+      "type": "string"
+    },
+    "plan_course_id": {
+      "type": "string"
+    },
+    "plan_event_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "email"
+  ]
+}

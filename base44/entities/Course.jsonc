@@ -1,0 +1,83 @@
+{
+  "name": "Course",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "level": {
+      "type": "string",
+      "enum": [
+        "absolute_beginner",
+        "beginner",
+        "intermediate"
+      ]
+    },
+    "goal": {
+      "type": "string",
+      "enum": [
+        "career_switch",
+        "upskill",
+        "explore",
+        "build_projects"
+      ]
+    },
+    "motivation": {
+      "type": "string",
+      "enum": [
+        "escape",
+        "compete",
+        "curious",
+        "belong"
+      ]
+    },
+    "duration": {
+      "type": "string"
+    },
+    "price": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "why_picked": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "course",
+        "tool",
+        "research_paper",
+        "phd_funding"
+      ],
+      "default": "course"
+    },
+    "beginner_safe": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "title",
+    "provider",
+    "url",
+    "level",
+    "goal"
+  ]
+}
