@@ -16,6 +16,7 @@ import Videos from './pages/Videos';
 import DiabetesChat from './pages/DiabetesChat';
 import OpenSource from './pages/OpenSource';
 import CareCompanion from './pages/CareCompanion';
+import HSAStore from './pages/HSAStore';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -53,6 +54,7 @@ const AuthenticatedApp = () => {
       <Route path="/chat" element={<DiabetesChat />} />
       <Route path="/opensource" element={<OpenSource />} />
       <Route path="/care" element={<CareCompanion />} />
+      <Route path="/store" element={<HSAStore />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
