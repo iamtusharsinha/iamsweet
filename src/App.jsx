@@ -14,6 +14,7 @@ import Resources from './pages/Resources';
 import Meals from './pages/Meals';
 import Videos from './pages/Videos';
 import DiabetesChat from './pages/DiabetesChat';
+import OpenSource from './pages/OpenSource';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -49,6 +50,7 @@ const AuthenticatedApp = () => {
       <Route path="/meals" element={<Meals />} />
       <Route path="/videos" element={<Videos />} />
       <Route path="/chat" element={<DiabetesChat />} />
+      <Route path="/opensource" element={<OpenSource />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
