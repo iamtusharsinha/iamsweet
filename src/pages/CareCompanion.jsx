@@ -3,8 +3,13 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, Heart, Plus, Pill, Calendar, TrendingUp,
-  Activity, Star, Bot, ClipboardList, Sparkles, Lock
+  Activity, Star, Bot, ClipboardList, Sparkles, Lock, Trash2, Settings, ChevronDown
 } from "lucide-react";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel,
+  AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { base44 } from "@/api/base44Client";
 import CheckInModal from "@/components/care/CheckInModal";
 import MedicationManager from "@/components/care/MedicationManager";
@@ -36,6 +41,8 @@ export default function CareCompanion() {
   const [tab, setTab] = useState("dashboard");
   const [loadingUser, setLoadingUser] = useState(true);
   const [tip] = useState(() => TIPS[Math.floor(Math.random() * TIPS.length)]);
+  const [showSettings, setShowSettings] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     async function init() {
@@ -65,6 +72,20 @@ export default function CareCompanion() {
 
   function reload() { if (user) loadData(user.id); }
 
+  async function handleDeleteAccount() {
+    setDeleting(true);
+    try {
+      // Delete all user data
+      await Promise.allSettled([
+        base44.entities.CareLog.deleteMany({ user_id: user.id }),
+        base44.entities.Medication.deleteMany({ user_id: user.id }),
+      ]);
+      await base44.auth.logout("/");
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   const todayLog = logs.find(l => l.date === new Date().toISOString().split("T")[0]);
   const recentBs = logs.filter(l => l.blood_sugar).slice(0, 7);
   const avgBs = recentBs.length ? Math.round(recentBs.reduce((a, b) => a + b.blood_sugar, 0) / recentBs.length) : null;
@@ -84,7 +105,7 @@ export default function CareCompanion() {
       <div className="fixed top-0 right-0 w-96 h-96 rounded-full blur-3xl -z-10 bg-blue-200/20 dark:bg-blue-900/10 pointer-events-none" />
 
       {/* Header */}
-      <header className="max-w-4xl mx-auto px-4 sm:px-6 pt-5 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800">
+      <header className="max-w-4xl mx-auto px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Home
@@ -311,6 +332,59 @@ export default function CareCompanion() {
 
         {tab === "medications" && (
           <MedicationManager user={user} medications={medications} onUpdate={reload} />
+        )}
+
+        {/* Account Settings — only shown when logged in */}
+        {user && (
+          <div className="mt-8 border-t border-blue-100 dark:border-gray-800 pt-6">
+            <button
+              onClick={() => setShowSettings(s => !s)}
+              className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors mb-3"
+            >
+              <Settings className="w-4 h-4" />
+              Account Settings
+              <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showSettings ? "rotate-180" : ""}`} />
+            </button>
+
+            {showSettings && (
+              <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="bg-white dark:bg-gray-800 border border-red-100 dark:border-red-900/40 rounded-2xl p-5">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
+                    <Trash2 className="w-4 h-4 text-red-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">Delete Account</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 mb-3">Permanently removes all your care logs and medication records. This cannot be undone.</p>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <button className="flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
+                          <Trash2 className="w-3.5 h-3.5" /> Delete My Account
+                        </button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This will permanently delete all your care logs, medication records, and account data. This action <strong>cannot be undone</strong>.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={handleDeleteAccount}
+                            disabled={deleting}
+                            className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
+                          >
+                            {deleting ? "Deleting…" : "Yes, delete everything"}
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </div>
         )}
       </div>
 

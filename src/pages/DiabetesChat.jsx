@@ -108,7 +108,7 @@ export default function DiabetesChat() {
   return (
     <div className="min-h-screen bg-blue-50 dark:bg-gray-950 flex flex-col pb-16 md:pb-0">
       {/* Header */}
-      <header className="px-4 sm:px-6 pt-5 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/90 dark:bg-gray-950/90 backdrop-blur-md border-b border-blue-100 dark:border-gray-800 max-w-4xl mx-auto w-full">
+      <header className="px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/90 dark:bg-gray-950/90 backdrop-blur-md border-b border-blue-100 dark:border-gray-800 max-w-4xl mx-auto w-full" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Home

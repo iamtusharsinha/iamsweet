@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import CartSidebar from "@/components/store/CartSidebar";
+import CustomSelect from "@/components/ui/CustomSelect";
 import ProductCard from "@/components/store/ProductCard";
 
 const PRODUCTS = [
@@ -317,7 +318,7 @@ export default function HSAStore() {
       )}
 
       {/* Header */}
-      <header className="max-w-7xl mx-auto px-4 sm:px-6 pt-5 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/90 dark:bg-gray-950/90 backdrop-blur-md border-b border-blue-100 dark:border-gray-800">
+      <header className="max-w-7xl mx-auto px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/90 dark:bg-gray-950/90 backdrop-blur-md border-b border-blue-100 dark:border-gray-800" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Home
@@ -399,12 +400,12 @@ export default function HSAStore() {
               className="w-full pl-10 pr-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:text-white placeholder-gray-400"
             />
           </div>
-          <select
-            value={sort} onChange={e => setSort(e.target.value)}
-            className="px-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            {SORT_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-          </select>
+          <CustomSelect
+            value={sort}
+            onChange={setSort}
+            options={SORT_OPTIONS}
+            className="sm:w-52"
+          />
         </div>
 
         {/* Category pills */}

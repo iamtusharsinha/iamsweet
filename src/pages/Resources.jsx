@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Search, ExternalLink, BadgeCheck, Globe, Heart, Activity, Pill, Brain, Shield, Baby, FlaskConical, Zap, BookOpen, ArrowLeft, Filter } from "lucide-react";
 import { base44 } from "@/api/base44Client";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 const CATEGORIES = [
   { key: "all", label: "All", icon: Globe },
@@ -61,7 +62,7 @@ export default function Resources() {
       <div className="fixed top-0 right-0 w-[500px] h-[500px] rounded-full blur-3xl -z-10 bg-blue-200/20 dark:bg-blue-900/10 pointer-events-none" />
 
       {/* Header */}
-      <header className="max-w-7xl mx-auto px-4 sm:px-6 pt-5 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800">
+      <header className="max-w-7xl mx-auto px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back
@@ -90,13 +91,12 @@ export default function Resources() {
               className="w-full pl-10 pr-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <select
+          <CustomSelect
             value={activeType}
-            onChange={e => setActiveType(e.target.value)}
-            className="px-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-700 dark:text-gray-200"
-          >
-            {TYPES.map(t => <option key={t}>{t}</option>)}
-          </select>
+            onChange={setActiveType}
+            options={TYPES}
+            className="sm:w-44"
+          />
           <button
             onClick={() => setCredibleOnly(!credibleOnly)}
             className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all ${credibleOnly ? "bg-blue-600 border-blue-600 text-white" : "bg-white dark:bg-gray-800 border-blue-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-blue-400"}`}

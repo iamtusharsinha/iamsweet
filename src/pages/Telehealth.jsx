@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import DoctorCard from "@/components/telehealth/DoctorCard";
+import CustomSelect from "@/components/ui/CustomSelect";
 import ConsultationRequestModal from "@/components/telehealth/ConsultationRequestModal";
 import ProviderRegistrationModal from "@/components/telehealth/ProviderRegistrationModal";
 
@@ -60,7 +61,7 @@ export default function Telehealth() {
       <div className="fixed top-0 right-0 w-96 h-96 rounded-full blur-3xl -z-10 bg-blue-200/20 dark:bg-blue-900/10 pointer-events-none" />
 
       {/* Header */}
-      <header className="max-w-7xl mx-auto px-4 sm:px-6 pt-5 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800">
+      <header className="max-w-7xl mx-auto px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Home
@@ -125,24 +126,15 @@ export default function Telehealth() {
           <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="grid sm:grid-cols-3 gap-3 mb-5">
             <div>
               <label className="text-xs font-semibold text-gray-500 mb-1 block">Provider Role</label>
-              <select value={roleFilter} onChange={e => setRoleFilter(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                {ROLES.map(r => <option key={r}>{r}</option>)}
-              </select>
+              <CustomSelect value={roleFilter} onChange={setRoleFilter} options={ROLES} />
             </div>
             <div>
               <label className="text-xs font-semibold text-gray-500 mb-1 block">Consultation Mode</label>
-              <select value={modeFilter} onChange={e => setModeFilter(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                {MODES.map(m => <option key={m}>{m}</option>)}
-              </select>
+              <CustomSelect value={modeFilter} onChange={setModeFilter} options={MODES} />
             </div>
             <div>
               <label className="text-xs font-semibold text-gray-500 mb-1 block">Diabetes Type</label>
-              <select value={typeFilter} onChange={e => setTypeFilter(e.target.value)}
-                className="w-full px-3 py-2.5 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                {DIABETES_TYPES.map(t => <option key={t}>{t}</option>)}
-              </select>
+              <CustomSelect value={typeFilter} onChange={setTypeFilter} options={DIABETES_TYPES} />
             </div>
           </motion.div>
         )}

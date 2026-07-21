@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Plus, Pill, Trash2, Check } from "lucide-react";
 import { base44 } from "@/api/base44Client";
@@ -11,26 +11,48 @@ const FREQ_LABELS = {
   as_needed: "As needed",
 };
 
-export default function MedicationManager({ user, medications, onUpdate }) {
+export default function MedicationManager({ user, medications: externalMeds, onUpdate }) {
+  const [localMeds, setLocalMeds] = useState(externalMeds);
   const [adding, setAdding] = useState(false);
-  const [form, setForm] = useState({ name: "", dose: "", frequency: "once_daily", notes: "" });
   const [saving, setSaving] = useState(false);
+  const [form, setForm] = useState({ name: "", dose: "", frequency: "once_daily", notes: "" });
+
+  // Keep local state in sync when parent reloads
+  useEffect(() => { setLocalMeds(externalMeds); }, [externalMeds]);
 
   async function addMed() {
     if (!form.name.trim()) return;
+    const tempId = `temp-${Date.now()}`;
+    const snapshot = { ...form };
+    const optimistic = { id: tempId, ...snapshot, user_id: user.id, active: true };
+    setLocalMeds(prev => [...prev, optimistic]);
+    setForm({ name: "", dose: "", frequency: "once_daily", notes: "" });
+    setAdding(false);
     setSaving(true);
     try {
-      await base44.entities.Medication.create({ ...form, user_id: user.id, active: true });
-      setForm({ name: "", dose: "", frequency: "once_daily", notes: "" });
-      setAdding(false);
+      await base44.entities.Medication.create({ ...snapshot, user_id: user.id, active: true });
       onUpdate();
-    } finally { setSaving(false); }
+    } catch {
+      setLocalMeds(prev => prev.filter(m => m.id !== tempId));
+      setAdding(true);
+    } finally {
+      setSaving(false);
+    }
   }
 
   async function deleteMed(id) {
-    await base44.entities.Medication.delete(id);
-    onUpdate();
+    // Optimistic: remove immediately
+    setLocalMeds(prev => prev.filter(m => m.id !== id));
+    try {
+      await base44.entities.Medication.delete(id);
+      onUpdate();
+    } catch {
+      // Roll back on failure
+      onUpdate();
+    }
   }
+
+  const medications = localMeds;
 
   if (!user) return (
     <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-5 text-center">

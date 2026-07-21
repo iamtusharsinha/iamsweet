@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Clock, Flame, Search, ChefHat, Leaf, ChevronRight } from "lucide-react";
 import RecipeModal from "@/components/meals/RecipeModal";
 import { MEALS, ETHNICITIES, CATEGORIES, GI_FILTERS, GI_LABELS, GI_BAR_COLORS } from "@/data/mealsData";
+import CustomSelect from "@/components/ui/CustomSelect";
 
 export default function Meals() {
   const [search, setSearch] = useState("");
@@ -30,7 +31,7 @@ export default function Meals() {
       <div className="fixed top-0 right-0 w-96 h-96 rounded-full blur-3xl -z-10 bg-blue-200/20 dark:bg-blue-900/10 pointer-events-none" />
 
       {/* Header */}
-      <header className="max-w-7xl mx-auto px-4 sm:px-6 pt-5 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800">
+      <header className="max-w-7xl mx-auto px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
             <ArrowLeft className="w-4 h-4" /> Home
@@ -64,12 +65,18 @@ export default function Meals() {
             />
           </div>
           <div className="flex gap-3">
-            <select value={category} onChange={e => setCategory(e.target.value)} className="flex-1 px-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              {CATEGORIES.map(c => <option key={c}>{c}</option>)}
-            </select>
-            <select value={giFilter} onChange={e => setGiFilter(e.target.value)} className="flex-1 px-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              {GI_FILTERS.map(g => <option key={g}>{g}</option>)}
-            </select>
+            <CustomSelect
+              value={category}
+              onChange={setCategory}
+              options={CATEGORIES}
+              className="flex-1"
+            />
+            <CustomSelect
+              value={giFilter}
+              onChange={setGiFilter}
+              options={GI_FILTERS}
+              className="flex-1"
+            />
           </div>
         </div>
 
