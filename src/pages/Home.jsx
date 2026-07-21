@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import {
   ArrowRight, Search, BookOpen, Heart, Activity, Pill, Brain, Shield,
   Baby, FlaskConical, ChevronDown, ExternalLink, BadgeCheck, FileText,
-  Zap, Globe
+  Zap, Globe, ChefHat, Youtube, MessageCircle
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import Logo from "@/components/Logo";
@@ -90,8 +90,10 @@ export default function Home() {
           </div>
           <span className="font-heading font-bold text-lg text-blue-900 dark:text-white tracking-tight">DiabetesHub</span>
         </div>
-        <div className="flex items-center gap-4">
-          <Link to="/resources" className="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium hidden sm:block">Browse all</Link>
+        <div className="flex items-center gap-3">
+          <Link to="/meals" className="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium"><ChefHat className="w-4 h-4" />Meals</Link>
+          <Link to="/videos" className="hidden sm:flex items-center gap-1.5 text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 transition-colors font-medium"><Youtube className="w-4 h-4 text-red-500" />Videos</Link>
+          <Link to="/chat" className="hidden sm:flex items-center gap-1.5 text-sm text-white bg-blue-600 hover:bg-blue-700 transition-colors font-medium px-3 py-1.5 rounded-full"><MessageCircle className="w-4 h-4" />Ask AI</Link>
           <DarkModeToggle />
         </div>
       </header>
@@ -204,6 +206,44 @@ export default function Home() {
               })}
             </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Quick Access Feature Cards */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
+        <div className="grid sm:grid-cols-3 gap-4">
+          <Link to="/meals" className="group flex items-center gap-4 bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-700 rounded-2xl p-5 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-100 dark:hover:shadow-blue-900/20 transition-all">
+            <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center flex-shrink-0">
+              <ChefHat className="w-6 h-6 text-green-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-gray-900 dark:text-white text-sm">Diabetes Meals</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">12 blood-sugar-friendly recipes</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-blue-600 transition-colors flex-shrink-0" />
+          </Link>
+
+          <Link to="/videos" className="group flex items-center gap-4 bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-700 rounded-2xl p-5 hover:border-blue-400 hover:shadow-lg hover:shadow-blue-100 dark:hover:shadow-blue-900/20 transition-all">
+            <div className="w-12 h-12 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center flex-shrink-0">
+              <Youtube className="w-6 h-6 text-red-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-gray-900 dark:text-white text-sm">Video Library</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">12 expert videos, all categories</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-blue-600 transition-colors flex-shrink-0" />
+          </Link>
+
+          <Link to="/chat" className="group flex items-center gap-4 bg-blue-600 dark:bg-blue-700 border border-blue-500 rounded-2xl p-5 hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-300/40 transition-all">
+            <div className="w-12 h-12 rounded-xl bg-blue-500 flex items-center justify-center flex-shrink-0">
+              <MessageCircle className="w-6 h-6 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="font-semibold text-white text-sm">Ask DiabetesHub AI</p>
+              <p className="text-xs text-blue-200 mt-0.5">Voice & text — ask anything, instantly</p>
+            </div>
+            <ArrowRight className="w-4 h-4 text-blue-300 group-hover:text-white transition-colors flex-shrink-0" />
+          </Link>
         </div>
       </section>
 
