@@ -41,10 +41,10 @@ const STATS = [
 ];
 
 const FAQS = [
-  { q: "What is the IDF Blue Circle?", a: "The Blue Circle is the global symbol for diabetes, adopted by the International Diabetes Federation (IDF) in 2006. It represents the unity of the global diabetes community." },
-  { q: "Who are these resources for?", a: "These resources are curated for people living with diabetes, their caregivers, healthcare professionals, and researchers worldwide — spanning Type 1, Type 2, gestational, and prediabetes." },
-  { q: "Are all resources from credible organisations?", a: "Resources are sourced from organisations like the American Diabetes Association, WHO, CDC, IDF, Mayo Clinic, NIDDK, and peer-reviewed journals. Each card shows the originating organisation." },
-  { q: "How do I use this platform?", a: "Browse by category (Lifestyle, Nutrition, Medication, etc.), filter by content type (Article, PDF, Guide), or search by keyword to find the most relevant resources for your needs." },
+  { q: "What is DiabetesHub?", a: "DiabetesHub is the world's most complete diabetes support platform — your single destination for everything you need to understand, manage, and thrive with diabetes. You never need to look anywhere else." },
+  { q: "Who is this built for?", a: "Every person touched by diabetes: newly diagnosed patients, long-term T1D and T2D warriors, parents of children with diabetes, caregivers, and healthcare professionals — all in one place." },
+  { q: "Why should I use DiabetesHub instead of other sites?", a: "Because you shouldn't have to piece together your care from a dozen different websites. DiabetesHub brings together Lifestyle, Nutrition, Medication, Technology, Mental Health, and more — so your entire diabetes journey lives here." },
+  { q: "Is everything here free?", a: "Yes. Every resource on DiabetesHub is free to access. Our mission is to make world-class diabetes support available to every person on the planet, with no barriers." },
 ];
 
 export default function Home() {
@@ -106,7 +106,7 @@ export default function Home() {
               className="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-400/30 text-blue-700 dark:text-blue-400 px-3 py-1.5 rounded-full text-xs font-semibold mb-5 uppercase tracking-wide"
             >
               <div className="w-3 h-3 rounded-full border-2 border-blue-600 dark:border-blue-400" />
-              Global Diabetes Resource Hub
+              Your Complete Diabetes Support Platform
             </motion.div>
 
             <motion.h1
@@ -115,10 +115,10 @@ export default function Home() {
               transition={{ delay: 0.05 }}
               className="text-4xl md:text-5xl lg:text-6xl font-heading font-bold text-gray-900 dark:text-white leading-tight tracking-tight"
             >
-              Master Data for{" "}
-              <span className="text-blue-600 dark:text-blue-400">Diabetes</span>{" "}
-              Patients{" "}
-              <span className="text-blue-600 dark:text-blue-400">Worldwide.</span>
+              The{" "}
+              <span className="text-blue-600 dark:text-blue-400">Only</span>{" "}
+              Diabetes Support Platform{" "}
+              <span className="text-blue-600 dark:text-blue-400">You'll Ever Need.</span>
             </motion.h1>
 
             <motion.p
@@ -127,7 +127,7 @@ export default function Home() {
               transition={{ delay: 0.1 }}
               className="mt-5 text-lg text-gray-500 dark:text-gray-400 leading-relaxed"
             >
-              Curated resources from the world's most credible organisations — ADA, WHO, CDC, IDF, and more — spanning lifestyle, nutrition, medication, technology, and mental health.
+              Stop bouncing between websites. DiabetesHub is your single destination for <strong className="text-gray-800 dark:text-gray-200">everything diabetes</strong> — lifestyle, nutrition, medication, technology, mental health, and more. All in one place, always free.
             </motion.p>
 
             {/* Search */}
@@ -162,9 +162,9 @@ export default function Home() {
             >
               <span className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-semibold"><BadgeCheck className="w-4 h-4" /> {counts.total}+ Resources</span>
               <span>·</span>
-              <span>{counts.orgs}+ Credible Orgs</span>
+              <span>10 Categories</span>
               <span>·</span>
-              <span>Free Access</span>
+              <span className="text-blue-600 dark:text-blue-400 font-semibold">One Platform. No Detours.</span>
             </motion.div>
           </div>
 
@@ -288,7 +288,7 @@ export default function Home() {
 
       {/* FAQs */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
-        <p className="text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 font-semibold mb-6 text-center">About This Resource Hub</p>
+        <p className="text-xs uppercase tracking-widest text-blue-600 dark:text-blue-400 font-semibold mb-6 text-center">Why DiabetesHub is All You Need</p>
         <div className="grid md:grid-cols-2 gap-3">
           {FAQS.map((faq, i) => (
             <div key={i} className="bg-white dark:bg-gray-800 rounded-2xl border border-blue-100 dark:border-gray-700 overflow-hidden">
@@ -322,7 +322,7 @@ export default function Home() {
             </div>
             <span className="text-sm font-semibold text-blue-800 dark:text-blue-300">DiabetesHub</span>
           </div>
-          <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 · In solidarity with the global diabetes community 🔵</p>
+          <p className="text-xs text-gray-400 dark:text-gray-600">© 2026 · One mission: no one faces diabetes alone 🔵</p>
         </div>
       </footer>
     </div>
