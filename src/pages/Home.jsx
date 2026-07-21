@@ -325,162 +325,90 @@ export default function Home() {
       </div>
 
       {/* ── HERO ── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-6">
-        <div className="grid lg:grid-cols-2 gap-10 items-center">
-          {/* Left — text */}
-          <div>
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 px-3.5 py-1.5 rounded-full text-xs font-bold mb-6 uppercase tracking-widest"
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 pt-16 pb-8 text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 px-3.5 py-1.5 rounded-full text-xs font-bold mb-6 uppercase tracking-widest"
+        >
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
+          World's #1 Diabetes Support Platform
+        </motion.div>
+
+        <motion.h1
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.06 }}
+          className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white leading-[1.05] tracking-tight"
+        >
+          Everything Diabetes.
+          <span className="block bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+            One Platform.
+          </span>
+        </motion.h1>
+
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.12 }}
+          className="mt-5 text-lg text-gray-500 dark:text-gray-400 leading-relaxed"
+        >
+          Stop bouncing between websites. iamsweet is your free, single destination for lifestyle, nutrition, medication, technology, mental health, and expert care.
+        </motion.p>
+
+        {/* Search bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.18 }}
+          className="mt-8 relative max-w-xl mx-auto"
+        >
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search resources, topics, organisations…"
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            className="w-full pl-12 pr-14 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg shadow-blue-900/5"
+          />
+          <button onClick={() => setActiveCategory("all")}
+            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/30">
+            <ArrowRight className="w-5 h-5 text-white" />
+          </button>
+        </motion.div>
+
+        {/* Quick topic pills */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.28 }}
+          className="mt-4 flex flex-wrap gap-2 justify-center"
+        >
+          {["Blood Sugar", "Insulin", "Low-GI Diet", "HbA1c", "CGM", "Type 1", "Type 2"].map(tag => (
+            <button
+              key={tag}
+              onClick={() => setSearchQuery(tag)}
+              className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all shadow-sm"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-              World's #1 Diabetes Support Platform
-            </motion.div>
+              {tag}
+            </button>
+          ))}
+        </motion.div>
 
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.06 }}
-              className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white leading-[1.05] tracking-tight"
-            >
-              Everything Diabetes.
-              <span className="block bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-                One Platform.
-              </span>
-            </motion.h1>
-
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.12 }}
-              className="mt-5 text-lg text-gray-500 dark:text-gray-400 leading-relaxed"
-            >
-              Stop bouncing between websites. iamsweet is your free, single destination for lifestyle, nutrition, medication, technology, mental health, and expert care.
-            </motion.p>
-
-            {/* Search bar */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.18 }}
-              className="mt-8 relative"
-            >
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search resources, topics, organisations…"
-                value={searchQuery}
-                onChange={e => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-14 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg shadow-blue-900/5"
-              />
-              <button onClick={() => setActiveCategory("all")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/30">
-                <ArrowRight className="w-5 h-5 text-white" />
-              </button>
-            </motion.div>
-
-            {/* Quick topic pills */}
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.28 }}
-              className="mt-4 flex flex-wrap gap-2">
-              {["Blood Sugar", "Insulin", "Low-GI Diet", "HbA1c", "CGM", "Type 1", "Type 2"].map(tag => (
-                <button
-                  key={tag}
-                  onClick={() => setSearchQuery(tag)}
-                  className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all shadow-sm"
-                >
-                  {tag}
-                </button>
-              ))}
-            </motion.div>
-
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }}
-              className="mt-5 flex items-center flex-wrap gap-4 text-sm text-gray-400">
-              <span className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-semibold">
-                <BadgeCheck className="w-4 h-4" /> {counts.total}+ Resources
-              </span>
-              <span className="w-1 h-1 rounded-full bg-gray-300" />
-              <span>10 Categories</span>
-              <span className="w-1 h-1 rounded-full bg-gray-300" />
-              <span className="text-blue-600 dark:text-blue-400 font-semibold">Always Free</span>
-            </motion.div>
-          </div>
-
-          {/* Right — floating hero illustration */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.25, type: "spring", stiffness: 80 }}
-            className="hidden lg:flex items-center justify-center"
-          >
-            <div className="relative w-[380px] h-[380px]">
-              <div className="absolute inset-8 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 dark:from-blue-900/30 dark:to-indigo-900/20 blur-md" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                  className="w-44 h-44 rounded-3xl bg-white dark:bg-gray-800 shadow-2xl shadow-blue-200/60 dark:shadow-blue-900/40 flex flex-col items-center justify-center gap-2 border border-blue-100 dark:border-gray-700"
-                >
-                  <div className="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-500/40">
-                    <div className="w-10 h-10 rounded-full border-[5px] border-white" />
-                  </div>
-                  <span className="text-xs font-black text-blue-700 dark:text-blue-300 tracking-wide">iamsweet</span>
-                  <span className="text-[10px] text-gray-400">No one fights alone 💙</span>
-                </motion.div>
-              </div>
-
-              <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-                className="absolute top-4 left-8 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-rose-100 dark:border-gray-700 px-3 py-2 flex items-center gap-2">
-                <span className="text-lg">❤️</span>
-                <div>
-                  <p className="text-xs font-bold text-gray-800 dark:text-white leading-none">Care Log</p>
-                  <p className="text-[10px] text-gray-400">Today: 98 mg/dL</p>
-                </div>
-              </motion.div>
-
-              <motion.div animate={{ y: [0, 7, 0] }} transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-                className="absolute top-6 right-4 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-green-100 dark:border-gray-700 px-3 py-2 flex items-center gap-2">
-                <span className="text-lg">🥗</span>
-                <div>
-                  <p className="text-xs font-bold text-gray-800 dark:text-white leading-none">Low GI Meal</p>
-                  <p className="text-[10px] text-gray-400">GI Score: 32</p>
-                </div>
-              </motion.div>
-
-              <motion.div animate={{ y: [0, -5, 0] }} transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                className="absolute bottom-10 left-2 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-violet-100 dark:border-gray-700 px-3 py-2 flex items-center gap-2">
-                <span className="text-lg">🤖</span>
-                <div>
-                  <p className="text-xs font-bold text-gray-800 dark:text-white leading-none">AI Insight</p>
-                  <p className="text-[10px] text-gray-400">Looking good!</p>
-                </div>
-              </motion.div>
-
-              <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.1 }}
-                className="absolute bottom-8 right-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-blue-100 dark:border-gray-700 px-3 py-2 flex items-center gap-2">
-                <span className="text-lg">🩺</span>
-                <div>
-                  <p className="text-xs font-bold text-gray-800 dark:text-white leading-none">Telehealth</p>
-                  <p className="text-[10px] text-gray-400">Dr. available now</p>
-                </div>
-              </motion.div>
-
-              {[
-                { top: "20%", left: "5%", delay: 0 },
-                { top: "70%", left: "15%", delay: 0.6 },
-                { top: "15%", left: "75%", delay: 1.2 },
-                { top: "75%", left: "80%", delay: 0.4 },
-              ].map((pos, i) => (
-                <motion.div key={i}
-                  animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 2, repeat: Infinity, delay: pos.delay }}
-                  className="absolute w-2 h-2 rounded-full bg-blue-400"
-                  style={{ top: pos.top, left: pos.left }}
-                />
-              ))}
-            </div>
-          </motion.div>
-        </div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.38 }}
+          className="mt-5 flex items-center flex-wrap gap-4 text-sm text-gray-400 justify-center"
+        >
+          <span className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-semibold">
+            <BadgeCheck className="w-4 h-4" /> {counts.total}+ Resources
+          </span>
+          <span className="w-1 h-1 rounded-full bg-gray-300" />
+          <span>10 Categories</span>
+          <span className="w-1 h-1 rounded-full bg-gray-300" />
+          <span className="text-blue-600 dark:text-blue-400 font-semibold">Always Free</span>
+        </motion.div>
       </section>
 
       {/* ── GOODRX-STYLE TOPIC CARDS with IMAGES ── */}
