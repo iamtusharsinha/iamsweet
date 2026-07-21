@@ -192,7 +192,7 @@ export default function Home() {
   });
 
   return (
-    <div className="min-h-screen bg-[#f5f7ff] dark:bg-[#0a0d1a] transition-colors duration-300 overflow-x-hidden">
+    <div className="min-h-screen bg-[#f5f7ff] dark:bg-[#0a0d1a] transition-colors duration-300 overflow-x-hidden pb-16 md:pb-0">
 
       {/* Ambient blobs */}
       <div className="fixed top-0 right-0 w-[600px] h-[600px] rounded-full blur-3xl -z-10 bg-blue-300/20 dark:bg-blue-800/15 pointer-events-none" />
@@ -339,7 +339,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.06 }}
-          className="text-5xl md:text-6xl font-black text-gray-900 dark:text-white leading-[1.05] tracking-tight"
+          className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 dark:text-white leading-[1.05] tracking-tight"
         >
           Everything Diabetes.
           <span className="block bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">

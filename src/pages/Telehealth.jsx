@@ -56,7 +56,7 @@ export default function Telehealth() {
   });
 
   return (
-    <div className="min-h-screen bg-blue-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-blue-50 dark:bg-gray-950 pb-16 md:pb-0">
       <div className="fixed top-0 right-0 w-96 h-96 rounded-full blur-3xl -z-10 bg-blue-200/20 dark:bg-blue-900/10 pointer-events-none" />
 
       {/* Header */}

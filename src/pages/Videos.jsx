@@ -241,7 +241,7 @@ export default function Videos() {
   });
 
   return (
-    <div className="min-h-screen bg-blue-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-blue-50 dark:bg-gray-950 pb-16 md:pb-0">
       <div className="fixed top-0 right-0 w-96 h-96 rounded-full blur-3xl -z-10 bg-blue-200/20 dark:bg-blue-900/10 pointer-events-none" />
 
       {/* Header */}
@@ -296,7 +296,7 @@ export default function Videos() {
         </div>
 
         {/* Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filtered.map((video, i) => (
             <motion.div
               key={video.id}

@@ -302,7 +302,7 @@ export default function HSAStore() {
   const isCancelled = params.get("cancelled") === "true";
 
   return (
-    <div className="min-h-screen bg-blue-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-blue-50 dark:bg-gray-950 pb-16 md:pb-0">
       {/* Toast */}
       {toastMsg && (
         <motion.div
@@ -371,18 +371,18 @@ export default function HSAStore() {
             <h2 className="text-xl font-bold text-white">Shop with Your Pre-Tax Health Dollars</h2>
             <p className="text-blue-200 text-sm mt-1">Save up to 30% by using your HSA or FSA card on all diabetes supplies.</p>
           </div>
-          <div className="flex gap-4 text-center flex-shrink-0">
-            <div className="bg-white/10 rounded-xl px-4 py-3">
-              <p className="text-white font-bold text-lg">{PRODUCTS.length}+</p>
+          <div className="flex gap-3 text-center flex-shrink-0">
+            <div className="bg-white/10 rounded-xl px-3 py-2.5">
+              <p className="text-white font-bold text-base">{PRODUCTS.length}+</p>
               <p className="text-blue-200 text-xs">Products</p>
             </div>
-            <div className="bg-white/10 rounded-xl px-4 py-3">
-              <p className="text-white font-bold text-lg">30%</p>
+            <div className="bg-white/10 rounded-xl px-3 py-2.5">
+              <p className="text-white font-bold text-base">30%</p>
               <p className="text-blue-200 text-xs">Tax Savings</p>
             </div>
-            <div className="bg-white/10 rounded-xl px-4 py-3">
-              <p className="text-white font-bold text-lg">Free</p>
-              <p className="text-blue-200 text-xs">Shipping $50+</p>
+            <div className="bg-white/10 rounded-xl px-3 py-2.5">
+              <p className="text-white font-bold text-base">Free</p>
+              <p className="text-blue-200 text-xs">$50+</p>
             </div>
           </div>
         </div>
@@ -443,7 +443,7 @@ export default function HSAStore() {
             <p className="text-sm mt-1">Try a different search or category</p>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-5">
             {filtered.map((product, i) => (
               <ProductCard
                 key={product.id}

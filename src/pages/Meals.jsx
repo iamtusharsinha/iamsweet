@@ -26,7 +26,7 @@ export default function Meals() {
   });
 
   return (
-    <div className="min-h-screen bg-blue-50 dark:bg-gray-950">
+    <div className="min-h-screen bg-blue-50 dark:bg-gray-950 pb-16 md:pb-0">
       <div className="fixed top-0 right-0 w-96 h-96 rounded-full blur-3xl -z-10 bg-blue-200/20 dark:bg-blue-900/10 pointer-events-none" />
 
       {/* Header */}
@@ -63,12 +63,14 @@ export default function Meals() {
               className="w-full pl-10 pr-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <select value={category} onChange={e => setCategory(e.target.value)} className="px-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            {CATEGORIES.map(c => <option key={c}>{c}</option>)}
-          </select>
-          <select value={giFilter} onChange={e => setGiFilter(e.target.value)} className="px-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            {GI_FILTERS.map(g => <option key={g}>{g}</option>)}
-          </select>
+          <div className="flex gap-3">
+            <select value={category} onChange={e => setCategory(e.target.value)} className="flex-1 px-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              {CATEGORIES.map(c => <option key={c}>{c}</option>)}
+            </select>
+            <select value={giFilter} onChange={e => setGiFilter(e.target.value)} className="flex-1 px-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
+              {GI_FILTERS.map(g => <option key={g}>{g}</option>)}
+            </select>
+          </div>
         </div>
 
         {/* Ethnicity filter pills */}
@@ -100,7 +102,7 @@ export default function Meals() {
             <p className="font-medium">No meals match your filters</p>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {filtered.map((meal, i) => (
               <motion.div
                 key={meal.name}
