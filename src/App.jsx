@@ -20,6 +20,8 @@ import OpenSource from './pages/OpenSource';
 import CareCompanion from './pages/CareCompanion';
 import HSAStore from './pages/HSAStore';
 import Telehealth from './pages/Telehealth';
+import About from './pages/About';
+import Contact from './pages/Contact';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -59,6 +61,8 @@ const AuthenticatedApp = () => {
       <Route path="/care" element={<CareCompanion />} />
       <Route path="/store" element={<HSAStore />} />
       <Route path="/telehealth" element={<Telehealth />} />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );

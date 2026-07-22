@@ -656,7 +656,11 @@ export default function Home() {
             </div>
             <span className="text-sm font-bold text-gray-800 dark:text-gray-200">iamsweet</span>
           </div>
-          <p className="text-xs text-gray-400">© 2026 iamsweet · {t("footer")}</p>
+          <div className="flex items-center gap-4">
+            <Link to="/about" className="text-xs text-gray-400 hover:text-blue-600 transition-colors">About</Link>
+            <Link to="/contact" className="text-xs text-gray-400 hover:text-blue-600 transition-colors">Contact</Link>
+            <p className="text-xs text-gray-400">© 2026 iamsweet · {t("footer")}</p>
+          </div>
         </div>
       </footer>
     </div>
