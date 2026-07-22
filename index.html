@@ -1,14 +1,211 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- ═══ PRECONNECT ═══ -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- ═══ CHARSET & VIEWPORT ═══ -->
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="https://base44.com/logo_v2.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ═══ PRIMARY SEO META ═══ -->
+    <title>iamsweet — World's #1 Free Diabetes Support Platform</title>
+    <meta name="description" content="iamsweet is the world's most complete diabetes support platform — free resources on nutrition, medication, blood sugar, CGMs, mental health, telehealth, and AI-powered care. Trusted by people with Type 1, Type 2 & gestational diabetes globally." />
+    <meta name="keywords" content="diabetes support, Type 1 diabetes, Type 2 diabetes, blood sugar management, HbA1c, CGM, insulin, diabetes diet, low GI recipes, diabetes telehealth, diabetes AI assistant, gestational diabetes, diabetes resources" />
+    <meta name="author" content="iamsweet" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <link rel="canonical" href="https://iamsweet.base44.app/" />
+
+    <!-- ═══ GEO / INTERNATIONAL ═══ -->
+    <meta name="geo.region" content="US" />
+    <meta name="language" content="English" />
+    <meta http-equiv="content-language" content="en" />
+
+    <!-- ═══ OPEN GRAPH (Facebook, LinkedIn, WhatsApp) ═══ -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="iamsweet" />
+    <meta property="og:title" content="iamsweet — World's #1 Free Diabetes Support Platform" />
+    <meta property="og:description" content="Everything diabetes. One free platform. Nutrition, medication, blood sugar tracking, telehealth, AI chat, and 100+ curated resources for people living with diabetes." />
+    <meta property="og:url" content="https://iamsweet.base44.app/" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&h=630&fit=crop" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="iamsweet — Diabetes support platform with care tools, nutrition, and AI chat" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- ═══ TWITTER / X CARD ═══ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@iamsweet" />
+    <meta name="twitter:title" content="iamsweet — World's #1 Free Diabetes Support Platform" />
+    <meta name="twitter:description" content="Everything diabetes. One free platform. Nutrition, medication, blood sugar tracking, telehealth, AI chat, and 100+ curated resources." />
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&h=630&fit=crop" />
+    <meta name="twitter:image:alt" content="iamsweet diabetes support platform" />
+
+    <!-- ═══ FAVICON & PWA ═══ -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230057b7'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='20' fill='white'>i</text></svg>" />
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230057b7'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='900' font-size='20' fill='white'>i</text></svg>" />
     <link rel="manifest" href="/manifest.json" />
-    <title>Base44 APP</title>
+    <meta name="theme-color" content="#0057b7" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="iamsweet" />
+    <meta name="application-name" content="iamsweet" />
+
+    <!-- ═══ STRUCTURED DATA — WebSite + SearchAction (GEO: entity clarity) ═══ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "iamsweet",
+      "alternateName": ["iamsweet diabetes", "iamsweet platform"],
+      "url": "https://iamsweet.base44.app/",
+      "description": "The world's most complete free diabetes support platform — nutrition, medication, blood sugar management, telehealth, AI chat, and 100+ curated expert resources.",
+      "inLanguage": ["en", "hi", "ar"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://iamsweet.base44.app/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+
+    <!-- ═══ STRUCTURED DATA — Organization (E-E-A-T signal) ═══ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "iamsweet",
+      "url": "https://iamsweet.base44.app/",
+      "logo": "https://iamsweet.base44.app/",
+      "description": "iamsweet is a global diabetes health platform providing free, evidence-based resources, AI-powered support, telehealth access, and community tools for people living with diabetes.",
+      "foundingDate": "2024",
+      "areaServed": "Worldwide",
+      "knowsAbout": [
+        "Type 1 Diabetes",
+        "Type 2 Diabetes",
+        "Gestational Diabetes",
+        "Blood Sugar Management",
+        "HbA1c",
+        "Continuous Glucose Monitors",
+        "Insulin Therapy",
+        "Diabetes Nutrition",
+        "Low Glycemic Index Diet",
+        "Diabetes Mental Health",
+        "Diabetes Telehealth"
+      ],
+      "sameAs": []
+    }
+    </script>
+
+    <!-- ═══ STRUCTURED DATA — MedicalWebPage (YMYL / health authority) ═══ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalWebPage",
+      "name": "iamsweet — Diabetes Support Platform",
+      "url": "https://iamsweet.base44.app/",
+      "description": "Comprehensive diabetes support including blood sugar tracking, low-GI meal plans, medication guides, CGM technology resources, mental health support, and telehealth consultations.",
+      "medicalAudience": {
+        "@type": "MedicalAudience",
+        "audienceType": "Patient"
+      },
+      "about": [
+        {
+          "@type": "MedicalCondition",
+          "name": "Type 1 Diabetes",
+          "alternateName": "T1D",
+          "code": { "@type": "MedicalCode", "codeValue": "E10", "codingSystem": "ICD-10" }
+        },
+        {
+          "@type": "MedicalCondition",
+          "name": "Type 2 Diabetes",
+          "alternateName": "T2D",
+          "code": { "@type": "MedicalCode", "codeValue": "E11", "codingSystem": "ICD-10" }
+        },
+        {
+          "@type": "MedicalCondition",
+          "name": "Gestational Diabetes",
+          "code": { "@type": "MedicalCode", "codeValue": "O24", "codingSystem": "ICD-10" }
+        }
+      ],
+      "specialty": "Endocrinology"
+    }
+    </script>
+
+    <!-- ═══ STRUCTURED DATA — FAQPage (rich snippets) ═══ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is iamsweet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "iamsweet is the world's most complete diabetes support platform — your single free destination for everything you need to understand, manage, and thrive with diabetes, including nutrition, medication, blood sugar tracking, telehealth, and AI-powered support."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is iamsweet free?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Every resource on iamsweet is 100% free to access. Our mission is to make world-class diabetes support available to every person on the planet."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Who is iamsweet built for?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "iamsweet is for every person touched by diabetes: newly diagnosed patients, long-term Type 1 and Type 2 warriors, parents of children with diabetes, caregivers, and healthcare professionals."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does iamsweet offer for diabetes management?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "iamsweet offers daily care tracking for blood sugar, mood and medications; 50+ low-GI diabetes meal recipes; a curated library of 100+ resources from credible organizations; a global telehealth directory of diabetes specialists; an AI chat assistant (SWEETY) for instant diabetes questions; educational videos; and an HSA/FSA-eligible product store."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I track my blood sugar on iamsweet?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Visit the Care Companion feature on iamsweet to log your daily blood sugar readings, mood, energy, symptoms, and medications. The platform generates AI-powered summaries and shows trends over time to help you manage your diabetes more effectively."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- ═══ STRUCTURED DATA — SiteNavigationElement (GEO: content signals) ═══ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SiteNavigationElement",
+      "name": ["Daily Care", "Diabetes Meals", "Telehealth", "Ask AI", "Video Library", "Resources", "HSA Store", "Open Source"],
+      "url": [
+        "https://iamsweet.base44.app/care",
+        "https://iamsweet.base44.app/meals",
+        "https://iamsweet.base44.app/telehealth",
+        "https://iamsweet.base44.app/chat",
+        "https://iamsweet.base44.app/videos",
+        "https://iamsweet.base44.app/resources",
+        "https://iamsweet.base44.app/store",
+        "https://iamsweet.base44.app/opensource"
+      ]
+    }
+    </script>
+
   </head>
   <body>
     <div id="root"></div>
