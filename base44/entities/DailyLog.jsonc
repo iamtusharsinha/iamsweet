@@ -1,0 +1,69 @@
+{
+  "name": "DailyLog",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "string"
+    },
+    "date": {
+      "type": "string",
+      "format": "date"
+    },
+    "mood": {
+      "type": "string",
+      "enum": [
+        "amazing",
+        "great",
+        "good",
+        "okay",
+        "low",
+        "rough"
+      ]
+    },
+    "mood_note": {
+      "type": "string"
+    },
+    "meals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "meal_type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "image_url": {
+            "type": "string"
+          },
+          "estimated_calories": {
+            "type": "number"
+          },
+          "logged_at": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "total_calories": {
+      "type": "number"
+    },
+    "water_glasses": {
+      "type": "number"
+    },
+    "exercise_minutes": {
+      "type": "number"
+    },
+    "sleep_hours": {
+      "type": "number"
+    },
+    "ai_pattern_note": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_id",
+    "date"
+  ]
+}

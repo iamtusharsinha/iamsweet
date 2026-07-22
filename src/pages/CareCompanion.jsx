@@ -16,9 +16,12 @@ import { useLanguage } from "@/lib/LanguageContext";
 import MedicationManager from "@/components/care/MedicationManager";
 import CareHistory from "@/components/care/CareHistory";
 import TrendCharts from "@/components/care/TrendCharts";
+import DailyLogTab from "@/components/care/DailyLogTab";
+import { UtensilsCrossed } from "lucide-react";
 
 const TABS_KEYS = [
   { key: "dashboard", labelKey: "dashboard", icon: Activity },
+  { key: "dailylog", labelKey: "Daily Log", icon: UtensilsCrossed },
   { key: "history", labelKey: "history", icon: Calendar },
   { key: "medications", labelKey: "medications", icon: Pill },
 ];
@@ -38,6 +41,7 @@ export default function CareCompanion() {
   const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [logs, setLogs] = useState([]);
+  const [dailyLogs, setDailyLogs] = useState([]);
   const [medications, setMedications] = useState([]);
   const [showCheckIn, setShowCheckIn] = useState(false);
   const [tab, setTab] = useState("dashboard");
@@ -63,12 +67,14 @@ export default function CareCompanion() {
 
   async function loadData(uid) {
     try {
-      const [logsData, medsData] = await Promise.all([
+      const [logsData, medsData, dailyLogsData] = await Promise.all([
         base44.entities.CareLog.filter({ user_id: uid }, "-date", 30),
         base44.entities.Medication.filter({ user_id: uid, active: true }),
+        base44.entities.DailyLog.filter({ user_id: uid }, "-date", 30),
       ]);
       setLogs(logsData);
       setMedications(medsData);
+      setDailyLogs(dailyLogsData);
     } catch {}
   }
 
@@ -81,6 +87,7 @@ export default function CareCompanion() {
       await Promise.allSettled([
         base44.entities.CareLog.deleteMany({ user_id: user.id }),
         base44.entities.Medication.deleteMany({ user_id: user.id }),
+        base44.entities.DailyLog.deleteMany({ user_id: user.id }),
       ]);
       await base44.auth.logout("/");
     } finally {
@@ -217,7 +224,7 @@ export default function CareCompanion() {
                   tab === tabItem.key ? "bg-blue-600 text-white shadow-sm" : "text-gray-500 dark:text-gray-400 hover:text-blue-600"
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />{t(tabItem.labelKey)}
+                <Icon className="w-3.5 h-3.5" />{tabItem.key === "dailylog" ? "Daily Log" : t(tabItem.labelKey)}
               </button>
             );
           })}
@@ -319,6 +326,10 @@ export default function CareCompanion() {
               </div>
             )}
           </div>
+        )}
+
+        {tab === "dailylog" && (
+          <DailyLogTab user={user} dailyLogs={dailyLogs} onUpdate={reload} />
         )}
 
         {tab === "history" && (
