@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Github, Star, GitFork, ExternalLink, Search, Code, Cpu, Activity, Zap, Brain, FlaskConical, Globe } from "lucide-react";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const PROJECTS = [
   // FLAGSHIP / MOST STARRED
@@ -262,6 +263,7 @@ const LANG_COLORS = {
 };
 
 export default function OpenSource() {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
 
@@ -282,12 +284,12 @@ export default function OpenSource() {
       <header className="max-w-7xl mx-auto px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Home
+            <ArrowLeft className="w-4 h-4" /> {t("home")}
           </Link>
           <div className="w-px h-5 bg-blue-200 dark:bg-gray-700" />
           <div className="flex items-center gap-2">
             <Github className="w-5 h-5 text-gray-900 dark:text-white" />
-            <span className="font-heading font-bold text-base text-blue-900 dark:text-white">Open Source Diabetes Projects</span>
+            <span className="font-heading font-bold text-base text-blue-900 dark:text-white">{t("openSourceTitle")}</span>
           </div>
         </div>
         <span className="text-sm text-blue-600 dark:text-blue-400 font-semibold">{filtered.length} projects</span>
@@ -298,8 +300,8 @@ export default function OpenSource() {
         <div className="bg-gray-900 dark:bg-gray-800 rounded-2xl p-4 mb-8 flex items-center gap-3">
           <Github className="w-5 h-5 text-gray-300 flex-shrink-0" />
           <p className="text-sm text-gray-300">
-            <strong className="text-white">{PROJECTS.length} open-source projects · {totalStars.toLocaleString()}+ combined GitHub stars.</strong>{" "}
-            From DIY artificial pancreas systems used by real patients, to AI/ML research tools. All MIT or open licensed. All free.
+            <strong className="text-white">{PROJECTS.length} {t("openSourceMission")} · {totalStars.toLocaleString()}+ {t("combinedStars")}</strong>{" "}
+            {t("openSourceDesc")}
           </p>
         </div>
 
@@ -308,7 +310,7 @@ export default function OpenSource() {
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             type="text"
-            placeholder="Search projects, languages, tags…"
+            placeholder={t("searchProjects")}
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full pl-10 pr-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -401,7 +403,7 @@ export default function OpenSource() {
         {filtered.length === 0 && (
           <div className="text-center py-24 text-gray-400">
             <Github className="w-10 h-10 mx-auto mb-3 opacity-40" />
-            <p className="font-medium">No projects found</p>
+            <p className="font-medium">{t("noProjects")}</p>
           </div>
         )}
       </div>

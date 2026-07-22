@@ -12,14 +12,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import { base44 } from "@/api/base44Client";
 import CheckInModal from "@/components/care/CheckInModal";
+import { useLanguage } from "@/lib/LanguageContext";
 import MedicationManager from "@/components/care/MedicationManager";
 import CareHistory from "@/components/care/CareHistory";
 import TrendCharts from "@/components/care/TrendCharts";
 
-const TABS = [
-  { key: "dashboard", label: "Dashboard", icon: Activity },
-  { key: "history", label: "History", icon: Calendar },
-  { key: "medications", label: "Medications", icon: Pill },
+const TABS_KEYS = [
+  { key: "dashboard", labelKey: "dashboard", icon: Activity },
+  { key: "history", labelKey: "history", icon: Calendar },
+  { key: "medications", labelKey: "medications", icon: Pill },
 ];
 
 const TIPS = [
@@ -34,6 +35,7 @@ const TIPS = [
 ];
 
 export default function CareCompanion() {
+  const { t } = useLanguage();
   const [user, setUser] = useState(null);
   const [logs, setLogs] = useState([]);
   const [medications, setMedications] = useState([]);
@@ -108,19 +110,19 @@ export default function CareCompanion() {
       <header className="max-w-4xl mx-auto px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Home
+            <ArrowLeft className="w-4 h-4" /> {t("home")}
           </Link>
           <div className="w-px h-5 bg-blue-200 dark:bg-gray-700" />
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center">
               <Heart className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="font-heading font-bold text-base text-blue-900 dark:text-white">AI Care Companion</span>
+            <span className="font-heading font-bold text-base text-blue-900 dark:text-white">{t("careTitle")}</span>
           </div>
         </div>
         {!loadingUser && !user && (
           <Link to="/login" className="flex items-center gap-1.5 text-xs bg-blue-600 text-white px-3 py-1.5 rounded-full font-medium hover:bg-blue-700 transition-colors">
-            <Lock className="w-3 h-3" /> Sign in to save
+            <Lock className="w-3 h-3" /> {t("signIn")}
           </Link>
         )}
         {user && (
@@ -145,10 +147,10 @@ export default function CareCompanion() {
                   {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
                 </p>
                 <h1 className="text-2xl font-bold leading-tight">
-                  {user ? `Hello, ${user.full_name?.split(" ")[0] || "there"} 👋` : "Your Daily Care Hub"}
+                  {user ? `${t("helloThere")}, ${user.full_name?.split(" ")[0] || ""} 👋` : t("yourDailyCareHub")}
                 </h1>
                 <p className="text-blue-200 text-sm mt-1">
-                  {todayLog ? "Check-in complete for today ✓" : "Ready for your daily check-in?"}
+                  {todayLog ? t("checkInComplete") : t("readyCheckIn")}
                 </p>
               </div>
               <Bot className="w-10 h-10 text-blue-300 opacity-80 flex-shrink-0" />
@@ -159,17 +161,17 @@ export default function CareCompanion() {
               <div className="flex gap-4 mt-4">
                 <div className="bg-white/10 rounded-xl px-4 py-2 text-center">
                   <p className="text-xl font-bold">{streak}</p>
-                  <p className="text-xs text-blue-200">day streak 🔥</p>
+                  <p className="text-xs text-blue-200">{t("dayStreak")}</p>
                 </div>
                 {avgBs && (
                   <div className="bg-white/10 rounded-xl px-4 py-2 text-center">
                     <p className="text-xl font-bold">{avgBs}</p>
-                    <p className="text-xs text-blue-200">avg glucose</p>
+                    <p className="text-xs text-blue-200">{t("avgGlucose")}</p>
                   </div>
                 )}
                 <div className="bg-white/10 rounded-xl px-4 py-2 text-center">
                   <p className="text-xl font-bold">{logs.length}</p>
-                  <p className="text-xs text-blue-200">check-ins</p>
+                  <p className="text-xs text-blue-200">{t("checkIns")}</p>
                 </div>
               </div>
             )}
@@ -180,7 +182,7 @@ export default function CareCompanion() {
                 onClick={() => setShowCheckIn(true)}
                 className="mt-4 flex items-center gap-2 bg-white text-blue-700 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-blue-50 transition-colors shadow-lg shadow-blue-900/20"
               >
-                <Plus className="w-4 h-4" /> Start Today's Check-In
+                <Plus className="w-4 h-4" /> {t("startCheckIn")}
               </button>
             )}
             {todayLog && (
@@ -188,7 +190,7 @@ export default function CareCompanion() {
                 onClick={() => setShowCheckIn(true)}
                 className="mt-4 flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-colors"
               >
-                <ClipboardList className="w-4 h-4" /> Update Check-In
+                <ClipboardList className="w-4 h-4" /> {t("updateCheckIn")}
               </button>
             )}
           </div>
@@ -198,24 +200,24 @@ export default function CareCompanion() {
         <div className="bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-700 rounded-2xl p-4 mb-6 flex gap-3">
           <Sparkles className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
           <div>
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Today's Care Tip</p>
+            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{t("todayTip")}</p>
             <p className="text-sm text-gray-700 dark:text-gray-300">{tip}</p>
           </div>
         </div>
 
         {/* Tabs */}
         <div className="flex gap-1 bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-700 rounded-xl p-1 mb-6">
-          {TABS.map(t => {
-            const Icon = t.icon;
+          {TABS_KEYS.map(tabItem => {
+            const Icon = tabItem.icon;
             return (
               <button
-                key={t.key}
-                onClick={() => setTab(t.key)}
+                key={tabItem.key}
+                onClick={() => setTab(tabItem.key)}
                 className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-sm font-medium transition-all ${
-                  tab === t.key ? "bg-blue-600 text-white shadow-sm" : "text-gray-500 dark:text-gray-400 hover:text-blue-600"
+                  tab === tabItem.key ? "bg-blue-600 text-white shadow-sm" : "text-gray-500 dark:text-gray-400 hover:text-blue-600"
                 }`}
               >
-                <Icon className="w-3.5 h-3.5" />{t.label}
+                <Icon className="w-3.5 h-3.5" />{t(tabItem.labelKey)}
               </button>
             );
           })}
@@ -229,7 +231,7 @@ export default function CareCompanion() {
               <div className="bg-white dark:bg-gray-800 border border-green-200 dark:border-green-800 rounded-2xl p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Star className="w-4 h-4 text-green-500" />
-                  <p className="text-sm font-semibold text-gray-900 dark:text-white">Today's Summary</p>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">{t("todaySummary")}</p>
                 </div>
                 {todayLog.ai_summary && (
                   <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed bg-green-50 dark:bg-green-900/20 rounded-xl p-3">{todayLog.ai_summary}</p>
@@ -237,19 +239,19 @@ export default function CareCompanion() {
                 <div className="grid grid-cols-3 gap-2 mt-3">
                   {todayLog.blood_sugar && (
                     <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-2.5 text-center">
-                      <p className="text-xs text-gray-400">Blood Sugar</p>
+                      <p className="text-xs text-gray-400">{t("bloodSugar")}</p>
                       <p className="font-bold text-gray-900 dark:text-white text-sm">{todayLog.blood_sugar}</p>
                     </div>
                   )}
                   {todayLog.mood && (
                     <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-2.5 text-center">
-                      <p className="text-xs text-gray-400">Mood</p>
+                      <p className="text-xs text-gray-400">{t("mood")}</p>
                       <p className="font-bold text-gray-900 dark:text-white text-sm capitalize">{todayLog.mood}</p>
                     </div>
                   )}
                   {todayLog.energy && (
                     <div className="bg-gray-50 dark:bg-gray-700 rounded-xl p-2.5 text-center">
-                      <p className="text-xs text-gray-400">Energy</p>
+                      <p className="text-xs text-gray-400">{t("energy")}</p>
                       <p className="font-bold text-gray-900 dark:text-white text-sm capitalize">{todayLog.energy}</p>
                     </div>
                   )}
@@ -261,7 +263,7 @@ export default function CareCompanion() {
             {medications.length > 0 && (
               <div className="bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-700 rounded-2xl p-5">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                  <Pill className="w-4 h-4 text-blue-500" /> Today's Medications
+                  <Pill className="w-4 h-4 text-blue-500" /> {t("todayMeds")}
                 </p>
                 <div className="space-y-2">
                   {medications.map(med => {
@@ -284,7 +286,7 @@ export default function CareCompanion() {
             {recentBs.length > 1 && (
               <div className="bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-700 rounded-2xl p-5">
                 <p className="text-sm font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-blue-500" /> Recent Blood Sugar
+                  <TrendingUp className="w-4 h-4 text-blue-500" /> {t("recentBs")}
                 </p>
                 <div className="flex items-end gap-2 h-16">
                   {recentBs.slice().reverse().map((l, i) => {
@@ -310,10 +312,10 @@ export default function CareCompanion() {
             {!user && (
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800 rounded-2xl p-6 text-center">
                 <Bot className="w-10 h-10 text-blue-400 mx-auto mb-3" />
-                <h3 className="font-bold text-gray-900 dark:text-white mb-1">Save Your Care History</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">Create a free account to track check-ins over time, spot trends, and get personalized AI insights.</p>
+                <h3 className="font-bold text-gray-900 dark:text-white mb-1">{t("saveHistory")}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t("saveHistoryDesc")}</p>
                 <Link to="/register" className="inline-flex items-center gap-1.5 bg-blue-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-colors">
-                  Create Free Account
+                  {t("createAccount")}
                 </Link>
               </div>
             )}
@@ -325,8 +327,8 @@ export default function CareCompanion() {
             ? <CareHistory logs={logs} />
             : <div className="text-center py-16 text-gray-400">
                 <Lock className="w-8 h-8 mx-auto mb-2" />
-                <p className="font-medium">Log in to see your history</p>
-                <Link to="/login" className="mt-3 inline-block text-sm text-blue-600 hover:underline">Sign in →</Link>
+                <p className="font-medium">{t("loginHistory")}</p>
+                <Link to="/login" className="mt-3 inline-block text-sm text-blue-600 hover:underline">{t("signIn")} →</Link>
               </div>
         )}
 
@@ -342,7 +344,7 @@ export default function CareCompanion() {
               className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors mb-3"
             >
               <Settings className="w-4 h-4" />
-              Account Settings
+              {t("accountSettings")}
               <ChevronDown className={`w-3.5 h-3.5 transition-transform ${showSettings ? "rotate-180" : ""}`} />
             </button>
 
@@ -353,29 +355,29 @@ export default function CareCompanion() {
                     <Trash2 className="w-4 h-4 text-red-600" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-gray-900 dark:text-white">Delete Account</p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 mb-3">Permanently removes all your care logs and medication records. This cannot be undone.</p>
+                    <p className="text-sm font-semibold text-gray-900 dark:text-white">{t("deleteAccount")}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 mb-3">{t("deleteDesc")}</p>
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <button className="flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors">
-                          <Trash2 className="w-3.5 h-3.5" /> Delete My Account
+                          <Trash2 className="w-3.5 h-3.5" /> {t("deleteBtn")}
                         </button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogTitle>{t("confirmDelete")}</AlertDialogTitle>
                           <AlertDialogDescription>
-                            This will permanently delete all your care logs, medication records, and account data. This action <strong>cannot be undone</strong>.
+                            {t("confirmDeleteDesc")}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={handleDeleteAccount}
                             disabled={deleting}
                             className="bg-red-600 hover:bg-red-700 focus:ring-red-600"
                           >
-                            {deleting ? "Deleting…" : "Yes, delete everything"}
+                            {deleting ? t("deleting") : t("deleteConfirm")}
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>

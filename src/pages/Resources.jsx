@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Search, ExternalLink, BadgeCheck, Globe, Heart, Activity, Pill, Brain, Shield, Baby, FlaskConical, Zap, BookOpen, ArrowLeft, Filter } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import CustomSelect from "@/components/ui/CustomSelect";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const CATEGORIES = [
   { key: "all", label: "All", icon: Globe },
@@ -31,6 +32,7 @@ const TYPE_COLORS = {
 };
 
 export default function Resources() {
+  const { t } = useLanguage();
   const [resources, setResources] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("all");
@@ -65,14 +67,14 @@ export default function Resources() {
       <header className="max-w-7xl mx-auto px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Back
+            <ArrowLeft className="w-4 h-4" /> {t("back")}
           </Link>
           <div className="w-px h-5 bg-blue-200 dark:bg-gray-700" />
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center">
               <span className="text-white font-bold text-xs">D</span>
             </div>
-            <span className="font-heading font-bold text-base text-blue-900 dark:text-white">All Resources</span>
+            <span className="font-heading font-bold text-base text-blue-900 dark:text-white">{t("resourcesTitle")}</span>
           </div>
         </div>
         <span className="text-sm text-blue-600 dark:text-blue-400 font-semibold">{filtered.length} resources</span>
@@ -85,7 +87,7 @@ export default function Resources() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Search resources…"
+              placeholder={t("searchResources")}
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full pl-10 pr-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -101,7 +103,7 @@ export default function Resources() {
             onClick={() => setCredibleOnly(!credibleOnly)}
             className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all ${credibleOnly ? "bg-blue-600 border-blue-600 text-white" : "bg-white dark:bg-gray-800 border-blue-200 dark:border-gray-700 text-gray-700 dark:text-gray-200 hover:border-blue-400"}`}
           >
-            <BadgeCheck className="w-4 h-4" /> Credible only
+            <BadgeCheck className="w-4 h-4" /> {t("credibleOnly")}
           </button>
         </div>
 
@@ -133,8 +135,8 @@ export default function Resources() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-24 text-gray-400">
             <Search className="w-10 h-10 mx-auto mb-3 opacity-40" />
-            <p className="font-medium text-lg">No resources found</p>
-            <p className="text-sm mt-1">Try adjusting filters or search terms</p>
+            <p className="font-medium text-lg">{t("noResources")}</p>
+            <p className="text-sm mt-1">{t("adjustFilters")}</p>
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">

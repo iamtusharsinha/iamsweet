@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import DarkModeToggle from "@/components/DarkModeToggle";
+import LanguagePicker from "@/components/LanguagePicker";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const NAV_PRIMARY = [
   { to: "/care", icon: Heart, label: "Care", color: "text-rose-500" },
@@ -150,6 +152,7 @@ const CAT_IMAGES = [
 ];
 
 export default function Home() {
+  const { t } = useLanguage();
   const [resources, setResources] = useState([]);
   const [featured, setFeatured] = useState([]);
   const [activeCategory, setActiveCategory] = useState("all");
@@ -271,8 +274,9 @@ export default function Home() {
               <Link to="/chat"
                 className="hidden sm:flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold px-4 py-2 rounded-xl transition-all shadow-md shadow-blue-600/25 hover:shadow-blue-600/40">
                 <Sparkles className="w-3.5 h-3.5" />
-                Ask AI
+                {t("askAI")}
               </Link>
+              <LanguagePicker />
               <DarkModeToggle />
               <button onClick={() => setMobileOpen(o => !o)}
                 className="md:hidden w-9 h-9 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex items-center justify-center">
@@ -332,7 +336,7 @@ export default function Home() {
           className="inline-flex items-center gap-2 bg-blue-600/10 border border-blue-500/20 text-blue-700 dark:text-blue-400 px-3.5 py-1.5 rounded-full text-xs font-bold mb-6 uppercase tracking-widest"
         >
           <span className="w-1.5 h-1.5 rounded-full bg-blue-600 dark:bg-blue-400 animate-pulse" />
-          World's #1 Diabetes Support Platform
+          {t("platformBadge")}
         </motion.div>
 
         <motion.h1
@@ -341,9 +345,9 @@ export default function Home() {
           transition={{ delay: 0.06 }}
           className="text-4xl sm:text-5xl md:text-6xl font-black text-gray-900 dark:text-white leading-[1.05] tracking-tight"
         >
-          Everything Diabetes.
+          {t("heroTitle1")}
           <span className="block bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-            One Platform.
+            {t("heroTitle2")}
           </span>
         </motion.h1>
 
@@ -353,7 +357,7 @@ export default function Home() {
           transition={{ delay: 0.12 }}
           className="mt-5 text-lg text-gray-500 dark:text-gray-400 leading-relaxed"
         >
-          Stop bouncing between websites. iamsweet is your free, single destination for lifestyle, nutrition, medication, technology, mental health, and expert care.
+          {t("heroSubtitle")}
         </motion.p>
 
         {/* Search bar */}
@@ -366,7 +370,7 @@ export default function Home() {
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             type="text"
-            placeholder="Search resources, topics, organisations…"
+            placeholder={t("searchPlaceholder")}
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             className="w-full pl-12 pr-14 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg shadow-blue-900/5"
@@ -402,21 +406,21 @@ export default function Home() {
           className="mt-5 flex items-center flex-wrap gap-4 text-sm text-gray-400 justify-center"
         >
           <span className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-semibold">
-            <BadgeCheck className="w-4 h-4" /> {counts.total}+ Resources
+            <BadgeCheck className="w-4 h-4" /> {counts.total}+ {t("badgeResources")}
           </span>
           <span className="w-1 h-1 rounded-full bg-gray-300" />
-          <span>10 Categories</span>
+          <span>{t("badgeCategories")}</span>
           <span className="w-1 h-1 rounded-full bg-gray-300" />
-          <span className="text-blue-600 dark:text-blue-400 font-semibold">Always Free</span>
+          <span className="text-blue-600 dark:text-blue-400 font-semibold">{t("badgeFree")}</span>
         </motion.div>
       </section>
 
       {/* ── GOODRX-STYLE TOPIC CARDS with IMAGES ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
         <div className="flex items-center gap-3 mb-5">
-          <span className="text-sm font-black text-gray-900 dark:text-white">Explore Topics</span>
+          <span className="text-sm font-black text-gray-900 dark:text-white">{t("exploreTopics")}</span>
           <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
-          <span className="text-xs text-gray-400">6 destinations</span>
+          <span className="text-xs text-gray-400">{t("destinations")}</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
           {TOPIC_CARDS.map((card, i) => (
@@ -472,7 +476,7 @@ export default function Home() {
       {/* ── BROWSE BY CATEGORY — image strip ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
         <div className="flex items-center gap-3 mb-5">
-          <span className="text-sm font-black text-gray-900 dark:text-white">Browse by Category</span>
+          <span className="text-sm font-black text-gray-900 dark:text-white">{t("browseByCategory")}</span>
           <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
@@ -555,8 +559,8 @@ export default function Home() {
                 <Star className="w-5 h-5 text-white fill-white" />
               </div>
               <div>
-                <p className="text-white font-black text-base leading-none">Featured Resources</p>
-                <p className="text-amber-100 text-xs mt-0.5">Hand-picked by our team · Always credible</p>
+                <p className="text-white font-black text-base leading-none">{t("featuredResources")}</p>
+                <p className="text-amber-100 text-xs mt-0.5">{t("featuredSubtitle")}</p>
               </div>
             </div>
             {featured.length > 3 && (
@@ -620,7 +624,7 @@ export default function Home() {
       {/* ── FAQs ── */}
       <section className="max-w-4xl mx-auto px-4 sm:px-6 pb-20">
         <div className="flex items-center gap-3 mb-6">
-          <span className="text-sm font-black text-gray-900 dark:text-white">Frequently Asked Questions</span>
+          <span className="text-sm font-black text-gray-900 dark:text-white">{t("faq")}</span>
           <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
         </div>
         <div className="space-y-2">
@@ -652,7 +656,7 @@ export default function Home() {
             </div>
             <span className="text-sm font-bold text-gray-800 dark:text-gray-200">iamsweet</span>
           </div>
-          <p className="text-xs text-gray-400">© 2026 iamsweet · No one faces diabetes alone 🔵</p>
+          <p className="text-xs text-gray-400">© 2026 iamsweet · {t("footer")}</p>
         </div>
       </footer>
     </div>

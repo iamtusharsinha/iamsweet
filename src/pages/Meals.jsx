@@ -5,8 +5,10 @@ import { ArrowLeft, Clock, Flame, Search, ChefHat, Leaf, ChevronRight } from "lu
 import RecipeModal from "@/components/meals/RecipeModal";
 import { MEALS, ETHNICITIES, CATEGORIES, GI_FILTERS, GI_LABELS, GI_BAR_COLORS } from "@/data/mealsData";
 import CustomSelect from "@/components/ui/CustomSelect";
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function Meals() {
+  const { t } = useLanguage();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [ethnicity, setEthnicity] = useState("All");
@@ -34,12 +36,12 @@ export default function Meals() {
       <header className="max-w-7xl mx-auto px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Home
+            <ArrowLeft className="w-4 h-4" /> {t("home")}
           </Link>
           <div className="w-px h-5 bg-blue-200 dark:bg-gray-700" />
           <div className="flex items-center gap-2">
             <ChefHat className="w-5 h-5 text-blue-600" />
-            <span className="font-heading font-bold text-base text-blue-900 dark:text-white">Diabetes-Friendly Meals</span>
+            <span className="font-heading font-bold text-base text-blue-900 dark:text-white">{t("mealsTitle")}</span>
           </div>
         </div>
         <span className="text-sm text-blue-600 dark:text-blue-400 font-semibold">{filtered.length} meals</span>
@@ -49,7 +51,7 @@ export default function Meals() {
         {/* Mission strip */}
         <div className="bg-blue-600 rounded-2xl p-4 mb-6 flex items-center gap-3">
           <Leaf className="w-5 h-5 text-blue-200 flex-shrink-0" />
-          <p className="text-sm text-white"><strong>Every meal is designed for blood sugar stability</strong> — with step-by-step recipes, GI scores, and diabetes tips. Tap any card to start cooking.</p>
+          <p className="text-sm text-white">{t("mealsSubtitle")}</p>
         </div>
 
         {/* Search + category filter */}
@@ -58,7 +60,7 @@ export default function Meals() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text"
-              placeholder="Search meals, cuisines, tags…"
+              placeholder={t("searchMeals")}
               value={search}
               onChange={e => setSearch(e.target.value)}
               className="w-full pl-10 pr-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -106,7 +108,7 @@ export default function Meals() {
         {filtered.length === 0 ? (
           <div className="text-center py-24 text-gray-400">
             <ChefHat className="w-10 h-10 mx-auto mb-3 opacity-40" />
-            <p className="font-medium">No meals match your filters</p>
+            <p className="font-medium">{t("noMeals")}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">

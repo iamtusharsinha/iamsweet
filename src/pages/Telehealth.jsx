@@ -9,6 +9,7 @@ import { base44 } from "@/api/base44Client";
 import DoctorCard from "@/components/telehealth/DoctorCard";
 import CustomSelect from "@/components/ui/CustomSelect";
 import ConsultationRequestModal from "@/components/telehealth/ConsultationRequestModal";
+import { useLanguage } from "@/lib/LanguageContext";
 import ProviderRegistrationModal from "@/components/telehealth/ProviderRegistrationModal";
 
 const ROLES = ["All Providers", "Doctor", "Endocrinologist", "Nurse", "Nurse Practitioner", "Diabetes Educator", "Dietitian"];
@@ -23,6 +24,7 @@ const STATS = [
 ];
 
 export default function Telehealth() {
+  const { t } = useLanguage();
   const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -64,12 +66,12 @@ export default function Telehealth() {
       <header className="max-w-7xl mx-auto px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/80 dark:bg-gray-950/80 backdrop-blur-md border-b border-blue-100 dark:border-gray-800" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Home
+            <ArrowLeft className="w-4 h-4" /> {t("home")}
           </Link>
           <div className="w-px h-5 bg-blue-200 dark:bg-gray-700" />
           <div className="flex items-center gap-2">
             <Stethoscope className="w-5 h-5 text-blue-600" />
-            <span className="font-heading font-bold text-base text-blue-900 dark:text-white">DiabetesHub Telehealth</span>
+            <span className="font-heading font-bold text-base text-blue-900 dark:text-white">{t("telehealthTitle")}</span>
           </div>
         </div>
         <button
@@ -77,7 +79,7 @@ export default function Telehealth() {
           className="flex items-center gap-1.5 bg-blue-600 text-white text-sm font-semibold px-4 py-2 rounded-full hover:bg-blue-700 transition-colors"
         >
           <UserPlus className="w-4 h-4" />
-          <span className="hidden sm:inline">Join as Provider</span>
+          <span className="hidden sm:inline">{t("joinAsProvider")}</span>
         </button>
       </header>
 
@@ -109,7 +111,7 @@ export default function Telehealth() {
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <input
               type="text" value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="Search by name, country, city, language, specialty…"
+              placeholder={t("searchProviders")}
               className="w-full pl-10 pr-4 py-3 rounded-xl border border-blue-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -117,7 +119,7 @@ export default function Telehealth() {
             onClick={() => setShowFilters(f => !f)}
             className={`flex items-center gap-2 px-4 py-3 rounded-xl border text-sm font-medium transition-all ${showFilters ? "bg-blue-600 border-blue-600 text-white" : "bg-white dark:bg-gray-800 border-blue-200 dark:border-gray-700 text-gray-600 hover:border-blue-400"}`}
           >
-            <SlidersHorizontal className="w-4 h-4" /> Filters
+            <SlidersHorizontal className="w-4 h-4" /> {t("filters")}
           </button>
         </div>
 
@@ -125,15 +127,15 @@ export default function Telehealth() {
         {showFilters && (
           <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="grid sm:grid-cols-3 gap-3 mb-5">
             <div>
-              <label className="text-xs font-semibold text-gray-500 mb-1 block">Provider Role</label>
+              <label className="text-xs font-semibold text-gray-500 mb-1 block">{t("providerRole")}</label>
               <CustomSelect value={roleFilter} onChange={setRoleFilter} options={ROLES} />
             </div>
             <div>
-              <label className="text-xs font-semibold text-gray-500 mb-1 block">Consultation Mode</label>
+              <label className="text-xs font-semibold text-gray-500 mb-1 block">{t("consultationMode")}</label>
               <CustomSelect value={modeFilter} onChange={setModeFilter} options={MODES} />
             </div>
             <div>
-              <label className="text-xs font-semibold text-gray-500 mb-1 block">Diabetes Type</label>
+              <label className="text-xs font-semibold text-gray-500 mb-1 block">{t("diabetesType")}</label>
               <CustomSelect value={typeFilter} onChange={setTypeFilter} options={DIABETES_TYPES} />
             </div>
           </motion.div>
@@ -178,16 +180,16 @@ export default function Telehealth() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-24">
             <Users className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-            <p className="font-semibold text-gray-500 dark:text-gray-400 mb-2">No providers found</p>
-            <p className="text-sm text-gray-400 mb-6">Try adjusting your filters or search terms.</p>
+            <p className="font-semibold text-gray-500 dark:text-gray-400 mb-2">{t("noProviders")}</p>
+            <p className="text-sm text-gray-400 mb-6">{t("tryFilters")}</p>
             <button onClick={() => setShowRegister(true)}
               className="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-5 py-2.5 rounded-xl hover:bg-blue-700 transition-colors text-sm">
-              <UserPlus className="w-4 h-4" /> Be the first provider
+              <UserPlus className="w-4 h-4" /> {t("beFirst")}
             </button>
           </div>
         ) : (
           <>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{filtered.length} provider{filtered.length !== 1 ? "s" : ""} found</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{filtered.length} {filtered.length !== 1 ? t("providersFoundPlural") : t("providersFound")} {t("found")}</p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {filtered.map((doc, i) => (
                 <DoctorCard key={doc.id} doctor={doc} delay={Math.min(i * 0.04, 0.4)} onRequest={setSelectedDoctor} />
@@ -199,12 +201,12 @@ export default function Telehealth() {
         {/* Provider CTA banner */}
         <div className="mt-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-3xl p-7 flex flex-col sm:flex-row items-center justify-between gap-5">
           <div className="text-white">
-            <h3 className="font-bold text-lg mb-1">Are you a diabetes healthcare professional?</h3>
-            <p className="text-blue-200 text-sm">Join our global directory — doctors, nurses, educators, and dietitians welcome.</p>
+            <h3 className="font-bold text-lg mb-1">{t("providerCTATitle")}</h3>
+            <p className="text-blue-200 text-sm">{t("providerCTASubtitle")}</p>
           </div>
           <button onClick={() => setShowRegister(true)}
             className="flex-shrink-0 flex items-center gap-2 bg-white text-blue-700 font-bold px-6 py-3 rounded-xl hover:bg-blue-50 transition-colors text-sm shadow-lg">
-            <UserPlus className="w-4 h-4" /> Register Now
+            <UserPlus className="w-4 h-4" /> {t("registerNow")}
           </button>
         </div>
       </div>

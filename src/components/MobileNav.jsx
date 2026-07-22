@@ -1,17 +1,19 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Heart, ChefHat, Stethoscope, MessageCircle, Home } from "lucide-react";
-
-const NAV = [
-  { to: "/", icon: Home, label: "Home" },
-  { to: "/care", icon: Heart, label: "Care" },
-  { to: "/meals", icon: ChefHat, label: "Meals" },
-  { to: "/telehealth", icon: Stethoscope, label: "Doctors" },
-  { to: "/chat", icon: MessageCircle, label: "Ask AI" },
-];
+import { useLanguage } from "@/lib/LanguageContext";
 
 export default function MobileNav() {
   const { pathname } = useLocation();
+  const { t } = useLanguage();
+
+  const NAV = [
+    { to: "/", icon: Home, label: t("home") },
+    { to: "/care", icon: Heart, label: t("care") },
+    { to: "/meals", icon: ChefHat, label: t("meals") },
+    { to: "/telehealth", icon: Stethoscope, label: t("doctors") },
+    { to: "/chat", icon: MessageCircle, label: t("askAI") },
+  ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-t border-gray-200 dark:border-gray-800" style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}>

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Send, Mic, MicOff, Bot, User, Loader2, Volume2, VolumeX } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import ReactMarkdown from "react-markdown";
+import { useLanguage } from "@/lib/LanguageContext";
 
 const SUGGESTIONS = [
   "What foods should I avoid with Type 2 diabetes?",
@@ -26,6 +27,7 @@ Rules:
 - Be warm and encouraging.`;
 
 export default function DiabetesChat() {
+  const { t } = useLanguage();
   const [messages, setMessages] = useState([
     {
       role: "assistant",
@@ -111,7 +113,7 @@ export default function DiabetesChat() {
       <header className="px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/90 dark:bg-gray-950/90 backdrop-blur-md border-b border-blue-100 dark:border-gray-800 max-w-4xl mx-auto w-full" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Home
+            <ArrowLeft className="w-4 h-4" /> {t("home")}
           </Link>
           <div className="w-px h-5 bg-blue-200 dark:bg-gray-700" />
           <div className="flex items-center gap-2">
@@ -119,8 +121,8 @@ export default function DiabetesChat() {
               <Bot className="w-4 h-4 text-white" />
             </div>
             <div>
-              <span className="font-heading font-bold text-sm text-blue-900 dark:text-white block leading-none">SWEETY</span>
-              <span className="text-xs text-green-500 font-medium">● Online</span>
+              <span className="font-heading font-bold text-sm text-blue-900 dark:text-white block leading-none">{t("chatTitle")}</span>
+              <span className="text-xs text-green-500 font-medium">● {t("chatOnline")}</span>
             </div>
           </div>
         </div>
@@ -141,7 +143,7 @@ export default function DiabetesChat() {
         {/* Suggestion chips — show only if just the greeting */}
         {messages.length === 1 && (
           <div className="mb-2">
-            <p className="text-xs text-gray-400 dark:text-gray-500 mb-3 text-center">Tap a question to get started</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mb-3 text-center">{t("tapQuestion")}</p>
             <div className="flex flex-wrap gap-2 justify-center">
               {SUGGESTIONS.map(s => (
                 <button
@@ -221,7 +223,7 @@ export default function DiabetesChat() {
             value={input}
             onChange={e => setInput(e.target.value)}
             onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendMessage(); } }}
-            placeholder="Ask anything about diabetes…"
+            placeholder={t("chatPlaceholder")}
             rows={1}
             className="flex-1 resize-none bg-transparent text-sm text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none py-2 px-1 max-h-32 overflow-y-auto"
             style={{ minHeight: "36px" }}
@@ -234,7 +236,7 @@ export default function DiabetesChat() {
             <Send className="w-4 h-4 text-white" />
           </button>
         </div>
-        <p className="text-center text-xs text-gray-400 mt-2">SWEETY is an AI — always check with your doctor for medical decisions.</p>
+        <p className="text-center text-xs text-gray-400 mt-2">{t("chatDisclaimer")}</p>
       </div>
     </div>
   );
