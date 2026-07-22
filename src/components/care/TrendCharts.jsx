@@ -38,7 +38,7 @@ function EnergyTooltip({ active, payload, label }) {
 }
 
 export default function TrendCharts({ logs }) {
-  const [range, setRange] = useState(30);
+  const [range, setRange] = useState(7);
 
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - range);

@@ -306,7 +306,6 @@ export default function CareCompanion() {
               </div>
             )}
 
-            {/* Trend Charts */}
             {user && logs.length > 0 && <TrendCharts logs={logs} />}
 
             {!user && (
