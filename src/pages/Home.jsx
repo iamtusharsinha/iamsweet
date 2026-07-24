@@ -276,6 +276,14 @@ export default function Home() {
                 <Sparkles className="w-3.5 h-3.5" />
                 {t("askAI")}
               </Link>
+              <Link to="/login"
+                className="hidden sm:flex items-center gap-1.5 text-sm font-semibold text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors px-3 py-2 rounded-xl hover:bg-blue-50 dark:hover:bg-gray-800">
+                Sign in
+              </Link>
+              <Link to="/register"
+                className="hidden sm:flex items-center gap-1.5 bg-gray-900 dark:bg-white hover:bg-gray-700 dark:hover:bg-gray-100 text-white dark:text-gray-900 text-sm font-semibold px-4 py-2 rounded-xl transition-all">
+                Sign up
+              </Link>
               <LanguagePicker />
               <DarkModeToggle />
               <button onClick={() => setMobileOpen(o => !o)}
@@ -295,6 +303,14 @@ export default function Home() {
                 className="mt-1 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border border-white/50 dark:border-gray-700/50 rounded-2xl shadow-xl overflow-hidden"
               >
                 <div className="p-3 grid grid-cols-2 gap-1">
+                  <Link to="/login" onClick={() => setMobileOpen(false)}
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 transition-all col-span-1">
+                    <span className="text-sm font-semibold text-gray-700 dark:text-gray-300">Sign in</span>
+                  </Link>
+                  <Link to="/register" onClick={() => setMobileOpen(false)}
+                    className="flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl bg-blue-600 text-white transition-all col-span-1">
+                    <span className="text-sm font-semibold">Sign up free</span>
+                  </Link>
                   {[...NAV_PRIMARY, ...NAV_MORE].map(n => {
                     const Icon = n.icon;
                     return (
