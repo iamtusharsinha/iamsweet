@@ -9,9 +9,6 @@ import UserNotRegisteredError from '@/components/UserNotRegisteredError';
 import ScrollToTop from './components/ScrollToTop';
 import MobileNav from './components/MobileNav';
 import Home from './pages/Home';
-import Intake from './pages/Intake';
-import Plan from './pages/Plan';
-import Browse from './pages/Browse';
 import Resources from './pages/Resources';
 import Meals from './pages/Meals';
 import Videos from './pages/Videos';
@@ -50,9 +47,6 @@ const AuthenticatedApp = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/intake" element={<Intake />} />
-      <Route path="/plan" element={<Plan />} />
-      <Route path="/browse" element={<Browse />} />
       <Route path="/resources" element={<Resources />} />
       <Route path="/meals" element={<Meals />} />
       <Route path="/videos" element={<Videos />} />
