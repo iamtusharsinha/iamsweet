@@ -529,13 +529,13 @@ export default function Home() {
         </div>
 
         {/* All category pills */}
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex gap-2 overflow-x-auto no-scrollbar mb-8 pb-1">
           {CATEGORIES.map(cat => {
             const Icon = cat.icon;
             const isActive = activeCategory === cat.key;
             return (
               <button key={cat.key} onClick={() => setActiveCategory(cat.key)}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold border transition-all ${
+                className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm font-semibold border transition-all flex-shrink-0 ${
                   isActive
                     ? "bg-blue-600 border-blue-600 text-white shadow-md shadow-blue-400/20"
                     : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-blue-400 hover:text-blue-600"
