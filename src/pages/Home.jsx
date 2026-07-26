@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowRight, Search, BookOpen, Heart, Activity, Pill, Brain, Shield,
+  ArrowRight, ArrowLeft as ArrowLeftIcon, Search, BookOpen, Heart, Activity, Pill, Brain, Shield,
   Baby, FlaskConical, ChevronDown, ExternalLink, BadgeCheck,
   Zap, Globe, ChefHat, Youtube, MessageCircle, Github, ShoppingBag,
-  Stethoscope, Sparkles, TrendingUp, Users, Menu, X, ChevronRight, Star
+  Stethoscope, Sparkles, TrendingUp, Users, Menu, X, ChevronRight, ChevronLeft, Star
 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import DarkModeToggle from "@/components/DarkModeToggle";
@@ -165,6 +165,7 @@ export default function Home() {
   const [featuredDropdown, setFeaturedDropdown] = useState(null);
   const moreRef = useRef(null);
   const featuredRef = useRef(null);
+  const catCarouselRef = useRef(null);
 
   useEffect(() => {
     async function load() {
@@ -489,42 +490,41 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── BROWSE BY CATEGORY — image strip ── */}
+      {/* ── BROWSE BY CATEGORY — carousel ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
         <div className="flex items-center gap-3 mb-5">
           <span className="text-sm font-black text-gray-900 dark:text-white">{t("browseByCategory")}</span>
           <div className="flex-1 h-px bg-gray-200 dark:bg-gray-800" />
+          <button onClick={() => catCarouselRef.current?.scrollBy({ left: -220, behavior: "smooth" })} className="w-7 h-7 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex items-center justify-center hover:border-blue-400 transition-colors">
+            <ChevronLeft className="w-4 h-4 text-gray-500" />
+          </button>
+          <button onClick={() => catCarouselRef.current?.scrollBy({ left: 220, behavior: "smooth" })} className="w-7 h-7 rounded-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex items-center justify-center hover:border-blue-400 transition-colors">
+            <ChevronRight className="w-4 h-4 text-gray-500" />
+          </button>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
-          {CAT_IMAGES.map((c, i) => (
-            <motion.div key={c.key} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
-              <button
-                onClick={() => setActiveCategory(c.key)}
-                className={`group relative flex flex-col overflow-hidden rounded-2xl border-2 w-full hover:shadow-xl hover:-translate-y-1 transition-all duration-200 ${
-                  activeCategory === c.key
-                    ? "border-blue-500 shadow-md shadow-blue-200/40"
-                    : "border-gray-100 dark:border-gray-700 hover:border-blue-400"
-                }`}
-              >
-                {/* Image */}
-                <div className="relative h-28 overflow-hidden">
-                  <img src={c.image} alt={c.label} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${c.gradient} to-transparent`} />
-                  <span className={`absolute top-2 left-2 ${c.tagColor} text-white text-[10px] font-bold px-2 py-0.5 rounded-full`}>
-                    {c.tag}
-                  </span>
-                  {activeCategory === c.key && (
-                    <div className="absolute inset-0 ring-2 ring-blue-500 ring-inset rounded-2xl" />
-                  )}
-                  <span className="absolute bottom-2 right-2 text-xl">{c.emoji}</span>
-                </div>
-                {/* Text */}
-                <div className="p-3 flex-1 bg-white dark:bg-gray-800">
-                  <p className={`text-xs font-black leading-tight transition-colors ${activeCategory === c.key ? "text-blue-700 dark:text-blue-400" : "text-gray-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400"}`}>{c.label}</p>
-                  <p className="text-[10px] text-gray-400 mt-0.5 leading-snug">{c.desc}</p>
-                </div>
-              </button>
-            </motion.div>
+        <div ref={catCarouselRef} className="flex gap-3 overflow-x-auto no-scrollbar pb-2 mb-6">
+          {CAT_IMAGES.map((c) => (
+            <button
+              key={c.key}
+              onClick={() => setActiveCategory(c.key)}
+              className={`group relative flex flex-col overflow-hidden rounded-2xl border-2 flex-shrink-0 w-44 hover:shadow-xl hover:-translate-y-1 transition-all duration-200 ${
+                activeCategory === c.key
+                  ? "border-blue-500 shadow-md shadow-blue-200/40"
+                  : "border-gray-100 dark:border-gray-700 hover:border-blue-400"
+              }`}
+            >
+              <div className="relative h-24 overflow-hidden">
+                <img src={c.image} alt={c.label} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                <div className={`absolute inset-0 bg-gradient-to-t ${c.gradient} to-transparent`} />
+                <span className={`absolute top-2 left-2 ${c.tagColor} text-white text-[10px] font-bold px-2 py-0.5 rounded-full`}>{c.tag}</span>
+                {activeCategory === c.key && <div className="absolute inset-0 ring-2 ring-blue-500 ring-inset rounded-2xl" />}
+                <span className="absolute bottom-2 right-2 text-lg">{c.emoji}</span>
+              </div>
+              <div className="p-2.5 flex-1 bg-white dark:bg-gray-800 text-left">
+                <p className={`text-xs font-black leading-tight transition-colors ${activeCategory === c.key ? "text-blue-700 dark:text-blue-400" : "text-gray-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400"}`}>{c.label}</p>
+                <p className="text-[10px] text-gray-400 mt-0.5 leading-snug">{c.desc}</p>
+              </div>
+            </button>
           ))}
         </div>
 
