@@ -474,29 +474,21 @@ export default function Home() {
 
       {/* ── STATS ── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-10">
-        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0f1f6e] via-[#1a3a9f] to-[#0e4fc4]">
-          {/* Decorative blobs */}
-          <div className="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-white/5 blur-2xl pointer-events-none" />
-          <div className="absolute -bottom-10 right-10 w-72 h-72 rounded-full bg-blue-400/10 blur-3xl pointer-events-none" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-32 bg-blue-500/10 blur-3xl pointer-events-none" />
-
-          <div className="relative px-6 py-10">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-px bg-white/10 rounded-2xl overflow-hidden">
-              {STATS.map((s, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: i * 0.08 }}
-                  className="flex flex-col items-center justify-center gap-2 bg-white/5 hover:bg-white/10 transition-colors px-4 py-7 group"
-                >
-                  <span className="text-3xl group-hover:scale-110 transition-transform duration-200">{s.emoji}</span>
-                  <p className="text-3xl md:text-4xl font-black text-white tracking-tight leading-none">{s.value}</p>
-                  <p className="text-xs text-blue-200 text-center leading-tight font-medium">{s.label}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          {STATS.map((s, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.08 }}
+              className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-[#0f1f6e] to-[#1a4fc4] p-5 flex flex-col items-center justify-center gap-2 shadow-lg shadow-blue-900/20 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/30 transition-all duration-200 group"
+            >
+              <div className="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-white/5 blur-xl pointer-events-none" />
+              <span className="text-3xl group-hover:scale-110 transition-transform duration-200">{s.emoji}</span>
+              <p className="text-3xl font-black text-white tracking-tight leading-none">{s.value}</p>
+              <p className="text-xs text-blue-200 text-center leading-tight font-medium">{s.label}</p>
+            </motion.div>
+          ))}
         </div>
       </section>
 
