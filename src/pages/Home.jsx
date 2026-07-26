@@ -208,11 +208,8 @@ export default function Home() {
           <div className="mt-3 flex items-center gap-3 bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-white/60 dark:border-gray-700/50 rounded-2xl px-4 py-2.5 shadow-lg shadow-blue-900/5">
 
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 mr-2 flex-shrink-0">
-              <div className="w-8 h-8 rounded-xl bg-blue-600 flex items-center justify-center shadow-md shadow-blue-600/30">
-                <span className="text-white font-black text-sm">i</span>
-              </div>
-              <span className="font-black text-base text-gray-900 dark:text-white tracking-tight hidden sm:block">iamsweet</span>
+            <Link to="/" className="flex items-center mr-2 flex-shrink-0">
+              <img src="https://media.base44.com/images/public/6a5ebcfd68e6120b630c6ded/9b90fc159_iamsweet.png" alt="iamsweet" className="h-8 w-auto" />
             </Link>
 
             <div className="h-5 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block" />
@@ -666,11 +663,8 @@ export default function Home() {
       {/* ── FOOTER ── */}
       <footer className="border-t border-gray-200 dark:border-gray-800 py-6 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-lg bg-blue-600 flex items-center justify-center">
-              <span className="text-white font-black text-xs">i</span>
-            </div>
-            <span className="text-sm font-bold text-gray-800 dark:text-gray-200">iamsweet</span>
+          <div className="flex items-center">
+            <img src="https://media.base44.com/images/public/6a5ebcfd68e6120b630c6ded/9b90fc159_iamsweet.png" alt="iamsweet" className="h-7 w-auto" />
           </div>
           <div className="flex items-center gap-4">
             <Link to="/about" className="text-xs text-gray-400 hover:text-blue-600 transition-colors">About</Link>
