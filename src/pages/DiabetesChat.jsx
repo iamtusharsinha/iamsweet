@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Send, Mic, MicOff, Bot, User, Loader2, Volume2, VolumeX, Waves } from "lucide-react";
+import { ArrowLeft, Send, Mic, MicOff, User, Loader2, Volume2, VolumeX, Waves } from "lucide-react";
+
+const SWEETY_IMG = "https://media.base44.com/images/public/6a5ebcfd68e6120b630c6ded/df32c2066_276465DD-3B17-4CBF-9091-DB89A25C5061.PNG";
 import { base44 } from "@/api/base44Client";
 import ReactMarkdown from "react-markdown";
 import { useLanguage } from "@/lib/LanguageContext";
@@ -171,8 +173,8 @@ export default function DiabetesChat() {
           </Link>
           <div className="w-px h-5 bg-blue-200 dark:bg-gray-700" />
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center">
-              <Bot className="w-4 h-4 text-white" />
+            <div className="w-7 h-7 rounded-full overflow-hidden bg-blue-50 flex items-center justify-center">
+              <img src={SWEETY_IMG} alt="SWEETY" className="w-full h-full object-cover" />
             </div>
             <div>
               <span className="font-heading font-bold text-sm text-blue-900 dark:text-white block leading-none">{t("chatTitle")}</span>
@@ -290,8 +292,8 @@ export default function DiabetesChat() {
             animate={{ opacity: 1, y: 0 }}
             className={`flex gap-3 ${msg.role === "user" ? "flex-row-reverse" : "flex-row"}`}
           >
-            <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center ${msg.role === "user" ? "bg-blue-600" : "bg-white dark:bg-gray-800 border-2 border-blue-200 dark:border-gray-600"}`}>
-              {msg.role === "user" ? <User className="w-4 h-4 text-white" /> : <Bot className="w-4 h-4 text-blue-600" />}
+            <div className={`w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center overflow-hidden ${msg.role === "user" ? "bg-blue-600" : "bg-blue-50 dark:bg-gray-800 border-2 border-blue-200 dark:border-gray-600"}`}>
+              {msg.role === "user" ? <User className="w-4 h-4 text-white" /> : <img src={SWEETY_IMG} alt="SWEETY" className="w-full h-full object-cover" />}
             </div>
 
             <div className={`max-w-[80%] relative group ${msg.role === "user" ? "items-end" : "items-start"} flex flex-col`}>
@@ -327,8 +329,8 @@ export default function DiabetesChat() {
 
         {loading && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex gap-3">
-            <div className="w-8 h-8 rounded-full bg-white dark:bg-gray-800 border-2 border-blue-200 dark:border-gray-600 flex items-center justify-center flex-shrink-0">
-              <Bot className="w-4 h-4 text-blue-600" />
+            <div className="w-8 h-8 rounded-full bg-blue-50 dark:bg-gray-800 border-2 border-blue-200 dark:border-gray-600 flex items-center justify-center flex-shrink-0 overflow-hidden">
+              <img src={SWEETY_IMG} alt="SWEETY" className="w-full h-full object-cover" />
             </div>
             <div className="bg-white dark:bg-gray-800 border border-blue-100 dark:border-gray-700 rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2">
               <Loader2 className="w-4 h-4 text-blue-500 animate-spin" />
