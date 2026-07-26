@@ -209,7 +209,7 @@ export default function Home() {
 
             {/* Logo */}
             <Link to="/" className="flex items-center mr-2 flex-shrink-0">
-              <img src="https://media.base44.com/images/public/6a5ebcfd68e6120b630c6ded/9b90fc159_iamsweet.png" alt="iamsweet" className="h-8 w-auto" />
+              <img src="https://media.base44.com/images/public/6a5ebcfd68e6120b630c6ded/372d3e55c_iamsweet.png" alt="iamsweet" className="h-8 w-auto" />
             </Link>
 
             <div className="h-5 w-px bg-gray-200 dark:bg-gray-700 hidden sm:block" />
@@ -664,7 +664,7 @@ export default function Home() {
       <footer className="border-t border-gray-200 dark:border-gray-800 py-6 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
           <div className="flex items-center">
-            <img src="https://media.base44.com/images/public/6a5ebcfd68e6120b630c6ded/9b90fc159_iamsweet.png" alt="iamsweet" className="h-7 w-auto" />
+            <img src="https://media.base44.com/images/public/6a5ebcfd68e6120b630c6ded/372d3e55c_iamsweet.png" alt="iamsweet" className="h-7 w-auto" />
           </div>
           <div className="flex items-center gap-4">
             <Link to="/about" className="text-xs text-gray-400 hover:text-blue-600 transition-colors">About</Link>
