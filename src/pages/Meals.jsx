@@ -22,9 +22,20 @@ export default function Meals() {
       return false;
     }
     if (ethnicity !== "All" && m.ethnicity !== ethnicity) return false;
-    if (giFilter !== "All GI" && m.glycemic !== giFilter) return false;
-    const q = search.toLowerCase();
-    if (q && !m.name.toLowerCase().includes(q) && !m.tags.some(t => t.includes(q)) && !m.cuisine.toLowerCase().includes(q) && !m.ethnicity.toLowerCase().includes(q)) return false;
+    // Map display label back to glycemic field value
+    const giValue = giFilter === "Low (Best)" ? "Low" : giFilter;
+    if (giFilter !== "All GI" && m.glycemic !== giValue) return false;
+    const q = search.toLowerCase()
+      .replace("low-gi", "low")
+      .replace("low gi", "low")
+      .replace("diabetes friendly", "")
+      .trim();
+    if (q && !m.name.toLowerCase().includes(q) &&
+        !m.tags.some(t => t.toLowerCase().includes(q)) &&
+        !m.cuisine.toLowerCase().includes(q) &&
+        !m.ethnicity.toLowerCase().includes(q) &&
+        !m.description.toLowerCase().includes(q) &&
+        !m.category.toLowerCase().includes(q)) return false;
     return true;
   });
 
@@ -128,7 +139,7 @@ export default function Meals() {
                     {meal.category}
                   </span>
                   <span className={`absolute top-3 right-3 text-xs font-semibold px-2.5 py-1 rounded-full ${GI_LABELS[meal.glycemic] || "bg-gray-100 text-gray-600"}`}>
-                    GI {meal.giScore}
+                    {meal.glycemic === "Low" ? "Low GI" : meal.glycemic === "Low-Medium" ? "Mod GI" : "Med GI"} · {meal.giScore}
                   </span>
                   <span className="absolute bottom-3 left-3 bg-black/50 text-white text-xs px-2 py-0.5 rounded-full">
                     {ETHNICITIES.find(e => e.key === meal.ethnicity)?.emoji} {meal.ethnicity}
@@ -148,8 +159,10 @@ export default function Meals() {
                       <div className={`h-full rounded-full transition-all ${GI_BAR_COLORS[meal.glycemic] || "bg-gray-400"}`} style={{ width: `${(meal.giScore / 100) * 100}%` }} />
                     </div>
                     <div className="flex justify-between mt-1">
-                      <span className="text-xs text-gray-400">GI Score</span>
-                      <span className={`text-xs font-semibold ${meal.glycemic === "Low" ? "text-green-600" : meal.glycemic === "Low-Medium" ? "text-yellow-600" : "text-orange-600"}`}>{meal.glycemic}</span>
+                      <span className="text-xs text-gray-400">Glycemic Index</span>
+                      <span className={`text-xs font-semibold ${meal.glycemic === "Low" ? "text-green-600" : meal.glycemic === "Low-Medium" ? "text-yellow-600" : "text-orange-600"}`}>
+                        {meal.glycemic === "Low" ? "✓ Low GI" : meal.glycemic === "Low-Medium" ? "Moderate GI" : "Medium GI"}
+                      </span>
                     </div>
                   </div>
 

@@ -880,7 +880,7 @@ export const ETHNICITIES = [
 ];
 
 export const CATEGORIES = ["All", "Breakfast", "Lunch", "Snack", "Dinner", "Vegan"];
-export const GI_FILTERS = ["All GI", "Low", "Low-Medium", "Medium"];
+export const GI_FILTERS = ["All GI", "Low (Best)", "Low-Medium", "Medium"];
 export const GI_LABELS = {
   Low: "bg-green-100 text-green-700",
   "Low-Medium": "bg-yellow-100 text-yellow-700",
