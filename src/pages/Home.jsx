@@ -37,6 +37,7 @@ const CATEGORIES = [
   { key: "Complications", label: "Complications", icon: BookOpen, emoji: "📋" },
   { key: "Research", label: "Research", icon: FlaskConical, emoji: "🔬" },
   { key: "Gestational", label: "Gestational", icon: Baby, emoji: "🤱" },
+  { key: "Pediatric", label: "Pediatric", icon: Baby, emoji: "👶" },
 ];
 
 const TYPE_COLORS = {
@@ -191,8 +192,14 @@ export default function Home() {
 
   const filtered = resources.filter(r => {
     const matchCat = activeCategory === "all" || r.category === activeCategory;
-    const q = searchQuery.toLowerCase();
-    const matchSearch = !q || r.title?.toLowerCase().includes(q) || r.org_name?.toLowerCase().includes(q) || r.category?.toLowerCase().includes(q) || r.tags?.some(t => t.toLowerCase().includes(q));
+    const q = searchQuery.toLowerCase().trim();
+    const matchSearch = !q ||
+      r.title?.toLowerCase().includes(q) ||
+      r.org_name?.toLowerCase().includes(q) ||
+      r.category?.toLowerCase().includes(q) ||
+      r.description?.toLowerCase().includes(q) ||
+      r.prompt_type?.toLowerCase().includes(q) ||
+      r.tags?.some(tag => tag.toLowerCase().includes(q));
     return matchCat && matchSearch;
   });
 
@@ -407,10 +414,14 @@ export default function Home() {
           transition={{ delay: 0.28 }}
           className="mt-4 flex flex-wrap gap-2 justify-center"
         >
-          {["Blood Sugar", "Insulin", "Low-GI Diet", "HbA1c", "CGM", "Type 1", "Type 2"].map(tag => (
+          {["Blood Sugar", "Insulin", "Type 1", "Type 2", "HbA1c", "CGM", "Mental Health", "Research", "Nutrition"].map(tag => (
             <button
               key={tag}
-              onClick={() => setSearchQuery(tag)}
+              onClick={() => {
+                setSearchQuery(tag);
+                setActiveCategory("all");
+                setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+              }}
               className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all shadow-sm"
             >
               {tag}
