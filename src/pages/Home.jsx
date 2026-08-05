@@ -166,6 +166,7 @@ export default function Home() {
   const moreRef = useRef(null);
   const featuredRef = useRef(null);
   const catCarouselRef = useRef(null);
+  const resultsRef = useRef(null);
 
   useEffect(() => {
     async function load() {
@@ -387,9 +388,13 @@ export default function Home() {
             placeholder={t("searchPlaceholder")}
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter") setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50); }}
             className="w-full pl-12 pr-14 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg shadow-blue-900/5"
           />
-          <button onClick={() => setActiveCategory("all")}
+          <button onClick={() => {
+              setActiveCategory("all");
+              setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+            }}
             className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/30">
             <ArrowRight className="w-5 h-5 text-white" />
           </button>
@@ -554,6 +559,7 @@ export default function Home() {
           })}
         </div>
 
+        <div ref={resultsRef} />
         {filtered.length === 0 ? (
           <div className="text-center py-20 text-gray-400">
             <Search className="w-10 h-10 mx-auto mb-3 opacity-30" />
