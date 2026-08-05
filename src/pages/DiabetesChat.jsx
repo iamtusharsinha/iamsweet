@@ -8,6 +8,20 @@ import { base44 } from "@/api/base44Client";
 import ReactMarkdown from "react-markdown";
 import { useLanguage } from "@/lib/LanguageContext";
 
+const ROLES = [
+  { key: "patient", label: "Patient", emoji: "🤒" },
+  { key: "caregiver", label: "Caregiver", emoji: "🧑‍⚕️" },
+  { key: "doctor", label: "Doctor", emoji: "👨‍⚕️" },
+  { key: "researcher", label: "Researcher", emoji: "🔬" },
+  { key: "other", label: "Other", emoji: "👤" },
+];
+
+const DETAIL_LEVELS = [
+  { value: 1, label: "Simple" },
+  { value: 2, label: "Balanced" },
+  { value: 3, label: "Detailed" },
+];
+
 const SUGGESTIONS = [
   "What foods should I avoid with Type 2 diabetes?",
   "How does exercise affect blood sugar?",
@@ -18,6 +32,34 @@ const SUGGESTIONS = [
   "What is A1C and what should my target be?",
   "How does stress affect blood sugar levels?",
 ];
+
+function buildSystemContext(role, detailLevel) {
+  const roleCtx = {
+    patient: "You are speaking with a patient managing diabetes. Use simple, reassuring language. Avoid medical jargon.",
+    caregiver: "You are speaking with a caregiver of someone with diabetes. Be practical and empathetic.",
+    doctor: "You are speaking with a physician. You may use clinical terminology, reference guidelines (ADA, EASD), and be precise.",
+    researcher: "You are speaking with a researcher. Be evidence-based, reference mechanisms, studies, and clinical nuance where relevant.",
+    other: "You are speaking with someone interested in diabetes. Keep it accessible and educational.",
+  };
+  const detailCtx = {
+    1: "Keep responses VERY short — 1-2 sentences max. Simple words only.",
+    2: "Keep responses concise — 2-4 short paragraphs. Balance simplicity and depth.",
+    3: "Give thorough responses — include mechanisms, context, and nuance. Still avoid unnecessary padding.",
+  };
+  return `You are SWEETY, a warm and empathetic diabetes support assistant. You respond like a knowledgeable friend — short, real, and personal.
+
+Audience: ${roleCtx[role] || roleCtx.other}
+Response depth: ${detailCtx[detailLevel] || detailCtx[2]}
+
+Rules:
+- For GENERIC questions (e.g. "what is diabetes", "what foods are good"): give a brief, practical answer. No lists.
+- For PERSONAL or SPECIFIC situations (e.g. "my sugar was 280 after lunch", "I feel dizzy", "I take metformin and..."): ask 1-2 targeted follow-up questions FIRST to understand their situation better before giving advice.
+- Give FEEDBACK, not just generic advice. Acknowledge what they're doing right or wrong. Be direct.
+- Be honest and specific. If something sounds risky, say so plainly.
+- Only engage with diabetes-related topics.
+- One brief doctor reminder only when clinically warranted — never as a boilerplate footer.
+- Be warm, never clinical or robotic unless speaking to a doctor/researcher.`;
+}
 
 const SYSTEM_CONTEXT = `You are SWEETY, a warm and empathetic diabetes support assistant. You respond like a knowledgeable friend — short, real, and personal.
 
@@ -33,10 +75,12 @@ Rules:
 
 export default function DiabetesChat() {
   const { t } = useLanguage();
+  const [userRole, setUserRole] = useState(null);
+  const [detailLevel, setDetailLevel] = useState(2);
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Hey! I'm **SWEETY** 🩵 — your diabetes support buddy. Ask me anything about blood sugar, nutrition, meds, lifestyle, or just how you're feeling today."
+      content: "Hey! I'm **SWEETY** 🩵 — your diabetes support buddy.\n\nBefore we start — who are you? This helps me tailor my responses just for you."
     }
   ]);
   const [input, setInput] = useState("");
@@ -82,7 +126,8 @@ export default function DiabetesChat() {
 
     try {
       const history = newMessages.map(m => `${m.role === "user" ? "User" : "SWEETY"}: ${m.content}`).join("\n");
-      const prompt = `${SYSTEM_CONTEXT}\n\nConversation:\n${history}\n\nSWEETY:`;
+      const ctx = buildSystemContext(userRole || "other", detailLevel);
+      const prompt = `${ctx}\n\nConversation:\n${history}\n\nSWEETY:`;
       const response = await base44.integrations.Core.InvokeLLM({ prompt });
       setMessages(prev => [...prev, { role: "assistant", content: response }]);
     } catch {
@@ -185,6 +230,23 @@ export default function DiabetesChat() {
             </div>
           </div>
         </div>
+        {/* Detail Level Lever */}
+        <div className="hidden sm:flex items-center gap-1.5 bg-white dark:bg-gray-800 border border-blue-200 dark:border-gray-700 rounded-xl px-2 py-1">
+          {DETAIL_LEVELS.map(d => (
+            <button
+              key={d.value}
+              onClick={() => setDetailLevel(d.value)}
+              className={`text-xs font-semibold px-2.5 py-1 rounded-lg transition-all ${
+                detailLevel === d.value
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-500 dark:text-gray-400 hover:text-blue-600"
+              }`}
+            >
+              {d.label}
+            </button>
+          ))}
+        </div>
+
         {/* Voice Mode Toggle */}
         <button
           onClick={toggleVoiceMode}
@@ -272,19 +334,37 @@ export default function DiabetesChat() {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto max-w-4xl mx-auto w-full px-4 sm:px-6 py-6 space-y-5">
         {messages.length === 1 && (
-          <div className="mb-2">
-            <p className="text-xs text-gray-400 dark:text-gray-500 mb-3 text-center">{t("tapQuestion")}</p>
-            <div className="flex flex-wrap gap-2 justify-center">
-              {SUGGESTIONS.map(s => (
-                <button
-                  key={s}
-                  onClick={() => sendMessage(s)}
-                  className="text-xs bg-white dark:bg-gray-800 border border-blue-200 dark:border-gray-700 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-full hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all"
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
+          <div className="mb-4 space-y-4">
+            {/* Role picker */}
+            {!userRole ? (
+              <div className="flex flex-wrap gap-2 justify-center">
+                {ROLES.map(r => (
+                  <button
+                    key={r.key}
+                    onClick={() => {
+                      setUserRole(r.key);
+                      setMessages(prev => [
+                        ...prev,
+                        { role: "user", content: `I am a ${r.label}` },
+                        { role: "assistant", content: `Got it! I'll tailor my answers for you as a ${r.label} ${r.emoji}. What's on your mind?` }
+                      ]);
+                    }}
+                    className="flex items-center gap-1.5 text-sm bg-white dark:bg-gray-800 border border-blue-200 dark:border-gray-700 text-blue-700 dark:text-blue-300 px-4 py-2.5 rounded-xl hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all font-medium"
+                  >
+                    <span>{r.emoji}</span> {r.label}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2 justify-center">
+                {SUGGESTIONS.map(s => (
+                  <button key={s} onClick={() => sendMessage(s)}
+                    className="text-xs bg-white dark:bg-gray-800 border border-blue-200 dark:border-gray-700 text-blue-700 dark:text-blue-300 px-3 py-2 rounded-full hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all">
+                    {s}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
