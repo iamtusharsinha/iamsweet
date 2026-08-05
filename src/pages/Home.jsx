@@ -427,6 +427,12 @@ export default function Home() {
               {tag}
             </button>
           ))}
+          <Link
+            to="/meals"
+            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all shadow-sm"
+          >
+            Low-GI Diet 🥗
+          </Link>
         </motion.div>
 
         <motion.div
