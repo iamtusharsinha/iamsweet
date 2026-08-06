@@ -1,9 +1,90 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowLeft, Activity, Scale, Loader2, ChefHat, AlertCircle, CheckCircle2, RotateCcw } from "lucide-react";
+import { ArrowLeft, Activity, Scale, Loader2, ChefHat, AlertCircle, CheckCircle2, RotateCcw, Globe } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 import ReactMarkdown from "react-markdown";
+
+// ── Languages ──────────────────────────────────────────────────────────────
+const LANGUAGES = [
+  { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "hi", label: "हिन्दी", flag: "🇮🇳" },
+  { code: "ar", label: "العربية", flag: "🇸🇦" },
+  { code: "es", label: "Español", flag: "🇪🇸" },
+  { code: "fr", label: "Français", flag: "🇫🇷" },
+  { code: "pt", label: "Português", flag: "🇧🇷" },
+  { code: "zh", label: "中文", flag: "🇨🇳" },
+  { code: "sw", label: "Kiswahili", flag: "🇰🇪" },
+  { code: "ur", label: "اردو", flag: "🇵🇰" },
+  { code: "bn", label: "বাংলা", flag: "🇧🇩" },
+];
+
+// ── Ethnicities with real iconic dishes ───────────────────────────────────
+const ETHNICITIES = [
+  {
+    key: "south_asian",
+    label: "South Asian",
+    flag: "🇮🇳",
+    desc: "Indian, Pakistani, Bangladeshi",
+    dishes: ["Moong dal (low-GI)", "Methi roti", "Palak paneer", "Raita", "Bitter gourd sabzi", "Brown rice khichdi", "Sprout chaat", "Masoor dal soup"],
+  },
+  {
+    key: "east_asian",
+    label: "East Asian",
+    flag: "🇯🇵",
+    desc: "Japanese, Chinese, Korean",
+    dishes: ["Miso soup with tofu", "Edamame", "Soba noodles", "Congee (oats)", "Steamed fish with ginger", "Natto", "Kimchi", "Barley rice"],
+  },
+  {
+    key: "southeast_asian",
+    label: "Southeast Asian",
+    flag: "🇹🇭",
+    desc: "Thai, Filipino, Vietnamese, Indonesian",
+    dishes: ["Tom yum soup", "Goi cuon (fresh rolls)", "Tempeh stir-fry", "Lemongrass chicken", "Papaya salad", "Congee with fish", "Tofu laksa", "Bitter melon stir-fry"],
+  },
+  {
+    key: "middle_eastern",
+    label: "Middle Eastern",
+    flag: "🇱🇧",
+    desc: "Arabic, Lebanese, Turkish, Persian",
+    dishes: ["Fattoush salad", "Lentil soup (shorbat adas)", "Grilled kofta (lean)", "Tabbouleh", "Hummus with veggies", "Grilled fish with herbs", "Foul medames", "Za'atar whole wheat bread"],
+  },
+  {
+    key: "african",
+    label: "African",
+    flag: "🌍",
+    desc: "West, East, North & Southern African",
+    dishes: ["Ugali with sukuma wiki", "Jollof brown rice", "Mchicha (amaranth stew)", "Groundnut soup (lean)", "Tilapia with tomatoes", "Beans and plantain", "Injera with lentils", "Moringa soup"],
+  },
+  {
+    key: "latin_american",
+    label: "Latin American",
+    flag: "🇲🇽",
+    desc: "Mexican, Brazilian, Colombian, Peruvian",
+    dishes: ["Black bean soup", "Ceviche", "Quinoa salad", "Grilled chicken with chimichurri", "Avocado & egg tostada", "Lentil stew", "Chayote with herbs", "Arroz integral (brown rice)"],
+  },
+  {
+    key: "mediterranean",
+    label: "Mediterranean",
+    flag: "🇬🇷",
+    desc: "Greek, Italian, Spanish",
+    dishes: ["Greek salad with feta", "Lentil soup", "Grilled sardines", "Chickpea stew", "Tzatziki with veggies", "Farro salad", "Ratatouille", "Olive oil braised greens"],
+  },
+  {
+    key: "western",
+    label: "Western / American",
+    flag: "🇺🇸",
+    desc: "North American, British, Australian",
+    dishes: ["Oatmeal with berries", "Grilled salmon salad", "Turkey & avocado wrap", "Lentil veggie soup", "Egg white omelette", "Sweet potato & black bean bowl", "Greek yogurt parfait", "Quinoa tabbouleh"],
+  },
+  {
+    key: "caribbean",
+    label: "Caribbean",
+    flag: "🇯🇲",
+    desc: "Jamaican, Trinidadian, Haitian",
+    dishes: ["Callaloo soup", "Grilled jerk chicken (no sugar)", "Pigeon peas & brown rice", "Steamed fish with okra", "Dasheen leaves stew", "Breadfruit salad", "Soursop leaf tea", "Ackee with saltfish (reduced)"],
+  },
+];
 
 const SYMPTOMS = [
   "Frequent urination", "Excessive thirst", "Fatigue", "Blurred vision",
@@ -13,8 +94,13 @@ const SYMPTOMS = [
 ];
 
 const DIABETES_TYPES = ["Type 1", "Type 2", "Prediabetes", "Gestational", "Not sure"];
-const ACTIVITY_LEVELS = ["Sedentary (desk job, little exercise)", "Light (1-3 days/week)", "Moderate (3-5 days/week)", "Active (6-7 days/week)"];
-const MEAL_PREFS = ["No restriction", "Vegetarian", "Vegan", "Low-carb / Keto", "Mediterranean", "South Asian", "Middle Eastern"];
+const ACTIVITY_LEVELS = [
+  "Sedentary (desk job, little exercise)",
+  "Light (1-3 days/week)",
+  "Moderate (3-5 days/week)",
+  "Active (6-7 days/week)",
+];
+const DIETARY_PREFS = ["No restriction", "Vegetarian", "Vegan", "Low-carb / Keto", "Halal", "Kosher", "Gluten-free"];
 
 function getBMICategory(bmi) {
   if (bmi < 18.5) return { label: "Underweight", color: "text-blue-600", bg: "bg-blue-50 border-blue-200" };
@@ -32,19 +118,25 @@ function getGlucoseCategory(glucose, unit) {
 }
 
 export default function DietChart() {
+  const [lang, setLang] = useState("en");
   const [step, setStep] = useState(1);
   const [form, setForm] = useState({
-    age: "", gender: "Female", weight: "", height: "", weightUnit: "kg", heightUnit: "cm",
-    glucose: "", glucoseUnit: "mg/dL", diabetesType: "Type 2",
-    activityLevel: ACTIVITY_LEVELS[0], mealPref: "No restriction",
-    symptoms: [], otherNotes: "",
+    age: "", gender: "Female",
+    weight: "", height: "", weightUnit: "kg", heightUnit: "cm",
+    glucose: "", glucoseUnit: "mg/dL",
+    diabetesType: "Type 2",
+    ethnicity: null,
+    activityLevel: ACTIVITY_LEVELS[0],
+    dietaryPref: "No restriction",
+    symptoms: [],
+    otherNotes: "",
   });
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const bmi = (() => {
     const w = parseFloat(form.weight);
-    let h = parseFloat(form.height);
+    const h = parseFloat(form.height);
     if (!w || !h) return null;
     const wKg = form.weightUnit === "lbs" ? w * 0.453592 : w;
     const hM = form.heightUnit === "cm" ? h / 100 : h * 0.0254;
@@ -53,6 +145,7 @@ export default function DietChart() {
 
   const glucoseCat = form.glucose ? getGlucoseCategory(parseFloat(form.glucose), form.glucoseUnit) : null;
   const bmiCat = bmi ? getBMICategory(parseFloat(bmi)) : null;
+  const selectedEthnicity = ETHNICITIES.find(e => e.key === form.ethnicity);
 
   function toggleSymptom(s) {
     setForm(f => ({
@@ -64,8 +157,15 @@ export default function DietChart() {
   async function generate() {
     setLoading(true);
     setResult(null);
+    const langLabel = LANGUAGES.find(l => l.code === lang)?.label || "English";
+    const ethnicDishes = selectedEthnicity
+      ? `The patient's cultural background is ${selectedEthnicity.label} (${selectedEthnicity.desc}). Prioritize these culturally familiar, diabetes-friendly dishes and ingredients: ${selectedEthnicity.dishes.join(", ")}. Include local dish names with brief descriptions in the diet plan.`
+      : "No specific cultural preference — use globally common healthy foods.";
+
     try {
-      const prompt = `You are a certified diabetes dietitian. Create a personalized daily diet chart for this patient:
+      const prompt = `You are a certified diabetes dietitian. Respond ENTIRELY in ${langLabel} — every word of your response must be in ${langLabel}, including section headings, advice, and food names (add the local name first, then English in brackets if helpful).
+
+Create a personalized daily diet chart for this patient:
 
 **Patient Profile:**
 - Age: ${form.age} | Gender: ${form.gender}
@@ -73,23 +173,25 @@ export default function DietChart() {
 - Fasting Glucose: ${form.glucose} ${form.glucoseUnit} → ${glucoseCat?.label}
 - Diabetes Type: ${form.diabetesType}
 - Activity Level: ${form.activityLevel}
-- Meal Preference: ${form.mealPref}
+- Dietary Preference: ${form.dietaryPref}
 - Symptoms: ${form.symptoms.length ? form.symptoms.join(", ") : "None reported"}
 - Additional notes: ${form.otherNotes || "None"}
 
-Provide a structured response with these sections:
-1. **Your Health Snapshot** – brief 2-3 sentence personalized assessment
+**Cultural Context:** ${ethnicDishes}
+
+Provide a structured response with these sections (all in ${langLabel}):
+1. **Your Health Snapshot** – 2-3 sentence personalized assessment
 2. **Daily Calorie & Carb Target** – specific numbers with explanation
-3. **🌅 Breakfast** – 2 options with portions and GI notes
+3. **🌅 Breakfast** – 2 culturally appropriate options with portions and GI notes
 4. **☀️ Mid-Morning Snack** – 1-2 options
 5. **🌞 Lunch** – 2 options with portions
 6. **🌆 Evening Snack** – 1-2 options
 7. **🌙 Dinner** – 2 options with portions
 8. **🚫 Foods to Strictly Avoid** – short list with reasons
-9. **⭐ Top 5 Superfoods for You** – specific to their profile
+9. **⭐ Top 5 Superfoods for You** – specific to their cultural background and health profile
 10. **💧 Hydration & Lifestyle Tips** – 3 quick tips
 
-Keep meal options realistic, specific, and matched to their ${form.mealPref} preference. Reference their glucose level and BMI in recommendations. Be direct and practical — no generic advice.`;
+Use real, specific dish names from their cultural background. Reference their glucose level and BMI. Be direct and practical.`;
 
       const response = await base44.integrations.Core.InvokeLLM({ prompt });
       setResult(response);
@@ -105,38 +207,55 @@ Keep meal options realistic, specific, and matched to their ${form.mealPref} pre
     <div className="min-h-screen bg-[#f5f7ff] dark:bg-[#0a0d1a] pb-20">
       {/* Header */}
       <header className="sticky top-0 z-30 bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl border-b border-gray-100 dark:border-gray-800">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-4 flex items-center gap-4">
-          <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
-            <ArrowLeft className="w-4 h-4" /> Home
-          </Link>
-          <div className="w-px h-5 bg-gray-200 dark:bg-gray-700" />
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
-              <ChefHat className="w-4 h-4 text-white" />
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <Link to="/" className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 transition-colors">
+              <ArrowLeft className="w-4 h-4" /> Home
+            </Link>
+            <div className="w-px h-5 bg-gray-200 dark:bg-gray-700" />
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+                <ChefHat className="w-4 h-4 text-white" />
+              </div>
+              <div className="hidden sm:block">
+                <p className="font-bold text-sm text-gray-900 dark:text-white leading-none">Personalized Diet Chart</p>
+                <p className="text-xs text-gray-400">Glucose · BMI · Ethnicity · Symptoms</p>
+              </div>
             </div>
-            <div>
-              <p className="font-bold text-sm text-gray-900 dark:text-white leading-none">Personalized Diet Chart</p>
-              <p className="text-xs text-gray-400">Based on your glucose, BMI & symptoms</p>
-            </div>
+          </div>
+          {/* Language Picker */}
+          <div className="flex gap-1 flex-wrap justify-end">
+            {LANGUAGES.slice(0, 5).map(l => (
+              <button key={l.code} onClick={() => setLang(l.code)}
+                title={l.label}
+                className={`text-base px-2 py-1 rounded-lg border transition-all ${lang === l.code ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30" : "border-transparent hover:border-gray-300"}`}>
+                {l.flag}
+              </button>
+            ))}
+            <select value={lang} onChange={e => setLang(e.target.value)}
+              className="text-xs rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-1 focus:outline-none">
+              {LANGUAGES.map(l => <option key={l.code} value={l.code}>{l.flag} {l.label}</option>)}
+            </select>
           </div>
         </div>
       </header>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 pt-8">
-        {!result ? (
+        {!result && !loading ? (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}>
             {/* Progress */}
             <div className="flex items-center gap-2 mb-8">
-              {[1, 2].map(s => (
+              {[1, 2, 3].map(s => (
                 <React.Fragment key={s}>
-                  <div className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-all ${step >= s ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-800 text-gray-400"}`}>
-                    {s === 1 ? "📊 Health Stats" : "🩺 Symptoms & Prefs"}
+                  <div className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full transition-all flex-shrink-0 ${step >= s ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-gray-800 text-gray-400"}`}>
+                    {s === 1 ? "📊 Health" : s === 2 ? "🌍 Culture" : "🩺 Symptoms"}
                   </div>
-                  {s < 2 && <div className={`flex-1 h-0.5 rounded ${step > s ? "bg-blue-600" : "bg-gray-200 dark:bg-gray-700"}`} />}
+                  {s < 3 && <div className={`flex-1 h-0.5 rounded ${step > s ? "bg-blue-600" : "bg-gray-200 dark:bg-gray-700"}`} />}
                 </React.Fragment>
               ))}
             </div>
 
+            {/* ── STEP 1: Health Stats ── */}
             {step === 1 && (
               <div className="space-y-5">
                 <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 space-y-5">
@@ -197,14 +316,14 @@ Keep meal options realistic, specific, and matched to their ${form.mealPref} pre
                     </div>
                   </div>
 
-                  {/* BMI live preview */}
+                  {/* BMI live */}
                   {bmi && bmiCat && (
                     <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
                       className={`flex items-center gap-3 p-3 rounded-xl border ${bmiCat.bg}`}>
                       <Scale className={`w-5 h-5 ${bmiCat.color}`} />
                       <div>
-                        <p className="text-xs font-bold text-gray-700 dark:text-gray-300">Your BMI: <span className={bmiCat.color}>{bmi} — {bmiCat.label}</span></p>
-                        <p className="text-[10px] text-gray-400">Calculated automatically from your inputs</p>
+                        <p className="text-xs font-bold text-gray-700 dark:text-gray-300">BMI: <span className={bmiCat.color}>{bmi} — {bmiCat.label}</span></p>
+                        <p className="text-[10px] text-gray-400">Auto-calculated</p>
                       </div>
                     </motion.div>
                   )}
@@ -245,22 +364,66 @@ Keep meal options realistic, specific, and matched to their ${form.mealPref} pre
                   </div>
                 </div>
 
-                <button
-                  onClick={() => setStep(2)}
-                  disabled={!isStep1Valid}
-                  className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black rounded-2xl transition-all shadow-lg shadow-blue-600/25 text-sm"
-                >
-                  Next: Symptoms & Preferences →
+                <button onClick={() => setStep(2)} disabled={!isStep1Valid}
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed text-white font-black rounded-2xl transition-all shadow-lg shadow-blue-600/25 text-sm">
+                  Next: Cultural Background →
                 </button>
               </div>
             )}
 
+            {/* ── STEP 2: Ethnicity & Culture ── */}
             {step === 2 && (
               <div className="space-y-5">
                 <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 space-y-5">
                   <h2 className="font-black text-gray-900 dark:text-white text-lg flex items-center gap-2">
-                    🩺 Symptoms & Preferences
+                    <Globe className="w-5 h-5 text-emerald-500" /> Your Cultural Background
                   </h2>
+                  <p className="text-xs text-gray-500 dark:text-gray-400">We'll tailor recipes and dishes to your cuisine — so your diet chart feels familiar, not foreign.</p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {ETHNICITIES.map(e => (
+                      <button key={e.key} onClick={() => setForm(f => ({ ...f, ethnicity: e.key }))}
+                        className={`text-left p-4 rounded-2xl border-2 transition-all ${form.ethnicity === e.key ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20" : "border-gray-100 dark:border-gray-700 hover:border-emerald-300 bg-gray-50 dark:bg-gray-700/50"}`}>
+                        <div className="flex items-center gap-2 mb-1.5">
+                          <span className="text-xl">{e.flag}</span>
+                          <p className={`text-sm font-black ${form.ethnicity === e.key ? "text-emerald-700 dark:text-emerald-400" : "text-gray-900 dark:text-white"}`}>{e.label}</p>
+                          {form.ethnicity === e.key && <CheckCircle2 className="w-4 h-4 text-emerald-600 ml-auto" />}
+                        </div>
+                        <p className="text-[10px] text-gray-400 mb-2">{e.desc}</p>
+                        <div className="flex flex-wrap gap-1">
+                          {e.dishes.slice(0, 3).map(d => (
+                            <span key={d} className="text-[10px] bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 px-1.5 py-0.5 rounded-full">{d}</span>
+                          ))}
+                          <span className="text-[10px] text-gray-400">+{e.dishes.length - 3} more</span>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+
+                  <button onClick={() => setForm(f => ({ ...f, ethnicity: null }))}
+                    className={`text-xs text-gray-400 hover:text-gray-600 transition-colors ${!form.ethnicity ? "font-bold text-gray-600 dark:text-gray-300" : ""}`}>
+                    Skip / No preference
+                  </button>
+                </div>
+
+                <div className="flex gap-3">
+                  <button onClick={() => setStep(1)}
+                    className="px-6 py-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-2xl transition-all hover:border-blue-400 text-sm">
+                    ← Back
+                  </button>
+                  <button onClick={() => setStep(3)}
+                    className="flex-1 py-4 bg-blue-600 hover:bg-blue-700 text-white font-black rounded-2xl transition-all shadow-lg shadow-blue-600/25 text-sm">
+                    Next: Symptoms & Prefs →
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* ── STEP 3: Symptoms & Preferences ── */}
+            {step === 3 && (
+              <div className="space-y-5">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 space-y-5">
+                  <h2 className="font-black text-gray-900 dark:text-white text-lg">🩺 Symptoms & Preferences</h2>
 
                   {/* Activity Level */}
                   <div>
@@ -275,13 +438,13 @@ Keep meal options realistic, specific, and matched to their ${form.mealPref} pre
                     </div>
                   </div>
 
-                  {/* Meal Preference */}
+                  {/* Dietary Preference */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">Meal Preference</label>
+                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">Dietary Preference</label>
                     <div className="flex flex-wrap gap-2">
-                      {MEAL_PREFS.map(p => (
-                        <button key={p} onClick={() => setForm(f => ({ ...f, mealPref: p }))}
-                          className={`px-3 py-2 text-xs font-semibold rounded-xl border transition-all ${form.mealPref === p ? "bg-emerald-600 border-emerald-600 text-white" : "border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-emerald-400"}`}>
+                      {DIETARY_PREFS.map(p => (
+                        <button key={p} onClick={() => setForm(f => ({ ...f, dietaryPref: p }))}
+                          className={`px-3 py-2 text-xs font-semibold rounded-xl border transition-all ${form.dietaryPref === p ? "bg-emerald-600 border-emerald-600 text-white" : "border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:border-emerald-400"}`}>
                           {p}
                         </button>
                       ))}
@@ -290,7 +453,9 @@ Keep meal options realistic, specific, and matched to their ${form.mealPref} pre
 
                   {/* Symptoms */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">Current Symptoms <span className="text-gray-400 font-normal">(select all that apply)</span></label>
+                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">
+                      Current Symptoms <span className="text-gray-400 font-normal">(select all that apply)</span>
+                    </label>
                     <div className="flex flex-wrap gap-2">
                       {SYMPTOMS.map(s => (
                         <button key={s} onClick={() => toggleSymptom(s)}
@@ -302,19 +467,19 @@ Keep meal options realistic, specific, and matched to their ${form.mealPref} pre
                     </div>
                   </div>
 
-                  {/* Additional Notes */}
+                  {/* Notes */}
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">Anything else? <span className="text-gray-400 font-normal">(optional)</span></label>
-                    <textarea
-                      rows={3} placeholder="e.g. on metformin, avoid gluten, hate fish..."
+                    <label className="block text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1.5">
+                      Anything else? <span className="text-gray-400 font-normal">(optional)</span>
+                    </label>
+                    <textarea rows={3} placeholder="e.g. on metformin, avoid gluten, hate fish..."
                       value={form.otherNotes} onChange={e => setForm(f => ({ ...f, otherNotes: e.target.value }))}
-                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
-                    />
+                      className="w-full px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none" />
                   </div>
                 </div>
 
                 <div className="flex gap-3">
-                  <button onClick={() => setStep(1)}
+                  <button onClick={() => setStep(2)}
                     className="px-6 py-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-2xl transition-all hover:border-blue-400 text-sm">
                     ← Back
                   </button>
@@ -333,7 +498,9 @@ Keep meal options realistic, specific, and matched to their ${form.mealPref} pre
               <Loader2 className="w-8 h-8 text-white animate-spin" />
             </div>
             <p className="font-black text-gray-900 dark:text-white text-lg">Building your diet chart…</p>
-            <p className="text-gray-400 text-sm mt-2">Analyzing your glucose, BMI & symptoms</p>
+            <p className="text-gray-400 text-sm mt-2">
+              {selectedEthnicity ? `Crafting ${selectedEthnicity.label} recipes for your profile` : "Analyzing your glucose, BMI & symptoms"}
+            </p>
           </motion.div>
         ) : (
           <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
@@ -353,13 +520,14 @@ Keep meal options realistic, specific, and matched to their ${form.mealPref} pre
                   <p className={`text-[10px] font-semibold ${glucoseCat.color}`}>{form.glucoseUnit}</p>
                 </div>
               )}
-              <div className="p-3 rounded-2xl border border-blue-200 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-800 text-center">
-                <p className="text-[10px] text-gray-500 font-semibold">Type</p>
-                <p className="text-sm font-black text-blue-600 dark:text-blue-400 leading-tight mt-1">{form.diabetesType}</p>
+              <div className="p-3 rounded-2xl border border-emerald-200 bg-emerald-50 dark:bg-emerald-900/20 dark:border-emerald-800 text-center">
+                <p className="text-[10px] text-gray-500 font-semibold">Cuisine</p>
+                <p className="text-xl">{selectedEthnicity?.flag || "🌍"}</p>
+                <p className="text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">{selectedEthnicity?.label || "Global"}</p>
               </div>
             </div>
 
-            {/* Diet Chart Result */}
+            {/* Result */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 overflow-hidden">
               <div className="h-2 bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-500" />
               <div className="p-6">
@@ -369,7 +537,9 @@ Keep meal options realistic, specific, and matched to their ${form.mealPref} pre
                   </div>
                   <div>
                     <p className="font-black text-gray-900 dark:text-white text-sm">Your Personalized Diet Chart</p>
-                    <p className="text-xs text-gray-400">AI-generated based on your health data</p>
+                    <p className="text-xs text-gray-400">
+                      {selectedEthnicity ? `${selectedEthnicity.flag} ${selectedEthnicity.label} cuisine` : "Global"} · {LANGUAGES.find(l => l.code === lang)?.label}
+                    </p>
                   </div>
                 </div>
                 <div className="prose prose-sm dark:prose-invert max-w-none prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:font-black prose-p:text-gray-600 dark:prose-p:text-gray-300 prose-li:text-gray-600 dark:prose-li:text-gray-300 prose-strong:text-gray-900 dark:prose-strong:text-white">
@@ -381,12 +551,12 @@ Keep meal options realistic, specific, and matched to their ${form.mealPref} pre
             {/* Disclaimer */}
             <div className="flex items-start gap-3 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl">
               <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-amber-700 dark:text-amber-400">This diet chart is AI-generated for educational purposes. Always consult your doctor or registered dietitian before making significant dietary changes.</p>
+              <p className="text-xs text-amber-700 dark:text-amber-400">AI-generated for educational purposes only. Always consult your doctor or registered dietitian before making significant dietary changes.</p>
             </div>
 
             {/* Actions */}
-            <div className="flex gap-3">
-              <button onClick={() => { setResult(null); setStep(1); setForm(f => ({ ...f, symptoms: [], otherNotes: "" })); }}
+            <div className="flex gap-3 flex-wrap">
+              <button onClick={() => { setResult(null); setStep(1); setForm(f => ({ ...f, symptoms: [], otherNotes: "", ethnicity: null })); }}
                 className="flex items-center gap-2 px-5 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 font-semibold rounded-xl text-sm hover:border-blue-400 transition-all">
                 <RotateCcw className="w-4 h-4" /> Start Over
               </button>
@@ -399,16 +569,6 @@ Keep meal options realistic, specific, and matched to their ${form.mealPref} pre
                 Ask SWEETY 🤖
               </Link>
             </div>
-          </motion.div>
-        )}
-
-        {loading && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-24">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center mx-auto mb-4">
-              <Loader2 className="w-8 h-8 text-white animate-spin" />
-            </div>
-            <p className="font-black text-gray-900 dark:text-white text-lg">Building your diet chart…</p>
-            <p className="text-gray-400 text-sm mt-2">Analyzing your glucose, BMI & symptoms</p>
           </motion.div>
         )}
       </div>
