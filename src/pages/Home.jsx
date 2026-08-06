@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  ArrowRight, ArrowLeft as ArrowLeftIcon, Search, BookOpen, Heart, Activity, Pill, Brain, Shield,
+  Search, BookOpen, Heart, Activity, Pill, Brain, Shield,
   Baby, FlaskConical, ChevronDown, ExternalLink, BadgeCheck,
   Zap, Globe, ChefHat, Youtube, MessageCircle, Github, ShoppingBag,
   Stethoscope, Sparkles, TrendingUp, Users, Menu, X, ChevronRight, ChevronLeft, Star
@@ -11,6 +11,7 @@ import { base44 } from "@/api/base44Client";
 import DarkModeToggle from "@/components/DarkModeToggle";
 import LanguagePicker from "@/components/LanguagePicker";
 import { useLanguage } from "@/lib/LanguageContext";
+import HeroSearch from "@/components/HeroSearch";
 
 const NAV_PRIMARY = [
   { to: "/care", icon: Heart, label: "Care", color: "text-rose-500" },
@@ -382,29 +383,18 @@ export default function Home() {
           {t("heroSubtitle")}
         </motion.p>
 
-        {/* Search bar */}
+        {/* Smart AI Search bar */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.18 }}
-          className="mt-8 relative max-w-xl mx-auto"
+          className="mt-8"
         >
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            type="text"
+          <HeroSearch
+            resources={resources}
             placeholder={t("searchPlaceholder")}
-            value={searchQuery}
-            onChange={e => setSearchQuery(e.target.value)}
-            onKeyDown={e => { if (e.key === "Enter") setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50); }}
-            className="w-full pl-12 pr-14 py-4 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 shadow-lg shadow-blue-900/5"
+            onScrollToResults={() => setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50)}
           />
-          <button onClick={() => {
-              setActiveCategory("all");
-              setTimeout(() => resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
-            }}
-            className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/30">
-            <ArrowRight className="w-5 h-5 text-white" />
-          </button>
         </motion.div>
 
         {/* Quick topic pills */}
@@ -428,10 +418,10 @@ export default function Home() {
             </button>
           ))}
           <Link
-            to="/meals"
-            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all shadow-sm"
+            to="/diet-chart"
+            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-300 dark:border-emerald-700 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 hover:border-emerald-400 transition-all shadow-sm"
           >
-            Low-GI Diet 🥗
+            Diet Chart 📊
           </Link>
         </motion.div>
 

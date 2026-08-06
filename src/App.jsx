@@ -19,6 +19,7 @@ import HSAStore from './pages/HSAStore';
 import Telehealth from './pages/Telehealth';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import DietChart from './pages/DietChart';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -57,6 +58,7 @@ const AuthenticatedApp = () => {
       <Route path="/telehealth" element={<Telehealth />} />
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/diet-chart" element={<DietChart />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
