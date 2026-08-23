@@ -446,9 +446,9 @@ export default function Home() {
                   className={`relative inline-flex items-center gap-2 bg-gradient-to-r ${f.color} text-white text-sm font-bold px-4 py-2 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200`}
                 >
                   {f.pulse && (
-                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60" />
-                      <span className="relative inline-flex rounded-full h-3 w-3 bg-white/90" />
+                    <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75" />
+                      <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-red-500 border-2 border-white" />
                     </span>
                   )}
                   <span>{f.emoji}</span>
