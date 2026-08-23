@@ -4,6 +4,7 @@ import { useLanguage } from "@/lib/LanguageContext";
 
 const LANGS = [
   { code: "en", label: "English", flag: "🇬🇧" },
+  { code: "es", label: "Español", flag: "🇪🇸" },
   { code: "hi", label: "हिन्दी", flag: "🇮🇳" },
   { code: "ar", label: "العربية", flag: "🇸🇦" },
 ];
