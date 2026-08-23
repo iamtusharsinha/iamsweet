@@ -416,6 +416,92 @@ export default function Home() {
           {t("heroSubtitle")}
         </motion.p>
 
+        {/* ── Animated Feature Highlights ── */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.16 }}
+          className="mt-8 mb-2"
+        >
+          {/* NEW TOOLS row */}
+          <div className="flex items-center gap-2 justify-center mb-3">
+            <span className="text-[10px] font-black uppercase tracking-widest text-gray-400">New Tools</span>
+            <div className="h-px flex-1 max-w-[60px] bg-gray-200 dark:bg-gray-700" />
+          </div>
+          <div className="flex flex-wrap gap-2 justify-center mb-5">
+            {[
+              { to: "/bolus-calculator", emoji: "💉", label: "Bolus Calculator", color: "from-blue-500 to-indigo-600", pulse: true },
+              { to: "/cgm-analyzer",     emoji: "📈", label: "CGM Analyzer",     color: "from-teal-500 to-cyan-600",   pulse: true },
+              { to: "/food-lookup",      emoji: "🥗", label: "Food Lookup",      color: "from-emerald-500 to-green-600", pulse: true },
+              { to: "/diet-chart",       emoji: "📊", label: "Diet Chart",       color: "from-orange-500 to-amber-500", pulse: false },
+            ].map((f, i) => (
+              <motion.div
+                key={f.to}
+                initial={{ opacity: 0, scale: 0.85, y: 8 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ delay: 0.18 + i * 0.07, type: "spring", stiffness: 300, damping: 20 }}
+              >
+                <Link
+                  to={f.to}
+                  className={`relative inline-flex items-center gap-2 bg-gradient-to-r ${f.color} text-white text-sm font-bold px-4 py-2 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-200`}
+                >
+                  {f.pulse && (
+                    <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-60" />
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-white/90" />
+                    </span>
+                  )}
+                  <span>{f.emoji}</span>
+                  {f.label}
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Auto-scrolling feature ticker */}
+          <div className="overflow-hidden rounded-2xl bg-white/60 dark:bg-gray-800/60 border border-gray-100 dark:border-gray-700 backdrop-blur-sm">
+            <motion.div
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ duration: 28, repeat: Infinity, ease: "linear" }}
+              className="flex whitespace-nowrap py-2.5"
+            >
+              {[
+                { icon: "💉", text: "Insulin Bolus Calculator" },
+                { icon: "📈", text: "CGM Data Analyzer" },
+                { icon: "🥗", text: "Food & GI Lookup" },
+                { icon: "📊", text: "AI Diet Chart" },
+                { icon: "🤖", text: "SWEETY AI Assistant" },
+                { icon: "🩺", text: "Telehealth Doctors" },
+                { icon: "❤️", text: "Daily Care Tracker" },
+                { icon: "🔬", text: "30+ Open Source Repos" },
+                { icon: "🎬", text: "Video Library" },
+                { icon: "💊", text: "Medication Reminders" },
+                { icon: "🛒", text: "HSA/FSA Store" },
+                { icon: "🌍", text: "Multi-Language Support" },
+                // duplicate for seamless loop
+                { icon: "💉", text: "Insulin Bolus Calculator" },
+                { icon: "📈", text: "CGM Data Analyzer" },
+                { icon: "🥗", text: "Food & GI Lookup" },
+                { icon: "📊", text: "AI Diet Chart" },
+                { icon: "🤖", text: "SWEETY AI Assistant" },
+                { icon: "🩺", text: "Telehealth Doctors" },
+                { icon: "❤️", text: "Daily Care Tracker" },
+                { icon: "🔬", text: "30+ Open Source Repos" },
+                { icon: "🎬", text: "Video Library" },
+                { icon: "💊", text: "Medication Reminders" },
+                { icon: "🛒", text: "HSA/FSA Store" },
+                { icon: "🌍", text: "Multi-Language Support" },
+              ].map((item, i) => (
+                <span key={i} className="inline-flex items-center gap-2 px-5 text-xs font-semibold text-gray-600 dark:text-gray-300">
+                  <span className="text-base">{item.icon}</span>
+                  {item.text}
+                  <span className="text-gray-300 dark:text-gray-600 ml-3">·</span>
+                </span>
+              ))}
+            </motion.div>
+          </div>
+        </motion.div>
+
         {/* Smart AI Search bar */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
