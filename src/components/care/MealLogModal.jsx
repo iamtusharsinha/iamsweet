@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Camera, Upload, Loader2, UtensilsCrossed, Sparkles } from "lucide-react";
+import { X, Camera, Loader2, Sparkles, Droplets, Dumbbell, Moon, CheckCircle2 } from "lucide-react";
 import { base44 } from "@/api/base44Client";
 
 const MEAL_TYPES = [
@@ -20,7 +20,7 @@ const MOODS = [
 ];
 
 export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
-  const [step, setStep] = useState(0); // 0=mood, 1=meal
+  const [step, setStep] = useState(0); // 0=mood, 1=meal, 2=habits, 3=ai summary
   const [mood, setMood] = useState(existingLog?.mood || "");
   const [moodNote, setMoodNote] = useState(existingLog?.mood_note || "");
   const [mealType, setMealType] = useState("breakfast");
@@ -31,6 +31,15 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
   const [estimatingCal, setEstimatingCal] = useState(false);
   const [estimatedCal, setEstimatedCal] = useState(null);
   const [error, setError] = useState("");
+
+  // Habit fields
+  const [waterGlasses, setWaterGlasses] = useState(existingLog?.water_glasses ?? "");
+  const [exerciseMinutes, setExerciseMinutes] = useState(existingLog?.exercise_minutes ?? "");
+  const [sleepHours, setSleepHours] = useState(existingLog?.sleep_hours ?? "");
+
+  // AI pattern note
+  const [aiPatternNote, setAiPatternNote] = useState("");
+
   const fileRef = useRef();
 
   function handleImageChange(e) {
@@ -75,7 +84,7 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
     }
   }
 
-  async function saveMeal() {
+  async function saveAll() {
     setSaving(true);
     setError("");
     try {
@@ -94,30 +103,43 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
         logged_at: new Date().toISOString(),
       };
 
+      const allMeals = [...(existingLog?.meals || []), ...(description ? [newMealEntry] : [])];
+      const totalCal = allMeals.reduce((sum, m) => sum + (m.estimated_calories || 0), 0);
+
+      const logData = {
+        mood: mood || existingLog?.mood,
+        mood_note: moodNote || existingLog?.mood_note,
+        meals: allMeals,
+        total_calories: totalCal || undefined,
+        water_glasses: waterGlasses !== "" ? parseFloat(waterGlasses) : undefined,
+        exercise_minutes: exerciseMinutes !== "" ? parseFloat(exerciseMinutes) : undefined,
+        sleep_hours: sleepHours !== "" ? parseFloat(sleepHours) : undefined,
+      };
+
+      // Generate AI pattern note
+      const prompt = `You are a caring diabetes nutrition coach. A patient just logged their daily habits.
+
+Meals today: ${allMeals.map(m => `${m.meal_type}: ${m.description || "unspecified"} (${m.estimated_calories || "?"}kcal)`).join("; ") || "none logged"}
+Total calories: ${totalCal || "unknown"} kcal
+Water: ${waterGlasses !== "" ? waterGlasses + " glasses" : "not logged"}
+Exercise: ${exerciseMinutes !== "" ? exerciseMinutes + " minutes" : "not logged"}
+Sleep last night: ${sleepHours !== "" ? sleepHours + " hours" : "not logged"}
+Mood: ${mood || "not logged"}
+
+Write a warm 2-3 sentence AI pattern note that: (1) acknowledges their nutrition choices today, (2) notes if water/exercise/sleep are on track for a diabetic, (3) gives one specific actionable tip. Keep it under 70 words.`;
+
+      const patternNote = await base44.integrations.Core.InvokeLLM({ prompt });
+
+      logData.ai_pattern_note = patternNote;
+
       if (existingLog) {
-        // Update existing log — add meal to existing meals array
-        const updatedMeals = [...(existingLog.meals || []), newMealEntry];
-        const totalCal = updatedMeals.reduce((sum, m) => sum + (m.estimated_calories || 0), 0);
-        await base44.entities.DailyLog.update(existingLog.id, {
-          mood: mood || existingLog.mood,
-          mood_note: moodNote || existingLog.mood_note,
-          meals: updatedMeals,
-          total_calories: totalCal || undefined,
-        });
+        await base44.entities.DailyLog.update(existingLog.id, logData);
       } else {
-        // Create new log for today
-        await base44.entities.DailyLog.create({
-          user_id: user.id,
-          date: today,
-          mood,
-          mood_note: moodNote,
-          meals: [newMealEntry],
-          total_calories: estimatedCal?.calories || undefined,
-        });
+        await base44.entities.DailyLog.create({ user_id: user.id, date: today, ...logData });
       }
 
-      onSaved?.();
-      onClose();
+      setAiPatternNote(patternNote);
+      setStep(3); // show summary
     } catch (e) {
       setError("Failed to save. Please try again.");
     } finally {
@@ -144,6 +166,8 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
     }
   }
 
+  const STEP_TITLES = ["Mood 🌟", "Meal 🍽️", "Habits 💧", "Summary ✨"];
+
   return (
     <AnimatePresence>
       <motion.div
@@ -163,10 +187,8 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
           {/* Header */}
           <div className="flex items-center justify-between px-5 pt-5 pb-3 border-b border-gray-100 dark:border-gray-800">
             <div>
-              <h2 className="font-bold text-gray-900 dark:text-white">
-                {step === 0 ? "How are you feeling? 🌟" : "Log a Meal 🍽️"}
-              </h2>
-              <p className="text-xs text-gray-400 mt-0.5">Step {step + 1} of 2 — all optional</p>
+              <h2 className="font-bold text-gray-900 dark:text-white">{STEP_TITLES[step]}</h2>
+              {step < 3 && <p className="text-xs text-gray-400 mt-0.5">Step {step + 1} of 3 — all optional</p>}
             </div>
             <button onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center hover:bg-gray-200 transition-colors">
               <X className="w-4 h-4 text-gray-500" />
@@ -174,16 +196,19 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
           </div>
 
           {/* Progress */}
-          <div className="px-5 pt-3">
-            <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
-              <motion.div animate={{ width: `${((step + 1) / 2) * 100}%` }} className="h-full bg-green-500 rounded-full transition-all duration-300" />
+          {step < 3 && (
+            <div className="px-5 pt-3">
+              <div className="h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+                <motion.div animate={{ width: `${((step + 1) / 3) * 100}%` }} className="h-full bg-green-500 rounded-full transition-all duration-300" />
+              </div>
             </div>
-          </div>
+          )}
 
           <div className="flex-1 overflow-y-auto px-5 py-5">
+
+            {/* Step 0: Mood */}
             {step === 0 && (
               <div className="space-y-5">
-                {/* Mood picker */}
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">Pick your mood</p>
                   <div className="grid grid-cols-3 gap-2">
@@ -211,9 +236,9 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
               </div>
             )}
 
+            {/* Step 1: Meal */}
             {step === 1 && (
               <div className="space-y-4">
-                {/* Meal type */}
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Meal type</p>
                   <div className="grid grid-cols-4 gap-2">
@@ -227,7 +252,6 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
                   </div>
                 </div>
 
-                {/* Photo upload */}
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Photo (optional)</p>
                   <input ref={fileRef} type="file" accept="image/*" capture="environment" className="hidden" onChange={handleImageChange} />
@@ -248,7 +272,6 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
                   )}
                 </div>
 
-                {/* Description */}
                 <div>
                   <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">What did you eat?</p>
                   <input
@@ -260,14 +283,12 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
                   />
                 </div>
 
-                {/* AI Calorie estimate */}
                 {(imageFile || description) && !estimatedCal && (
                   <button onClick={estimateCalories} disabled={estimatingCal}
                     className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-green-400 text-green-600 dark:text-green-400 text-sm font-semibold hover:bg-green-50 dark:hover:bg-green-900/20 transition-all disabled:opacity-60">
                     {estimatingCal
                       ? <><Loader2 className="w-4 h-4 animate-spin" /> Estimating calories…</>
-                      : <><Sparkles className="w-4 h-4" /> Estimate calories with AI</>
-                    }
+                      : <><Sparkles className="w-4 h-4" /> Estimate calories with AI</>}
                   </button>
                 )}
 
@@ -285,6 +306,120 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
                 )}
 
                 {error && <p className="text-xs text-red-500">{error}</p>}
+              </div>
+            )}
+
+            {/* Step 2: Habits — water, exercise, sleep */}
+            {step === 2 && (
+              <div className="space-y-5">
+                <p className="text-xs text-gray-400">Log your daily habits so your AI companion can spot patterns and give better advice.</p>
+
+                {/* Water */}
+                <div>
+                  <label className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                    <Droplets className="w-4 h-4 text-blue-400" /> Water Glasses
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1 flex-wrap">
+                      {[4, 6, 8, 10, 12].map(n => (
+                        <button key={n} onClick={() => setWaterGlasses(n)}
+                          className={`w-10 h-10 rounded-xl border-2 text-sm font-bold transition-all ${waterGlasses === n ? "border-blue-500 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300" : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-blue-300"}`}>
+                          {n}
+                        </button>
+                      ))}
+                    </div>
+                    <input type="number" min="0" max="20" placeholder="or type" value={waterGlasses}
+                      onChange={e => setWaterGlasses(e.target.value === "" ? "" : Number(e.target.value))}
+                      className="w-20 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-center text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400" />
+                  </div>
+                  {waterGlasses !== "" && <p className="text-xs text-blue-500 mt-1">Goal: 8 glasses/day{waterGlasses >= 8 ? " ✅" : " — keep drinking!"}</p>}
+                </div>
+
+                {/* Exercise */}
+                <div>
+                  <label className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                    <Dumbbell className="w-4 h-4 text-orange-400" /> Exercise Minutes
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1 flex-wrap">
+                      {[15, 30, 45, 60, 90].map(n => (
+                        <button key={n} onClick={() => setExerciseMinutes(n)}
+                          className={`px-3 h-10 rounded-xl border-2 text-sm font-bold transition-all ${exerciseMinutes === n ? "border-orange-500 bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300" : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-orange-300"}`}>
+                          {n}m
+                        </button>
+                      ))}
+                    </div>
+                    <input type="number" min="0" max="300" placeholder="or type" value={exerciseMinutes}
+                      onChange={e => setExerciseMinutes(e.target.value === "" ? "" : Number(e.target.value))}
+                      className="w-20 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-center text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-400" />
+                  </div>
+                  {exerciseMinutes !== "" && <p className="text-xs text-orange-500 mt-1">Goal: 30+ min/day{exerciseMinutes >= 30 ? " ✅" : " — even a walk counts!"}</p>}
+                </div>
+
+                {/* Sleep */}
+                <div>
+                  <label className="flex items-center gap-2 text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+                    <Moon className="w-4 h-4 text-indigo-400" /> Sleep Hours (last night)
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <div className="flex gap-1 flex-wrap">
+                      {[5, 6, 7, 8, 9].map(n => (
+                        <button key={n} onClick={() => setSleepHours(n)}
+                          className={`w-10 h-10 rounded-xl border-2 text-sm font-bold transition-all ${sleepHours === n ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300" : "border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-indigo-300"}`}>
+                          {n}
+                        </button>
+                      ))}
+                    </div>
+                    <input type="number" min="0" max="14" placeholder="or type" value={sleepHours}
+                      onChange={e => setSleepHours(e.target.value === "" ? "" : Number(e.target.value))}
+                      className="w-20 px-3 py-2 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm text-center text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-400" />
+                  </div>
+                  {sleepHours !== "" && <p className="text-xs text-indigo-500 mt-1">Goal: 7–9 hours{sleepHours >= 7 && sleepHours <= 9 ? " ✅" : sleepHours < 7 ? " — poor sleep raises blood sugar!" : " — slightly above average"}</p>}
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: AI Pattern Note Summary */}
+            {step === 3 && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 dark:text-white">All saved!</p>
+                    <p className="text-xs text-gray-400">Your AI nutrition & habits pattern note</p>
+                  </div>
+                </div>
+
+                <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4">
+                  <p className="text-sm text-emerald-900 dark:text-emerald-200 leading-relaxed">{aiPatternNote}</p>
+                </div>
+
+                {/* Recap */}
+                <div className="grid grid-cols-3 gap-2">
+                  {waterGlasses !== "" && (
+                    <div className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-3 text-center">
+                      <Droplets className="w-4 h-4 text-blue-500 mx-auto mb-1" />
+                      <p className="text-xs text-blue-600 dark:text-blue-400 font-bold">{waterGlasses} glasses</p>
+                      <p className="text-[10px] text-gray-400">Water</p>
+                    </div>
+                  )}
+                  {exerciseMinutes !== "" && (
+                    <div className="bg-orange-50 dark:bg-orange-900/20 rounded-xl p-3 text-center">
+                      <Dumbbell className="w-4 h-4 text-orange-500 mx-auto mb-1" />
+                      <p className="text-xs text-orange-600 dark:text-orange-400 font-bold">{exerciseMinutes} min</p>
+                      <p className="text-[10px] text-gray-400">Exercise</p>
+                    </div>
+                  )}
+                  {sleepHours !== "" && (
+                    <div className="bg-indigo-50 dark:bg-indigo-900/20 rounded-xl p-3 text-center">
+                      <Moon className="w-4 h-4 text-indigo-500 mx-auto mb-1" />
+                      <p className="text-xs text-indigo-600 dark:text-indigo-400 font-bold">{sleepHours} hrs</p>
+                      <p className="text-[10px] text-gray-400">Sleep</p>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
@@ -308,11 +443,27 @@ export default function MealLogModal({ user, onClose, onSaved, existingLog }) {
                 <button onClick={() => setStep(0)} className="flex-1 py-3 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 transition-colors">
                   Back
                 </button>
-                <button onClick={saveMeal} disabled={saving || (!description && !imageFile)}
-                  className="flex-1 py-3 bg-green-600 hover:bg-green-700 rounded-xl text-sm font-semibold text-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2">
-                  {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving…</> : "Save meal ✓"}
+                <button onClick={() => setStep(2)}
+                  className="flex-1 py-3 bg-green-600 hover:bg-green-700 rounded-xl text-sm font-semibold text-white transition-colors">
+                  Next: Habits →
                 </button>
               </>
+            )}
+            {step === 2 && (
+              <>
+                <button onClick={() => setStep(1)} className="flex-1 py-3 rounded-xl border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 transition-colors">
+                  Back
+                </button>
+                <button onClick={saveAll} disabled={saving}
+                  className="flex-1 py-3 bg-green-600 hover:bg-green-700 rounded-xl text-sm font-semibold text-white transition-colors disabled:opacity-60 flex items-center justify-center gap-2">
+                  {saving ? <><Loader2 className="w-4 h-4 animate-spin" /> Saving & analyzing…</> : <><CheckCircle2 className="w-4 h-4" /> Save & Get AI Note</>}
+                </button>
+              </>
+            )}
+            {step === 3 && (
+              <button onClick={() => { onSaved?.(); onClose(); }} className="flex-1 py-3 bg-green-600 hover:bg-green-700 rounded-xl text-sm font-semibold text-white transition-colors">
+                Done ✓
+              </button>
             )}
           </div>
         </motion.div>

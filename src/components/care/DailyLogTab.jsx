@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Plus, Flame, Droplets, Dumbbell, Moon, UtensilsCrossed, Smile } from "lucide-react";
+
 import MealLogModal from "@/components/care/MealLogModal";
 
 const MOOD_DISPLAY = {
@@ -63,6 +64,41 @@ export default function DailyLogTab({ user, dailyLogs, onUpdate }) {
       ) : (
         <div className="bg-gray-50 dark:bg-gray-800 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl p-4 text-center">
           <p className="text-sm text-gray-400">No mood logged today</p>
+        </div>
+      )}
+
+      {/* Habit summary row */}
+      {(todayLog?.water_glasses != null || todayLog?.exercise_minutes != null || todayLog?.sleep_hours != null) && (
+        <div className="grid grid-cols-3 gap-2">
+          {todayLog?.water_glasses != null && (
+            <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-2xl p-3 flex flex-col items-center gap-1">
+              <Droplets className="w-5 h-5 text-blue-400" />
+              <p className="text-lg font-black text-blue-700 dark:text-blue-300">{todayLog.water_glasses}</p>
+              <p className="text-[10px] text-gray-400 font-semibold">glasses water</p>
+            </div>
+          )}
+          {todayLog?.exercise_minutes != null && (
+            <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 rounded-2xl p-3 flex flex-col items-center gap-1">
+              <Dumbbell className="w-5 h-5 text-orange-400" />
+              <p className="text-lg font-black text-orange-700 dark:text-orange-300">{todayLog.exercise_minutes}</p>
+              <p className="text-[10px] text-gray-400 font-semibold">min exercise</p>
+            </div>
+          )}
+          {todayLog?.sleep_hours != null && (
+            <div className="bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800 rounded-2xl p-3 flex flex-col items-center gap-1">
+              <Moon className="w-5 h-5 text-indigo-400" />
+              <p className="text-lg font-black text-indigo-700 dark:text-indigo-300">{todayLog.sleep_hours}</p>
+              <p className="text-[10px] text-gray-400 font-semibold">hrs sleep</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* AI Pattern Note */}
+      {todayLog?.ai_pattern_note && (
+        <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-4">
+          <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase tracking-wide mb-1.5">🤖 AI Pattern Note</p>
+          <p className="text-sm text-emerald-900 dark:text-emerald-200 leading-relaxed">{todayLog.ai_pattern_note}</p>
         </div>
       )}
 
