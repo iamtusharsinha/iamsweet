@@ -226,9 +226,142 @@ const PROJECTS = [
     category: "Mobile Apps",
     tags: ["iOS", "CGM", "Dexcom", "Libre", "Apple Watch"]
   },
+  // ── NEW REPOS from Tavily research ────────────────────────────────────────
+  {
+    name: "nightscout/AndroidAPS",
+    displayName: "AAPS — Android Artificial Pancreas System",
+    url: "https://github.com/nightscout/AndroidAPS",
+    description: "The most widely used open-source automated insulin delivery (AID) system for Android. Implements the OpenAPS algorithm, supports dozens of insulin pumps, CGMs, and smartwatches. Used by thousands of T1D patients worldwide as a full closed-loop artificial pancreas.",
+    stars: 1100,
+    forks: 6000,
+    language: "Kotlin",
+    category: "Artificial Pancreas",
+    tags: ["Android", "closed-loop", "AID", "OpenAPS", "type 1"]
+  },
+  {
+    name: "kennedyjustin/BolusGPT",
+    displayName: "BolusGPT — GPT-Powered Insulin Dose Calculator",
+    url: "https://github.com/kennedyjustin/BolusGPT",
+    description: "An OpenAI custom GPT that calculates bolus insulin doses via natural language and images. Integrates with Dexcom CGMs for real-time glucose, stores insulin-to-carb ratios and ISF, and supports text, voice, and photo prompts. Built by a newly-diagnosed T1D developer.",
+    stars: 180,
+    forks: 22,
+    language: "Python",
+    category: "Bolus & Calculators",
+    tags: ["GPT", "bolus", "insulin", "Dexcom", "natural language"]
+  },
+  {
+    name: "mrsergazinov/gluformer",
+    displayName: "Gluformer — Transformer Glucose Forecasting",
+    url: "https://github.com/mrsergazinov/gluformer",
+    description: "Official implementation of 'Gluformer: Transformer-Based Personalized Glucose Forecasting with Uncertainty Quantification'. A state-of-the-art deep learning model for predicting future CGM readings with personalised uncertainty bounds.",
+    stars: 95,
+    forks: 28,
+    language: "Python",
+    category: "Research & AI",
+    tags: ["transformer", "forecasting", "uncertainty", "CGM", "deep learning"]
+  },
+  {
+    name: "nightscout/nightscout-connect",
+    displayName: "Nightscout Connect — Universal CGM Bridge",
+    url: "https://github.com/nightscout/nightscout-connect",
+    description: "Official Nightscout module providing a single entry point for bridging multiple diabetes cloud providers (Dexcom, LibreLinkUp, Glooko, Medtronic, Tandem) into Nightscout — supporting glucose readings, treatments, profiles, and device status.",
+    stars: 45,
+    forks: 18,
+    language: "TypeScript",
+    category: "CGM & Monitoring",
+    tags: ["Nightscout", "Dexcom", "LibreLink", "Glooko", "bridge"]
+  },
+  {
+    name: "acara-app/plate",
+    displayName: "Acara Plate — AI Meal Planner for Diabetes",
+    url: "https://github.com/acara-app/plate",
+    description: "Open-source self-hostable health AI platform for diabetes meal planning, glucose tracking, and coaching. Connects Apple Health, supports Telegram chat interface, scans meals with AI, and tracks glucose trends. Built specifically for Type 2 diabetes management.",
+    stars: 210,
+    forks: 34,
+    language: "PHP",
+    category: "Food & Nutrition",
+    tags: ["meal planning", "Apple Health", "AI", "self-hosted", "type 2"]
+  },
+  {
+    name: "GlucoseDAO/cgm_format",
+    displayName: "CGM Format Converter — Unified ML Dataset Tool",
+    url: "https://github.com/GlucoseDAO/cgm_format",
+    description: "Converts popular CGM data export formats (Dexcom, Libre, Nightscout, OhMD) into a unified schema suitable for machine learning training and inference. Essential for researchers building glucose prediction models.",
+    stars: 55,
+    forks: 12,
+    language: "Python",
+    category: "Research & AI",
+    tags: ["CGM", "data format", "ML", "converter", "Dexcom", "Libre"]
+  },
+  {
+    name: "openfoodfacts/openfoodfacts-server",
+    displayName: "Open Food Facts — Global Food Database",
+    url: "https://github.com/openfoodfacts/openfoodfacts-server",
+    description: "The world's largest open collaborative food database with 3M+ products, full nutritional information, ingredient lists, and Nutri-Score. Freely accessible via API — powers food logging apps worldwide including diabetes management tools.",
+    stars: 1100,
+    forks: 649,
+    language: "Perl / JavaScript",
+    category: "Food & Nutrition",
+    tags: ["food database", "nutrition", "API", "carbs", "open data"]
+  },
+  {
+    name: "mxklb/boluscalculator",
+    displayName: "Bolus Calculator — HTML5 Offline App",
+    url: "https://github.com/mxklb/boluscalculator",
+    description: "A lightweight HTML5 insulin bolus calculator webapp that works fully offline. Supports mg/dL and mmol/L, bread units and gram carbs, configurable I:C ratio, ISF, and correction dose. All settings stored locally — no server required.",
+    stars: 78,
+    forks: 32,
+    language: "HTML / JavaScript",
+    category: "Bolus & Calculators",
+    tags: ["bolus", "insulin", "offline", "HTML5", "carb counting"]
+  },
+  {
+    name: "dustinsurwill/glychart",
+    displayName: "GlyChart — Local xDrip+ CGM Data Analyzer",
+    url: "https://github.com/dustinsurwill/glychart",
+    description: "Local web app for analyzing xDrip+ CGM exports — calculates time in range, visualises meal excursions, and provides an insulin pump settings advisor. All data stays entirely on your machine — complete privacy.",
+    stars: 62,
+    forks: 15,
+    language: "JavaScript",
+    category: "CGM & Monitoring",
+    tags: ["xDrip+", "CGM", "TIR", "local", "privacy", "analysis"]
+  },
+  {
+    name: "jnctech/ha-tandem-pump",
+    displayName: "Tandem Pump — Home Assistant Integration",
+    url: "https://github.com/jnctech/ha-tandem-pump",
+    description: "Home Assistant integration for Tandem t:slim X2 insulin pumps with 69 sensors: real-time glucose, insulin delivery, battery status, active alerts, bolus calculator data, CGM statistics, and basal profiles. Direct connection to the Tandem Source API.",
+    stars: 95,
+    forks: 20,
+    language: "Python",
+    category: "Insulin Pumps",
+    tags: ["Tandem", "Home Assistant", "automation", "smart home", "t:slim"]
+  },
+  {
+    name: "lumose-health/GlycemicGPT",
+    displayName: "Lumose — Full-Stack Open-Source Diabetes Platform",
+    url: "https://github.com/lumose-health/GlycemicGPT",
+    description: "A comprehensive open-source diabetes platform built around AI-powered analysis. Connects directly to CGM devices and insulin pumps, provides real-time monitoring, daily AI briefs, pattern detection, conversational AI chat, and caregiver alerting. Stack: FastAPI, Next.js 15, React 19, PostgreSQL, Kotlin Android.",
+    stars: 310,
+    forks: 52,
+    language: "Python / TypeScript",
+    category: "AI & LLM",
+    tags: ["full-stack", "CGM", "insulin pump", "FastAPI", "Next.js"]
+  },
+  {
+    name: "gcappon/awesome-diabetes-software",
+    displayName: "Awesome Diabetes Software — Curated List",
+    url: "https://github.com/gcappon/awesome-diabetes-software",
+    description: "Community-curated awesome list of open-source diabetes research software covering datasets, T1D/T2D simulators, CGM analysis tools, glucose prediction algorithms, exercise management, clinical trial software, and top journals. Essential starting point for diabetes software researchers.",
+    stars: 180,
+    forks: 35,
+    language: "Markdown",
+    category: "Research & AI",
+    tags: ["awesome-list", "resources", "research", "datasets", "simulators"]
+  },
 ];
 
-const CATEGORIES = ["All", "CGM & Monitoring", "Artificial Pancreas", "Mobile Apps", "Research & AI", "Insulin Pumps", "AI & LLM", "Tools & Utilities"];
+const CATEGORIES = ["All", "CGM & Monitoring", "Artificial Pancreas", "Mobile Apps", "Research & AI", "Insulin Pumps", "AI & LLM", "Tools & Utilities", "Bolus & Calculators", "Food & Nutrition"];
 
 const CAT_ICONS = {
   "CGM & Monitoring": Activity,
@@ -238,6 +371,8 @@ const CAT_ICONS = {
   "Insulin Pumps": Zap,
   "AI & LLM": Brain,
   "Tools & Utilities": Code,
+  "Bolus & Calculators": Zap,
+  "Food & Nutrition": Globe,
 };
 
 const CAT_COLORS = {
@@ -248,6 +383,8 @@ const CAT_COLORS = {
   "Insulin Pumps": "bg-orange-50 text-orange-700 border-orange-200",
   "AI & LLM": "bg-purple-50 text-purple-700 border-purple-200",
   "Tools & Utilities": "bg-teal-50 text-teal-700 border-teal-200",
+  "Bolus & Calculators": "bg-blue-50 text-blue-700 border-blue-200",
+  "Food & Nutrition": "bg-emerald-50 text-emerald-700 border-emerald-200",
 };
 
 const LANG_COLORS = {

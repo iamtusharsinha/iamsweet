@@ -24,7 +24,10 @@ const NAV_MORE = [
   { to: "/videos", icon: Youtube, label: "Video Library", desc: "12 expert videos", color: "text-red-500" },
   { to: "/resources", icon: BookOpen, label: "Resources", desc: "Articles & guides", color: "text-violet-500" },
   { to: "/store", icon: ShoppingBag, label: "HSA/FSA Store", desc: "20+ products", color: "text-green-600" },
-  { to: "/opensource", icon: Github, label: "Open Source", desc: "20 GitHub projects", color: "text-gray-800 dark:text-white" },
+  { to: "/opensource", icon: Github, label: "Open Source", desc: "30+ GitHub projects", color: "text-gray-800 dark:text-white" },
+  { to: "/bolus-calculator", icon: Activity, label: "Bolus Calculator", desc: "Insulin dose tool", color: "text-blue-500" },
+  { to: "/cgm-analyzer", icon: Activity, label: "CGM Analyzer", desc: "Upload & analyze data", color: "text-teal-500" },
+  { to: "/food-lookup", icon: ChefHat, label: "Food Lookup", desc: "Carbs, GI & calories", color: "text-emerald-500" },
 ];
 
 const CATEGORIES = [
@@ -140,6 +143,36 @@ const TOPIC_CARDS = [
     tag: "Tax-Free",
     tagColor: "bg-teal-500",
     gradient: "from-teal-600/80",
+  },
+  {
+    to: "/bolus-calculator",
+    label: "Bolus Calculator",
+    desc: "Calculate your insulin dose instantly",
+    emoji: "💉",
+    image: "https://images.unsplash.com/photo-1631815588090-d4bfec5b1ccb?w=400&h=300&fit=crop",
+    tag: "New Tool",
+    tagColor: "bg-blue-500",
+    gradient: "from-blue-600/80",
+  },
+  {
+    to: "/cgm-analyzer",
+    label: "CGM Analyzer",
+    desc: "Upload & analyze your CGM data",
+    emoji: "📈",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop",
+    tag: "New Tool",
+    tagColor: "bg-teal-500",
+    gradient: "from-teal-600/80",
+  },
+  {
+    to: "/food-lookup",
+    label: "Food Lookup",
+    desc: "Carbs, GI & calories for any food",
+    emoji: "🥗",
+    image: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&h=300&fit=crop",
+    tag: "New Tool",
+    tagColor: "bg-emerald-500",
+    gradient: "from-emerald-600/80",
   },
 ];
 

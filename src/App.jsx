@@ -20,6 +20,9 @@ import Telehealth from './pages/Telehealth';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import DietChart from './pages/DietChart';
+import BolusCalculator from './pages/BolusCalculator';
+import CGMAnalyzer from './pages/CGMAnalyzer';
+import FoodLookup from './pages/FoodLookup';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -59,6 +62,9 @@ const AuthenticatedApp = () => {
       <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       <Route path="/diet-chart" element={<DietChart />} />
+      <Route path="/bolus-calculator" element={<BolusCalculator />} />
+      <Route path="/cgm-analyzer" element={<CGMAnalyzer />} />
+      <Route path="/food-lookup" element={<FoodLookup />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
