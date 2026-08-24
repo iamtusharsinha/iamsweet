@@ -4,6 +4,18 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
+    // Authorization: only allow authenticated admin users
+    const isAuthed = await base44.auth.isAuthenticated();
+    if (!isAuthed) {
+      console.warn("dailyCareReminder: unauthenticated request rejected");
+      return Response.json({ error: "Unauthorized" }, { status: 401 });
+    }
+    const me = await base44.auth.me();
+    if (me?.role !== "admin") {
+      console.warn(`dailyCareReminder: non-admin user ${me?.email} rejected`);
+      return Response.json({ error: "Forbidden" }, { status: 403 });
+    }
+
     // Fetch all registered users (service role — this is a scheduled/admin task)
     const users = await base44.asServiceRole.entities.User.list();
 
