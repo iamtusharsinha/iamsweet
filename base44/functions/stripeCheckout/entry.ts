@@ -26,7 +26,21 @@ const PRODUCT_CATALOG: Record<string, { name: string; price: number; image?: str
   "med-002": { name: "Glucerna Hunger Smart Shake Homemade Vanilla (12-Pack)", price: 26.99, category: "Diabetic Nutrition" },
 };
 
+const ALLOWED_ORIGINS = [
+  "https://iamsweet.base44.app",
+  "http://localhost:5173",
+  "http://localhost:3000",
+];
+
 Deno.serve(async (req) => {
+  // Block requests not originating from the app itself
+  const origin = req.headers.get("origin") || req.headers.get("referer") || "";
+  const allowed = ALLOWED_ORIGINS.some(o => origin.startsWith(o));
+  if (!allowed) {
+    console.warn("Blocked request from unauthorized origin:", origin);
+    return Response.json({ error: "Unauthorized" }, { status: 403 });
+  }
+
   try {
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY"), { apiVersion: "2023-10-16" });
     const { items, customerEmail, successUrl, cancelUrl } = await req.json();
