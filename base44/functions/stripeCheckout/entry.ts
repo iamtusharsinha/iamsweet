@@ -32,6 +32,20 @@ const ALLOWED_ORIGINS = [
   "http://localhost:3000",
 ];
 
+// Rate limiter: max 5 checkout attempts per IP per 60 seconds
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const entry = rateLimitMap.get(ip);
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + 60_000 });
+    return false;
+  }
+  if (entry.count >= 5) return true;
+  entry.count++;
+  return false;
+}
+
 Deno.serve(async (req) => {
   // Block requests not originating from the app itself
   const origin = req.headers.get("origin") || req.headers.get("referer") || "";
@@ -39,6 +53,13 @@ Deno.serve(async (req) => {
   if (!allowed) {
     console.warn("Blocked request from unauthorized origin:", origin);
     return Response.json({ error: "Unauthorized" }, { status: 403 });
+  }
+
+  // Rate limit by IP
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  if (isRateLimited(ip)) {
+    console.warn(`Rate limit exceeded for IP: ${ip}`);
+    return Response.json({ error: "Too many requests. Please try again later." }, { status: 429 });
   }
 
   try {
