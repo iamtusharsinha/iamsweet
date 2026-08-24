@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { base44 } from "@/api/base44Client";
+import { safeReturnTo } from "@/lib/authReturnTo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -79,7 +80,7 @@ export default function Login() {
     setError("");
     setLoading(true);
     try {
-      const returnTo = new URLSearchParams(window.location.search).get("returnTo") || "/";
+      const returnTo = safeReturnTo();
       await base44.auth.loginViaEmailPassword(email, password);
       window.location.href = returnTo;
     } catch (err) {
@@ -90,7 +91,7 @@ export default function Login() {
   };
 
   const handleGoogle = () => {
-    const returnTo = new URLSearchParams(window.location.search).get("returnTo") || "/";
+    const returnTo = safeReturnTo();
     base44.auth.loginWithProvider("google", returnTo);
   };
 
