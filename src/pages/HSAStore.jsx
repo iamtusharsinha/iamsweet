@@ -258,30 +258,7 @@ export default function HSAStore() {
   };
 
   const handleCheckout = async () => {
-    // Block checkout from iframe (preview mode)
-    if (window.self !== window.top) {
-      alert("Checkout is only available from the published app. Please open the app in a new tab to complete your purchase.");
-      return;
-    }
-
-    setCheckingOut(true);
-    try {
-      const origin = window.location.origin;
-      const res = await base44.functions.invoke("stripeCheckout", {
-        items: cart,
-        successUrl: `${origin}/store?success=true`,
-        cancelUrl: `${origin}/store?cancelled=true`,
-      });
-      if (res.data?.url) {
-        window.location.href = res.data.url;
-      } else {
-        showToast(res.data?.error || "Checkout failed. Please try again.", "error");
-      }
-    } catch (err) {
-      showToast("Checkout failed. Please try again.", "error");
-    } finally {
-      setCheckingOut(false);
-    }
+    showToast("Checkout is currently unavailable. Please contact support.", "error");
   };
 
   const filtered = useMemo(() => {
