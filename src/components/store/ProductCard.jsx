@@ -1,8 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, BadgeCheck, Star } from "lucide-react";
+import { BadgeCheck, Star, ExternalLink } from "lucide-react";
 
-export default function ProductCard({ product, onAddToCart, delay = 0 }) {
+export default function ProductCard({ product, delay = 0 }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 14 }}
@@ -56,13 +56,15 @@ export default function ProductCard({ product, onAddToCart, delay = 0 }) {
               <span className="text-sm text-gray-400 line-through">${product.originalPrice.toFixed(2)}</span>
             )}
           </div>
-          <button
-            onClick={() => onAddToCart(product)}
+          <a
+            href={product.buyUrl || `https://www.amazon.com/s?k=${encodeURIComponent(product.name)}`}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-2 rounded-xl transition-colors"
           >
-            <ShoppingCart className="w-3.5 h-3.5" />
-            Add
-          </button>
+            <ExternalLink className="w-3.5 h-3.5" />
+            Buy
+          </a>
         </div>
 
         {/* Eligible tag */}

@@ -1,12 +1,10 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+// cart/checkout removed — products now link directly to external retailers
 import {
-  ArrowLeft, ShoppingCart, Search, Shield, Zap, Heart, Activity,
-  CheckCircle2, AlertCircle
+  ArrowLeft, Search, Shield
 } from "lucide-react";
-import { base44 } from "@/api/base44Client";
-import CartSidebar from "@/components/store/CartSidebar";
 import CustomSelect from "@/components/ui/CustomSelect";
 import { useLanguage } from "@/lib/LanguageContext";
 import ProductCard from "@/components/store/ProductCard";
@@ -226,40 +224,9 @@ const SORT_OPTIONS = [
 
 export default function HSAStore() {
   const { t } = useLanguage();
-  const [cart, setCart] = useState([]);
-  const [cartOpen, setCartOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All Products");
   const [sort, setSort] = useState("featured");
-  const [checkingOut, setCheckingOut] = useState(false);
-  const [toastMsg, setToastMsg] = useState(null);
-
-  const showToast = (msg, type = "success") => {
-    setToastMsg({ msg, type });
-    setTimeout(() => setToastMsg(null), 3000);
-  };
-
-  const addToCart = (product) => {
-    setCart(prev => {
-      const existing = prev.find(i => i.product_id === product.id);
-      if (existing) return prev.map(i => i.product_id === product.id ? { ...i, quantity: i.quantity + 1 } : i);
-      return [...prev, { product_id: product.id, product_name: product.name, price: product.price, quantity: 1, image: product.image, category: product.category }];
-    });
-    showToast(`${product.name} added to cart`);
-  };
-
-  const updateQty = (productId, qty) => {
-    if (qty <= 0) return removeFromCart(productId);
-    setCart(prev => prev.map(i => i.product_id === productId ? { ...i, quantity: qty } : i));
-  };
-
-  const removeFromCart = (productId) => {
-    setCart(prev => prev.filter(i => i.product_id !== productId));
-  };
-
-  const handleCheckout = async () => {
-    showToast("Checkout is currently unavailable. Please contact support.", "error");
-  };
 
   const filtered = useMemo(() => {
     let items = PRODUCTS.filter(p => {
@@ -274,27 +241,8 @@ export default function HSAStore() {
     return items;
   }, [category, search, sort]);
 
-  const cartCount = cart.reduce((s, i) => s + i.quantity, 0);
-
-  // Check URL for success/cancel
-  const params = new URLSearchParams(window.location.search);
-  const isSuccess = params.get("success") === "true";
-  const isCancelled = params.get("cancelled") === "true";
-
   return (
     <div className="min-h-screen bg-blue-50 dark:bg-gray-950 pb-16 md:pb-0">
-      {/* Toast */}
-      {toastMsg && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-          className={`fixed top-5 right-5 z-50 flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg text-sm font-medium ${
-            toastMsg.type === "error" ? "bg-red-600 text-white" : "bg-green-600 text-white"
-          }`}
-        >
-          {toastMsg.type === "error" ? <AlertCircle className="w-4 h-4" /> : <CheckCircle2 className="w-4 h-4" />}
-          {toastMsg.msg}
-        </motion.div>
-      )}
 
       {/* Header */}
       <header className="max-w-7xl mx-auto px-4 sm:px-6 pb-4 flex items-center justify-between sticky top-0 z-30 bg-blue-50/90 dark:bg-gray-950/90 backdrop-blur-md border-b border-blue-100 dark:border-gray-800" style={{ paddingTop: "max(1.25rem, env(safe-area-inset-top))" }}>
@@ -311,35 +259,9 @@ export default function HSAStore() {
             </div>
           </div>
         </div>
-        <button
-          onClick={() => setCartOpen(true)}
-          className="relative flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-xl transition-colors"
-        >
-          <ShoppingCart className="w-4 h-4" />
-          <span className="hidden sm:inline text-sm">{t("cartLabel")}</span>
-          {cartCount > 0 && (
-            <span className="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">{cartCount}</span>
-          )}
-        </button>
       </header>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-        {/* Success / Cancel banners */}
-        {isSuccess && (
-          <div className="mb-6 bg-green-50 dark:bg-green-900/20 border border-green-300 dark:border-green-700 rounded-2xl p-4 flex items-center gap-3">
-            <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
-            <div>
-              <p className="font-semibold text-green-800 dark:text-green-300">{t("paymentSuccess")}</p>
-              <p className="text-sm text-green-600 dark:text-green-400">{t("paymentSuccessDesc")}</p>
-            </div>
-          </div>
-        )}
-        {isCancelled && (
-          <div className="mb-6 bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 rounded-2xl p-4 flex items-center gap-3">
-            <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0" />
-            <p className="text-sm text-amber-700 dark:text-amber-400">{t("paymentCancelled")}</p>
-          </div>
-        )}
 
         {/* Hero strip */}
         <div className="bg-gradient-to-r from-blue-700 to-blue-500 rounded-2xl p-6 mb-6 flex flex-col sm:flex-row items-center justify-between gap-4">
@@ -428,7 +350,6 @@ export default function HSAStore() {
               <ProductCard
                 key={product.id}
                 product={product}
-                onAddToCart={addToCart}
                 delay={Math.min(i * 0.04, 0.4)}
               />
             ))}
@@ -436,16 +357,6 @@ export default function HSAStore() {
         )}
       </div>
 
-      {/* Cart Sidebar */}
-      <CartSidebar
-        open={cartOpen}
-        onClose={() => setCartOpen(false)}
-        cart={cart}
-        onUpdateQty={updateQty}
-        onRemove={removeFromCart}
-        onCheckout={handleCheckout}
-        checkingOut={checkingOut}
-      />
     </div>
   );
 }
